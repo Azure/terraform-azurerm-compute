@@ -1,7 +1,7 @@
-output "azurerm_vm_name" {
-  value = "${azurerm_virtual_machine.vm.name}"
+output "azurerm_vm_names" {
+  value = "${var.vm_os_simple == "Windows" ? azurerm_virtual_machine.vm-windows.name : azurerm_virtual_machine.vm-linux.name}"
 }
 
-output "azurerm_vm_id" {
-  value = "${azurerm_virtual_machine.vm.id}"
+output "azurerm_vm_ids" {
+  value = "${var.vm_os_simple == "Windows" ? azurerm_virtual_machine.vm-windows.id : azurerm_virtual_machine.vm-linux.id}}"
 }

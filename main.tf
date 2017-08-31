@@ -1,10 +1,16 @@
 provider "azurerm" {
-    version = "~> 0.1"
+  version = "> 0.1"
 }
 
 module "os" {
   source = "./os"
   vm_os_simple = "${var.vm_os_simple}"
+}
+
+module "network" {
+  source = "github.com/Azure/terraform-azurerm-network"
+  location = "${var.location}"
+  prefix   = "${var.resource_group_name}"
 }
 
 resource "azurerm_resource_group" "vm" {
@@ -13,16 +19,56 @@ resource "azurerm_resource_group" "vm" {
   tags     = "${var.tags}"
 }
 
-resource "azurerm_virtual_machine" "vm" {
+resource "azurerm_virtual_machine" "vm-linux" {
+  count = "${var.vm_os_simple == "Windows" ? 0 : var.nb_instances}"
   name                  = "vm${count.index}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
   vm_size               = "${var.vm_size}"
   network_interface_ids = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
-  count                 = "${var.nb_instances}"
 
   storage_image_reference {
+    id        = "${var.vm_os_id}"
+    publisher = "${coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher)}"
+    offer     = "${coalesce(var.vm_os_offer, module.os.calculated_value_os_offer)}"
+    sku       = "${coalesce(var.vm_os_sku, module.os.calculated_value_os_sku)}"
+    version   = "${var.vm_os_version}"
+  }
+
+  storage_os_disk {
+    name          = "osdisk${count.index}"
+    create_option = "FromImage"
+  }
+
+  os_profile {
+    computer_name  = "${var.vm_hostname}"
+    admin_username = "${var.admin_username}"
+    admin_password = "${var.admin_password}"
+  }
+
+  os_profile_linux_config {
+    
+    disable_password_authentication = true
+
+    ssh_keys {
+      path     = "/home/${var.admin_username}/.ssh/authorized_keys"
+      key_data = "${file("${var.ssh_key}")}"
+    }
+  }
+}
+
+resource "azurerm_virtual_machine" "vm-windows" {
+  count = "${var.vm_os_simple == "Windows" ? var.nb_instances : 0}"
+  name                  = "vm${count.index}"
+  location              = "${var.location}"
+  resource_group_name   = "${azurerm_resource_group.vm.name}"
+  availability_set_id   = "${azurerm_availability_set.vm.id}"
+  vm_size               = "${var.vm_size}"
+  network_interface_ids = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
+
+  storage_image_reference {
+    id        = "${var.vm_os_id}"
     publisher = "${coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher)}"
     offer     = "${coalesce(var.vm_os_offer, module.os.calculated_value_os_offer)}"
     sku       = "${coalesce(var.vm_os_sku, module.os.calculated_value_os_sku)}"
@@ -42,7 +88,7 @@ resource "azurerm_virtual_machine" "vm" {
 }
 
 resource "azurerm_storage_account" "vm" {
-  //name                = "${var.dns_name}stor"
+  name                = "${var.storage_account_name}"
   location            = "${azurerm_resource_group.vm.location}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   account_type        = "${var.storage_account_type}"
@@ -55,6 +101,14 @@ resource "azurerm_availability_set" "vm" {
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
   managed                      = true
+}
+
+resource "azurerm_public_ip" "vm" {
+  name                         = "${var.vm_hostname}-publicIP"
+  location                     = "${var.location}"
+  resource_group_name          = "${azurerm_resource_group.vm.name}"
+  public_ip_address_allocation = "${var.public_ip_address_allocation}"
+  domain_name_label            = "${var.public_ip_address_domain_name}"
 }
 
 resource "azurerm_network_security_group" "vm" {
@@ -85,7 +139,8 @@ resource "azurerm_network_interface" "vm" {
 
   ip_configuration {
     name                                    = "ipconfig${count.index}"
-    subnet_id                               = "${module.tf-azurerm-vnet.azurerm_subnet_ids[0]}"
+    subnet_id                               = "${module.network.vnet_subnets[0]}"
     private_ip_address_allocation           = "Dynamic"
+    public_ip_address_id                    = "${count.index == 0 ? azurerm_public_ip.vm.id : ""}"
   }
 }

@@ -6,7 +6,7 @@ variable "vm_os_simple" {
 variable "standard_os" {
   default  = {
     "Ubuntu"  = "Canonical,UbuntuServer,16.04-LTS"
-    "Windows" = "MicrosoftWindows,WindowsServer,2016-Datacenter"
+    "Windows" = "MicrosoftWindowsServer,WindowsServer,2016-Datacenter"
     "RHEL"    = "RedHat,RHEL,7.3"
     "SUSE"    = "SUSE,openSUSE-Leap,42.2"
     "CentOS"  = "OpenLogic,CentOS,7.3"

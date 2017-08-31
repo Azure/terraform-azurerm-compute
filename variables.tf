@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   description = "The name of the resource group in which the resources will be created"
-  default     = "vms-rg"
+  default     = "compute"
 }
 
 variable "location" {
@@ -11,6 +11,11 @@ variable "location" {
 variable "storage_account_type" {
   description = "Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS."
   default     = "Premium_LRS"
+}
+
+variable "storage_account_name" {
+  description = "The Azure globally unique per region name of the storage account. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
+  default     = "myuniquestor2345"
 }
 
 variable "vm_size" {
@@ -25,12 +30,12 @@ variable "nb_instances" {
 
 variable "vm_hostname" {
   description = "VM name referenced also in storage-related names."
-  default = "mysweethost"
+  default = "myvmname"
 }
 
 variable "vm_os_simple" {
-  description = "Specify Ubuntu, Windows, RHEL, SUSE, CentOS, Debian, CoreOS, or SLES to get the latest image version of the specified os.  If this value is not provided, then vm_os_publisher, vm_os_offer, and vm_os_sku must be specified."
-  default = ""
+  description = "Specify Ubuntu, Windows, RHEL, SUSE, CentOS, Debian, CoreOS, or SLES to get the latest image version of the specified os.  Provide this value even if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku to determine Windows vs Linux-based vm configuration to be provisioned."
+  default = "Ubuntu"
 }
 
 variable "vm_os_publisher" {
@@ -69,8 +74,8 @@ variable "admin_password" {
 }
 
 variable "ssh_key" {
-  description = "Path to the public key to be used for ssh access to the VM"
-  default     = "~/.ssh/id_rsa.pub"
+  description = "Path to the public key to be used for ssh access to the VM.  Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub"
+  default     = "C:/home/azure/.ssh/id_rsa.pub"
 }
 
 variable "tags" {
@@ -80,12 +85,17 @@ variable "tags" {
     source = "terraform"
   }
 }
-
-variable "remote_port"{
-  default = "22"
+variable "public_ip_address_allocation" {
+  description = "Defines how an IP address is assigned. Options are Static or Dynamic."
+  default = "static"
 }
 
-variable "dns_name" {
-  description = " Label for the Domain Name. Will be used to make up the FQDN. If a domain name label is specified, an A DNS record is created for the public IP in the Microsoft Azure DNS system."
-  default = "terrafrocks"
+variable "public_ip_address_domain_name" {
+  description = "Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com"
+  default = "mycooldnsname12387"
+}
+
+variable "remote_port"{
+  description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
+  default = "22"
 }
