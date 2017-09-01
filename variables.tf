@@ -7,10 +7,6 @@ variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
 
-variable "storage_account_name" {
-  description = "The Azure globally unique per region name of the storage account. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
-}
-
 variable "vnet_subnet_id"{
   description = "The subnet id of the virtual network where the virtual machines will reside."
 }
@@ -56,7 +52,7 @@ variable "nb_instances" {
 }
 
 variable "vm_hostname" {
-  description = "VM name referenced also in storage-related names."
+  description = "local name of the VM"
   default = "myvm"
 }
 
