@@ -15,7 +15,7 @@ variable "vnet_subnet_id"{
   description = "The subnet id of the virtual network where the virtual machines will reside."
 }
 
-variable "public_ip_address_domain_name" {
+variable "public_ip_dns" {
   description = "Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com"
   default = ""
 }
