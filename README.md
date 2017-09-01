@@ -1,106 +1,117 @@
-Deploys a group of Virtual Machines exposed to a public IP via a Load Balancer
-==============================================================================
+Deploys 1+ Virtual Machines to your provided VNet
+=================================================
 
-This Terraform module deploys a Virtual Machines Scale Set in Azure with the following characteristics: 
+This Terraform module deploys Virtual Machines in Azure with the following characteristics:
 
-- Creates a virtual network and a subnet using the 10.0.0.0/16 and 10.0.1.0/24 address space.
-- Creates a load balancer for the scale set of virtual machines
-- Exposes through NAT one or several ports of the VMs on the load balancer
+- Ability to specify a simple string to get the latest marketplace image using `var.vm_os_simple`
+- All VMs use managed disks
+- Network Security Group (NSG) created and only if `var.remote_port` specified, then remote access rule created and opens this port to all nics
+- VM nics attached to a single virtual network subnet of your choice (new or existing) via `var.vnet_subnet_id`.
+- Public IP is created and attached only to the first VM's nic.  Once into this VM, connection can be make to the other vms using the private ip on the VNet.
 
-Module Input Variables 
+Module Input Variables
 ----------------------
 
-- `resource_group_name` - The name of the resource group in which the resources will be created.
+- `resource_group_name` - The name of the resource group in which the resources will be created. - default `compute`
 - `location` - The Azure location where the resources will be created.
-- `vm_size` - The initial size of the virtual machine that will be used in the VM Scale Set.
-- `admin_username` - The name of the administrator to access the machines part of the virtual machine scale set. 
+- `vnet_subnet_id` - The subnet id of the virtual network where the virtual machines will reside.
+- `public_ip_dns` - Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com
 - `admin_password` - The password of the administrator account. The password must comply with the complexity requirements for Azure virtual machines.
-- `ssh_key` - The path on the local machine of the ssh public key in the case of a Linux deployment.  
-- `nb_instance` - The number of instances that will be initially deployed in the virtual machine scale set.
-- `protocol` - A map representing the protocols and ports to open on the load balancer in front of the virtual machine scale set.
+- `ssh_key` - The path on the local machine of the ssh public key in the case of a Linux deployment. - default `~/.ssh/id_rsa.pub`
+- `remote_port` - Tcp port number to enable remote access to the nics on the vms via a NSG rule. Set to blank to disable.
+- `admin_username` - The name of the administrator to access the machines part of the virtual machine scale set. - default `azureuser`
+- `storage_account_type` - Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS. - default `Premium_LRS`
+- `vm_size` - The initial size of the virtual machine that will be deployed. - default `Standard_DS1_V2`
+- `nb_instances` - The number of instances that will be initially deployed in the virtual machine scale set. - default `1`
+- `vm_hostname` - local name of the VM. - default `myvm`
 - `vm_os_simple`- This variable allows to use a simple name to reference Linux or Windows operating systems. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`. The supported values are: "Ubuntu", "Windows", "RHEL", "SUSE", "CentOS", "Debian", "CoreOS" and "SLES".
-- `vm_os_id` - The ID of the image that you want to deploy if you are using a custom image. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`. 
-
+- `vm_os_id` - The ID of the image that you want to deploy if you are using a custom image. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`.
 - `vm_os_publisher` - The name of the publisher of the image that you want to deploy, for example "Canonical" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
 - `vm_os_offer` - The name of the offer of the image that you want to deploy, for example "UbuntuServer" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
 - `vm_os_sku` - The sku of the image that you want to deploy, for example "14.04.2-LTS" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
-
-- `lb_port` - Protocols to be used for the load balancer rules [frontend_port, protocol, backend_port]. Set to blank to disable.
+- `vm_os_version` - The version of the image that you want to deploy. - default `latest`
+- `public_ip_address_allocation` - Defines how an IP address is assigned. Options are Static or Dynamic. - default `static`
 - `tags` - A map of the tags to use on the resources that are deployed with this module.
 
 Usage
 -----
 
-Using the `vm_os_simple`: 
+Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VNet and opens up port 22 for SSH access with ~/.ssh/id_rsa.pub :
 
-```hcl 
-module "computegroup" { 
-    source              = "./path/to/module"
-    resource_group_name = "my-resource-group"
-    location            = "westus"
-    vm_size             = "Standard_A0"
-    admin_username      = "azureuser"
-    admin_password      = "ComplexPassword"
-    ssh_key             = "~/.ssh/id_rsa.pub"
-    nb_instance         = 2
-    vm_os_simple        = "Ubuntu"
-    vm_os_publisher     = ""
-    vm_os_offer         = ""
-    vm_os_sku           = ""
-    vm_os_id            = ""
-    lb_port             = { 
-                            http = ["80", "Tcp", "80"]
-                            https = ["443", "Tcp", "443"]
-                          }
-    tags                = {
-                            environment = "dev"
-                            costcenter  = "it"
-                          }
+```hcl
+  module "mycompute" {
+    source = "github.com/Azure/terraform-azurerm-compute"
+    resource_group_name = "mycompute"
+    location = "East US 2"
+    vm_os_simple = "Windows"
+    public_ip_dns = "mywindowsservers225"
+    remote_port = "3389"
+    nb_instances = 2
+    vnet_subnet_id = "${module.network.vnet_subnets[0]}"
+  }
+
+  module "network" {
+    source = "github.com/Azure/terraform-azurerm-network"
+    location = "East US 2"
+    prefix   = "mycompute"
+  }
+
+  output "vm_public_name"{
+    value = "${module.mycompute.public_ip_dns_name}"
+  }
+
+  output "vm_public_ip" {
+    value = "${module.mycompute.public_ip_address}"
+  }
+
+  output "vm_private_ips" {
+    value = "${module.mycompute.network_interface_private_ip}"
+  }
 }
 
 ```
-
-Using the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` 
+Provisions 2 Ubuntu 14.04 Server VMs using  `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` to a new VNet and opens up port 22 for SSH access with ~/.ssh/id_rsa.pub :
 
 ```hcl 
-module "computegroup" { 
-    source              = "./path/to/module"
-    resource_group_name = "my-resource-group"
+module "mycompute2" { 
+    source              = "github.com/Azure/terraform-azurerm-compute"
+    resource_group_name = "mycompute2"
     location            = "westus"
-    vm_size             = "Standard_A0"
-    admin_username      = "azureuser"
-    admin_password      = "ComplexPassword"
-    ssh_key             = "~/.ssh/id_rsa.pub"
-    nb_instance         = 2
-    vm_os_simple        = ""
+    public_ip_dns       = "myubuntuservers225"
+    remote_port         = "22"
+    nb_instances        = 2
     vm_os_publisher     = "Canonical"
     vm_os_offer         = "UbuntuServer"
     vm_os_sku           = "14.04.2-LTS"
-    vm_os_id            = ""
-    lb_port             = { 
-                            http = ["80", "Tcp", "80"]
-                            https = ["443", "Tcp", "443"]
-                          }
+    vnet_subnet_id      = "${module.network.vnet_subnets[0]}"
     tags                = {
                             environment = "dev"
                             costcenter  = "it"
                           }
 }
+  module "network" {
+    source = "github.com/Azure/terraform-azurerm-network"
+    location = "westus"
+    prefix   = "mycompute2"
+  }
 
 ```
-
 
 Outputs
 =======
 
-- `vmss_name` - Name of the virtual machine scale set
-- `vmss_id` - Id ot the virtual machine scale set
-- `vnet_id` - Id of the Virtual Network deployed as part of the VM scale set
-- `subnet_id` - Id of the Subnet deployed as part of the VM scale set
+- `vm_ids`- Virtual machine ids created
+- `network_security_group_id` - id of the security group provisioned
+- `network_interface_ids` - ids of the vm nics provisoned
+- `network_interface_private_ip` - private ip addresses of the vm nics
+- `public_ip_id` - id of the public ip address provisoned
+- `public_ip_address` - The actual ip address allocated for the resource.
+- `public_ip_dns_name` - fqdn to connect to the first vm   provisioned.
+- `availability_set_id` - id of the availability set where the vms are provisioned.
 
 Authors
 =======
-Originally created by [Damien Caro](http://github.com/dcaro)
+Originally created by [David Tesar](http://github.com/dtzar)
 
 License
 =======
