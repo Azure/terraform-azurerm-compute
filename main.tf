@@ -33,6 +33,8 @@ resource "azurerm_virtual_machine" "vm-linux" {
   storage_os_disk {
     name          = "osdisk${count.index}"
     create_option = "FromImage"
+    caching           = "ReadWrite"
+    managed_disk_type = "${var.storage_account_type}"
   }
   
   os_profile {
@@ -70,8 +72,10 @@ resource "azurerm_virtual_machine" "vm-windows" {
   }
 
   storage_os_disk {
-    name          = "osdisk${count.index}"
-    create_option = "FromImage"
+    name              = "osdisk${count.index}"
+    create_option     = "FromImage"
+    caching           = "ReadWrite"
+    managed_disk_type = "${var.storage_account_type}"
   }
 
   os_profile {
@@ -79,13 +83,6 @@ resource "azurerm_virtual_machine" "vm-windows" {
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
-}
-
-resource "azurerm_storage_account" "vm" {
-  name                = "${var.storage_account_name}"
-  location            = "${azurerm_resource_group.vm.location}"
-  resource_group_name = "${azurerm_resource_group.vm.name}"
-  account_type        = "${var.storage_account_type}"
 }
 
 resource "azurerm_availability_set" "vm" {

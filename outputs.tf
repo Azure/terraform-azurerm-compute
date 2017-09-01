@@ -36,8 +36,3 @@ output "azurerm_availability_set_id" {
   description = "id of the availability set where the vms are provisioned."
   value = "${azurerm_availability_set.vm.id}"
 }
-
-output "azurerm_storage_account_id" {
-  description = "id of the storage account where the vm vhds are stored."
-  value = "${azurerm_storage_account.vm.id}"
-}
