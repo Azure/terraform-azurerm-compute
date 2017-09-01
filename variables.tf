@@ -5,17 +5,44 @@ variable "resource_group_name" {
 
 variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
-  default     = "westus"
+}
+
+variable "storage_account_name" {
+  description = "The Azure globally unique per region name of the storage account. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
+}
+
+variable "vnet_subnet_id"{
+  description = "The subnet id of the virtual network where the virtual machines will reside."
+}
+
+variable "public_ip_address_domain_name" {
+  description = "Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com"
+  default = ""
+}
+
+variable "admin_password" {
+  description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure"
+  default = ""
+}
+
+variable "ssh_key" {
+  description = "Path to the public key to be used for ssh access to the VM.  Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub"
+  default     = "~/.ssh/id_rsa.pub"
+}
+
+variable "remote_port"{
+  description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
+  default = ""
+}
+
+variable "admin_username" {
+  description = "The admin username of the VM that will be deployed"
+  default     = "azureuser"
 }
 
 variable "storage_account_type" {
   description = "Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS."
   default     = "Premium_LRS"
-}
-
-variable "storage_account_name" {
-  description = "The Azure globally unique per region name of the storage account. Storage account name must be between 3 and 24 characters in length and use numbers and lower-case letters only."
-  default     = "myuniquestor2345"
 }
 
 variable "vm_size" {
@@ -30,12 +57,12 @@ variable "nb_instances" {
 
 variable "vm_hostname" {
   description = "VM name referenced also in storage-related names."
-  default = "myvmname"
+  default = "myvm"
 }
 
 variable "vm_os_simple" {
   description = "Specify Ubuntu, Windows, RHEL, SUSE, CentOS, Debian, CoreOS, or SLES to get the latest image version of the specified os.  Provide this value even if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku to determine Windows vs Linux-based vm configuration to be provisioned."
-  default = "Ubuntu"
+  default = ""
 }
 
 variable "vm_os_publisher" {
@@ -63,21 +90,6 @@ variable "vm_os_id" {
   default = ""
 }
 
-variable "admin_username" {
-  description = "The admin username of the VM that will be deployed"
-  default     = "azureuser"
-}
-
-variable "admin_password" {
-  description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure"
-  default = "CmplexP@ssw0rd"
-}
-
-variable "ssh_key" {
-  description = "Path to the public key to be used for ssh access to the VM.  Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub"
-  default     = "C:/home/azure/.ssh/id_rsa.pub"
-}
-
 variable "tags" {
   type = "map"
   description = "A map of the tags to use on the resources that are deployed with this module."
@@ -88,14 +100,4 @@ variable "tags" {
 variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default = "static"
-}
-
-variable "public_ip_address_domain_name" {
-  description = "Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com"
-  default = "mycooldnsname12387"
-}
-
-variable "remote_port"{
-  description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
-  default = "22"
 }

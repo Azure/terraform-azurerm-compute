@@ -7,12 +7,6 @@ module "os" {
   vm_os_simple = "${var.vm_os_simple}"
 }
 
-module "network" {
-  source = "github.com/Azure/terraform-azurerm-network"
-  location = "${var.location}"
-  prefix   = "${var.resource_group_name}"
-}
-
 resource "azurerm_resource_group" "vm" {
   name     = "${var.resource_group_name}"
   location = "${var.location}"
@@ -21,7 +15,7 @@ resource "azurerm_resource_group" "vm" {
 
 resource "azurerm_virtual_machine" "vm-linux" {
   count = "${var.vm_os_simple == "Windows" ? 0 : var.nb_instances}"
-  name                  = "vm${count.index}"
+  name                  = "${var.vm_hostname}${count.index}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
@@ -40,7 +34,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     name          = "osdisk${count.index}"
     create_option = "FromImage"
   }
-
+  
   os_profile {
     computer_name  = "${var.vm_hostname}"
     admin_username = "${var.admin_username}"
@@ -60,7 +54,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
 resource "azurerm_virtual_machine" "vm-windows" {
   count = "${var.vm_os_simple == "Windows" ? var.nb_instances : 0}"
-  name                  = "vm${count.index}"
+  name                  = "${var.vm_hostname}${count.index}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
@@ -139,7 +133,7 @@ resource "azurerm_network_interface" "vm" {
 
   ip_configuration {
     name                                    = "ipconfig${count.index}"
-    subnet_id                               = "${module.network.vnet_subnets[0]}"
+    subnet_id                               = "${var.vnet_subnet_id}"
     private_ip_address_allocation           = "Dynamic"
     public_ip_address_id                    = "${count.index == 0 ? azurerm_public_ip.vm.id : ""}"
   }
