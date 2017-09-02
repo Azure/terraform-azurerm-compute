@@ -53,7 +53,7 @@ Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VN
   module "network" {
     source = "github.com/Azure/terraform-azurerm-network"
     location = "East US 2"
-    prefix   = "mycompute"
+    resource_group_name = "mycompute"
   }
 
   output "vm_public_name"{
@@ -92,7 +92,7 @@ module "mycompute2" {
   module "network" {
     source = "github.com/Azure/terraform-azurerm-network"
     location = "westus"
-    prefix   = "mycompute2"
+    resource_group_name = "mycompute2"
   }
 
 ```
