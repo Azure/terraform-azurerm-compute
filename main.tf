@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "> 0.1"
+  version = "~> 0.1"
 }
 
 module "os" {
@@ -14,7 +14,7 @@ resource "azurerm_resource_group" "vm" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count = "${var.vm_os_simple == "Windows" ? 0 : var.nb_instances}"
+  count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? var.nb_instances : 0 }"
   name                  = "${var.vm_hostname}${count.index}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
@@ -55,7 +55,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
-  count = "${var.vm_os_simple == "Windows" ? var.nb_instances : 0}"
+  count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? 0 : var.nb_instances}"
   name                  = "${var.vm_hostname}${count.index}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"

@@ -1,6 +1,6 @@
 output "vm_ids" {
   description = "Virtual machine ids created."
-  value = "${var.vm_os_simple == "Windows" ? azurerm_virtual_machine.vm-windows.*.id : azurerm_virtual_machine.vm-linux.*.id}}"
+  value = "${concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id)}"
 }
 
 output "network_security_group_id" {
@@ -29,7 +29,7 @@ output "public_ip_address" {
 }
 
 output "public_ip_dns_name" {
-  description = "fqdn to connect to the first vm   provisioned."
+  description = "fqdn to connect to the first vm provisioned."
   value = "${azurerm_public_ip.vm.fqdn}"
 }
 

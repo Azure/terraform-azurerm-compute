@@ -57,7 +57,7 @@ variable "vm_hostname" {
 }
 
 variable "vm_os_simple" {
-  description = "Specify Ubuntu, Windows, RHEL, SUSE, CentOS, Debian, CoreOS, or SLES to get the latest image version of the specified os.  Provide this value even if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku to determine Windows vs Linux-based vm configuration to be provisioned."
+  description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
   default = ""
 }
 

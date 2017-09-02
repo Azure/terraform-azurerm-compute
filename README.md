@@ -24,7 +24,7 @@ Module Input Variables
 - `vm_size` - The initial size of the virtual machine that will be deployed. - default `Standard_DS1_V2`
 - `nb_instances` - The number of instances that will be initially deployed in the virtual machine scale set. - default `1`
 - `vm_hostname` - local name of the VM. - default `myvm`
-- `vm_os_simple`- This variable allows to use a simple name to reference Linux or Windows operating systems. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`. The supported values are: "Ubuntu", "Windows", "RHEL", "SUSE", "CentOS", "Debian", "CoreOS" and "SLES".
+- `vm_os_simple`- This variable allows to use a simple name to reference Linux or Windows operating systems. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`. The supported values are: "UbuntuServer", "WindowsServer", "RHEL", "openSUSE-Leap", "CentOS", "Debian", "CoreOS" and "SLES".
 - `vm_os_id` - The ID of the image that you want to deploy if you are using a custom image. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`.
 - `vm_os_publisher` - The name of the publisher of the image that you want to deploy, for example "Canonical" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
 - `vm_os_offer` - The name of the offer of the image that you want to deploy, for example "UbuntuServer" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
