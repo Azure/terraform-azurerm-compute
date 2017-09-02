@@ -36,14 +36,15 @@ Module Input Variables
 Usage
 -----
 
-Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VNet and opens up port 22 for SSH access with ~/.ssh/id_rsa.pub :
+Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VNet and opens up port 3389 for RDP access:
 
 ```hcl
   module "mycompute" {
     source = "github.com/Azure/terraform-azurerm-compute"
     resource_group_name = "mycompute"
     location = "East US 2"
-    vm_os_simple = "Windows"
+    admin_password = ComplxP@ssw0rd!
+    vm_os_simple = "WindowsServer"
     public_ip_dns = "mywindowsservers225"
     remote_port = "3389"
     nb_instances = 2
