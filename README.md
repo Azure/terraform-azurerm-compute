@@ -9,29 +9,6 @@ This Terraform module deploys Virtual Machines in Azure with the following chara
 - VM nics attached to a single virtual network subnet of your choice (new or existing) via `var.vnet_subnet_id`.
 - Public IP is created and attached only to the first VM's nic.  Once into this VM, connection can be make to the other vms using the private ip on the VNet.
 
-Module Input Variables
-----------------------
-
-- `resource_group_name` - The name of the resource group in which the resources will be created. - default `compute`
-- `location` - The Azure location where the resources will be created.
-- `vnet_subnet_id` - The subnet id of the virtual network where the virtual machines will reside.
-- `public_ip_dns` - Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com
-- `admin_password` - The password of the administrator account. The password must comply with the complexity requirements for Azure virtual machines.
-- `ssh_key` - The path on the local machine of the ssh public key in the case of a Linux deployment. - default `~/.ssh/id_rsa.pub`
-- `remote_port` - Tcp port number to enable remote access to the nics on the vms via a NSG rule. Set to blank to disable.
-- `admin_username` - The name of the administrator to access the machines part of the virtual machine scale set. - default `azureuser`
-- `storage_account_type` - Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS. - default `Premium_LRS`
-- `vm_size` - The initial size of the virtual machine that will be deployed. - default `Standard_DS1_V2`
-- `nb_instances` - The number of instances that will be initially deployed in the virtual machine scale set. - default `1`
-- `vm_hostname` - local name of the VM. - default `myvm`
-- `vm_os_simple`- This variable allows to use a simple name to reference Linux or Windows operating systems. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`. The supported values are: "UbuntuServer", "WindowsServer", "RHEL", "openSUSE-Leap", "CentOS", "Debian", "CoreOS" and "SLES".
-- `vm_os_id` - The ID of the image that you want to deploy if you are using a custom image. When used, you can ommit the `vm_os_publisher`, `vm_os_offer` and `vm_os_sku`.
-- `vm_os_publisher` - The name of the publisher of the image that you want to deploy, for example "Canonical" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
-- `vm_os_offer` - The name of the offer of the image that you want to deploy, for example "UbuntuServer" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
-- `vm_os_sku` - The sku of the image that you want to deploy, for example "14.04.2-LTS" if you are not using the `vm_os_simple` or `vm_os_id` variables. 
-- `vm_os_version` - The version of the image that you want to deploy. - default `latest`
-- `public_ip_address_allocation` - Defines how an IP address is assigned. Options are Static or Dynamic. - default `static`
-- `tags` - A map of the tags to use on the resources that are deployed with this module.
 
 Usage
 -----
@@ -40,7 +17,7 @@ Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VN
 
 ```hcl
   module "mycompute" {
-    source = "github.com/Azure/terraform-azurerm-compute"
+    source = "Azure/compute/azurerm"
     resource_group_name = "mycompute"
     location = "East US 2"
     admin_password = ComplxP@ssw0rd!
@@ -52,7 +29,7 @@ Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VN
   }
 
   module "network" {
-    source = "github.com/Azure/terraform-azurerm-network"
+    source = "Azure/network/azurerm"
     location = "East US 2"
     resource_group_name = "mycompute"
   }
@@ -75,7 +52,7 @@ Provisions 2 Ubuntu 14.04 Server VMs using  `vm_os_publisher`, `vm_os_offer` and
 
 ```hcl 
 module "mycompute2" { 
-    source              = "github.com/Azure/terraform-azurerm-compute"
+    source              = "Azure/compute/azurerm"
     resource_group_name = "mycompute2"
     location            = "westus"
     public_ip_dns       = "myubuntuservers225"
@@ -91,7 +68,7 @@ module "mycompute2" {
                           }
 }
   module "network" {
-    source = "github.com/Azure/terraform-azurerm-network"
+    source = "Azure/compute/azurerm"
     location = "westus"
     resource_group_name = "mycompute2"
   }
