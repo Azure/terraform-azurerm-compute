@@ -74,19 +74,6 @@ module "mycompute2" {
   }
 
 ```
-
-Outputs
-=======
-
-- `vm_ids`- Virtual machine ids created
-- `network_security_group_id` - id of the security group provisioned
-- `network_interface_ids` - ids of the vm nics provisoned
-- `network_interface_private_ip` - private ip addresses of the vm nics
-- `public_ip_id` - id of the public ip address provisoned
-- `public_ip_address` - The actual ip address allocated for the resource.
-- `public_ip_dns_name` - fqdn to connect to the first vm   provisioned.
-- `availability_set_id` - id of the availability set where the vms are provisioned.
-
 Authors
 =======
 Originally created by [David Tesar](http://github.com/dtzar)
