@@ -22,7 +22,7 @@ Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VN
     location = "East US 2"
     admin_password = ComplxP@ssw0rd!
     vm_os_simple = "WindowsServer"
-    public_ip_dns = "mywindowsservers225"
+    public_ip_dns = "mywinsrv252"
     remote_port = "3389"
     nb_instances = 2
     vnet_subnet_id = "${module.network.vnet_subnets[0]}"
