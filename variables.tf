@@ -102,3 +102,8 @@ variable "boot_diagnostics" {
   description = "(Optional) Enable or Disable boot diagnostics"
   default = "false"
 }
+
+variable "public_ip" {
+  description = "(Optional) Add Public IP or not"
+  default = "true"
+}
