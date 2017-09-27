@@ -45,9 +45,17 @@ resource "azurerm_virtual_machine" "vm-linux" {
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
   }
+
+  storage_data_disk {
+    name = "${azurerm_managed_disk.vm.name}"
+    managed_disk_id = "${azurerm_managed_disk.vm.id}"
+    create_option = "Attach"
+    lun = 0
+    disk_size_gb = "${azurerm_managed_disk.vm.disk_size_gb}"
+  }
   
   os_profile {
-    computer_name  = "${var.vm_hostname}"
+    computer_name  = "${var.vm_hostname}-${count.index}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
@@ -91,8 +99,16 @@ resource "azurerm_virtual_machine" "vm-windows" {
     managed_disk_type = "${var.storage_account_type}"
   }
 
+  storage_data_disk {
+    name = "${azurerm_managed_disk.vm.name}"
+    managed_disk_id = "${azurerm_managed_disk.vm.id}"
+    create_option = "Attach"
+    lun = 0
+    disk_size_gb = "${azurerm_managed_disk.vm.disk_size_gb}"
+  }
+
   os_profile {
-    computer_name  = "${var.vm_hostname}"
+    computer_name  = "${var.vm_hostname}-${count.index}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
@@ -150,7 +166,16 @@ resource "azurerm_network_interface" "vm" {
     name                                    = "ipconfig${count.index}"
     subnet_id                               = "${var.vnet_subnet_id}"
     private_ip_address_allocation           = "Dynamic"
-    #public_ip_address_id                    = "${count.index == 0 ? azurerm_public_ip.vm.id : ""}"
     public_ip_address_id                    = "${var.public_ip == "true" ? element(azurerm_public_ip.vm.*.id, count.index) : ""}"
   }
 }
+
+resource "azurerm_managed_disk" "vm" {
+  name = "datadisk-${var.vm_hostname}-${count.index + 1}"
+  location = "${azurerm_resource_group.vm.location}"
+  resource_group_name = "${azurerm_resource_group.vm.name}"
+  storage_account_type = "${var.data_sa_type}"
+  create_option = "Empty"
+  disk_size_gb = "${var.data_disk_size_gb}"
+}
+
