@@ -150,6 +150,7 @@ resource "azurerm_network_interface" "vm" {
     name                                    = "ipconfig${count.index}"
     subnet_id                               = "${var.vnet_subnet_id}"
     private_ip_address_allocation           = "Dynamic"
-    public_ip_address_id                    = "${count.index == 0 ? azurerm_public_ip.vm.id : ""}"
+    #public_ip_address_id                    = "${count.index == 0 ? azurerm_public_ip.vm.id : ""}"
+    public_ip_address_id                    = "${var.public_ip == "true" ? azurerm_public_ip.vm.id : ""}"
   }
 }
