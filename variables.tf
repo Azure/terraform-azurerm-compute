@@ -107,3 +107,13 @@ variable "public_ip" {
   description = "(Optional) Add Public IP or not"
   default = "true"
 }
+
+variable "data_sa_type" {
+  description = "Data Disk Storage Account type"
+  default = "Standard_LRS"
+}
+
+variable "data_disk_size_gb" {
+  description = "Data disk size in Gb"
+  default = 1
+}
