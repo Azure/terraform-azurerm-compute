@@ -56,13 +56,15 @@ resource "azurerm_virtual_machine" "vm-linux" {
     managed_disk_type = "${var.storage_account_type}"
   }
 
-  storage_data_disk {
-    name = "${element(azurerm_managed_disk.vm.*.name, count.index)}"
-    managed_disk_id = "${element(azurerm_managed_disk.vm.*.id, count.index)}"
-    create_option = "Attach"
-    lun = 0
-    disk_size_gb = "${element(azurerm_managed_disk.vm.*.disk_size_gb, count.index)}"
-  }
+
+ storage_data_disk {
+   name = "${element(azurerm_managed_disk.vm.*.name, count.index)}"
+   managed_disk_id = "${element(azurerm_managed_disk.vm.*.id, count.index)}"
+   create_option = "Attach"
+   lun = 0
+   disk_size_gb = "${element(azurerm_managed_disk.vm.*.disk_size_gb, count.index)}"
+ }
+
   
   os_profile {
     computer_name  = "${var.vm_hostname}-${count.index + 1}"

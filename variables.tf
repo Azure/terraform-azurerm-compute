@@ -114,6 +114,6 @@ variable "data_sa_type" {
 }
 
 variable "data_disk_size_gb" {
-  description = "Data disk size in Gb"
-  default = 1
+  description = "Storage data disk size size"
+  default = ""
 }
