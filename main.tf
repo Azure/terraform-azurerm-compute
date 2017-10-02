@@ -24,7 +24,7 @@ resource "azurerm_storage_account" "vm-sa" {
 
 resource "azurerm_virtual_machine" "vm-linux" {
   count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? 0 : var.nb_instances}"
-  name                  = "${var.vm_hostname}${count.index}"
+  name                  = "${var.vm_hostname}-${count.index + 1}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
@@ -69,7 +69,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
 resource "azurerm_virtual_machine" "vm-windows" {
   count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? var.nb_instances : 0}"
-  name                  = "${var.vm_hostname}${count.index}"
+  name                  = "${var.vm_hostname}-${count.index + 1}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
@@ -112,7 +112,8 @@ resource "azurerm_availability_set" "vm" {
 }
 
 resource "azurerm_public_ip" "vm" {
-  name                         = "${var.vm_hostname}-publicIP"
+  count                        = "${var.public_ip == "true" ? var.nb_instances : 0}"
+  name                         = "${var.vm_hostname}-${count.index}-publicIP"
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"

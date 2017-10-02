@@ -108,4 +108,7 @@ variable "boot_diagnostics_sa_type" {
   default = "Standard_LRS"
 }
   
-  
+variable "public_ip" {
+  description = "(Optional) Add Public IP or not"
+  default = "true"
+}
