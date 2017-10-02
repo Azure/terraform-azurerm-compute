@@ -122,3 +122,8 @@ variable "data_disk_size_gb" {
   description = "Storage data disk size size"
   default = ""
 }
+
+variable "delete_os_disk_on_termination" {
+  description = "Delete datadisk when machine is terminated"
+  default = "false"
+}
