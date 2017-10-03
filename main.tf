@@ -60,7 +60,6 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
  storage_data_disk {
    name = "${element(azurerm_managed_disk.vm.*.name, count.index)}"
-   managed_disk_id = "${element(azurerm_managed_disk.vm.*.id, count.index)}"
    create_option = "Attach"
    lun = 0
    disk_size_gb = "${element(azurerm_managed_disk.vm.*.disk_size_gb, count.index)}"
@@ -147,7 +146,7 @@ resource "azurerm_public_ip" "vm" {
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  domain_name_label            = "${var.vm_hostname}-${count.index + 1}"
+  domain_name_label            = "${lower(var.vm_hostname)}-${count.index + 1}"
 }
 
 resource "azurerm_network_security_group" "vm" {
