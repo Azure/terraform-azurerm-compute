@@ -31,7 +31,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
 
   storage_os_disk {
-    name          = "osdisk${count.index}"
+    name          = "osdisk-${var.vm_hostname}-${count.index}"
     create_option = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
