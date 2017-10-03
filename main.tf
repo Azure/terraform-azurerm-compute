@@ -95,6 +95,7 @@ resource "azurerm_availability_set" "vm" {
 }
 
 resource "azurerm_public_ip" "vm" {
+  count                        = "${var.public_ip == "true" ? var.nb_instances : 0}"
   name                         = "${var.vm_hostname}-publicIP"
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
@@ -132,7 +133,7 @@ resource "azurerm_network_interface" "vm" {
     name                                    = "ipconfig${count.index}"
     subnet_id                               = "${var.vnet_subnet_id}"
     private_ip_address_allocation           = "Dynamic"
-    public_ip_address_id                    = "${count.index == 0 ? azurerm_public_ip.vm.id : ""}"
+    public_ip_address_id                    = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
   }
 }
 
