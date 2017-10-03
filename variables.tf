@@ -97,3 +97,13 @@ variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default = "static"
 }
+
+variable "data_sa_type" {
+  description = "Data Disk Storage Account type"
+  default = "Standard_LRS"
+}
+
+variable "data_disk_size_gb" {
+  description = "Storage data disk size size"
+  default = ""
+}
