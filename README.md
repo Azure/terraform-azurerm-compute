@@ -68,10 +68,10 @@ module "mycompute2" {
                           }
 }
   module "network" {
-    source = "Azure/compute/azurerm"
-    location = "westus"
+    source 		= "Azure/network/azurerm"
+    location 		= "westus"
     resource_group_name = "mycompute2"
-  }
+}
 
 ```
 Authors
