@@ -99,7 +99,7 @@ resource "azurerm_public_ip" "vm" {
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  domain_name_label            = "${var.public_ip_dns}-${count.index}"
+  domain_name_label            = "${var.public_ip_dns}${count.index}"
 }
 
 resource "azurerm_network_security_group" "vm" {
@@ -136,6 +136,3 @@ resource "azurerm_network_interface" "vm" {
   }
 }
 
-
-  }
-}
