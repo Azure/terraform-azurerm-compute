@@ -18,7 +18,7 @@ resource "azurerm_storage_account" "vm-sa" {
   name = "${lower(replace(var.vm_hostname,"/[[:^alpha:]]/",""))}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   location = "${var.location}"
-  account_type = "${var.storage_account_type}"
+  account_type = "${var.boot_diagnostics_sa_type}"
   tags = "${var.tags}"
 }
 
