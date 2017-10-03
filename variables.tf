@@ -97,3 +97,8 @@ variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default = "static"
 }
+
+variable "boot_diagnostics" {
+  description = "(Optional) Enable or Disable boot diagnostics"
+  default = "false"
+}
