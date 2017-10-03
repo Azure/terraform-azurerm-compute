@@ -13,14 +13,34 @@ resource "azurerm_resource_group" "vm" {
   tags     = "${var.tags}"
 }
 
+resource "azurerm_storage_account" "vm-sa" {
+  count = "${var.boot_diagnostics == "true" ? 1 : 0}"
+  name = "${lower(replace(var.vm_hostname,"/[[:^alpha:]]/",""))}"
+  resource_group_name = "${azurerm_resource_group.vm.name}"
+  location = "${var.location}"
+  account_type = "${var.boot_diagnostics_sa_type}"
+  tags = "${var.tags}"
+}
+
+resource "azurerm_managed_disk" "vm" {
+  count = "${var.nb_instances}"
+  name = "datadisk-${var.vm_hostname}-${count.index + 1}"
+  location = "${azurerm_resource_group.vm.location}"
+  resource_group_name = "${azurerm_resource_group.vm.name}"
+  storage_account_type = "${var.data_sa_type}"
+  create_option = "Empty"
+  disk_size_gb = "${var.data_disk_size_gb}"
+}
+
 resource "azurerm_virtual_machine" "vm-linux" {
   count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? 0 : var.nb_instances}"
-  name                  = "${var.vm_hostname}${count.index}"
-  location              = "${var.location}"
-  resource_group_name   = "${azurerm_resource_group.vm.name}"
-  availability_set_id   = "${azurerm_availability_set.vm.id}"
-  vm_size               = "${var.vm_size}"
-  network_interface_ids = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
+  name                          = "${var.vm_hostname}-${count.index + 1}"
+  location                      = "${var.location}"
+  resource_group_name           = "${azurerm_resource_group.vm.name}"
+  availability_set_id           = "${azurerm_availability_set.vm.id}"
+  vm_size                       = "${var.vm_size}"
+  network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
+  delete_os_disk_on_termination = "${var.delete_os_disk_on_termination}"
 
   storage_image_reference {
     id        = "${var.vm_os_id}"
@@ -31,14 +51,23 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
 
   storage_os_disk {
-    name          = "osdisk${count.index}"
+    name          = "osdisk-${var.vm_hostname}-${count.index + 1}"
     create_option = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
   }
+
+
+ storage_data_disk {
+   name = "${element(azurerm_managed_disk.vm.*.name, count.index)}"
+   create_option = "Attach"
+   lun = 0
+   disk_size_gb = "${element(azurerm_managed_disk.vm.*.disk_size_gb, count.index)}"
+ }
+
   
   os_profile {
-    computer_name  = "${var.vm_hostname}"
+    computer_name  = "${var.vm_hostname}-${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
@@ -52,11 +81,15 @@ resource "azurerm_virtual_machine" "vm-linux" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${azurerm_storage_account.vm-sa.primary_blob_endpoint}"
+  }
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
   count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? var.nb_instances : 0}"
-  name                  = "${var.vm_hostname}${count.index}"
+  name                  = "${var.vm_hostname}-${count.index + 1}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
@@ -72,18 +105,31 @@ resource "azurerm_virtual_machine" "vm-windows" {
   }
 
   storage_os_disk {
-    name              = "osdisk${count.index}"
+    name              = "osdisk-${var.vm_hostname}-${count.index + 1}"
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
   }
 
+  storage_data_disk {
+    name = "${element(azurerm_managed_disk.vm.*.name, count.index)}"
+    managed_disk_id = "${element(azurerm_managed_disk.vm.*.id, count.index)}"
+    create_option = "Attach"
+    lun = 0
+    disk_size_gb = "${element(azurerm_managed_disk.vm.*.disk_size_gb, count.index)}"
+  }
+
   os_profile {
-    computer_name  = "${var.vm_hostname}"
+    computer_name  = "${var.vm_hostname}-${count.index + 1}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${azurerm_storage_account.vm-sa.primary_blob_endpoint}"
+  }
 }
+
 
 resource "azurerm_availability_set" "vm" {
   name                         = "${var.vm_hostname}avset"
@@ -95,11 +141,12 @@ resource "azurerm_availability_set" "vm" {
 }
 
 resource "azurerm_public_ip" "vm" {
-  name                         = "${var.vm_hostname}-publicIP"
+  count                        = "${var.public_ip == "true" ? var.nb_instances : 0}"
+  name                         = "${var.vm_hostname}-${count.index + 1}-publicIP"
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  domain_name_label            = "${var.public_ip_dns}"
+  domain_name_label            = "${lower(var.vm_hostname)}-${count.index + 1}"
 }
 
 resource "azurerm_network_security_group" "vm" {
@@ -123,15 +170,17 @@ resource "azurerm_network_security_group" "vm" {
 
 resource "azurerm_network_interface" "vm" {
   count               = "${var.nb_instances}"
-  name                = "nic${count.index}"
+  name                = "nic-${var.vm_hostname}-${count.index + 1}"
   location            = "${azurerm_resource_group.vm.location}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   network_security_group_id = "${azurerm_network_security_group.vm.id}"
 
   ip_configuration {
-    name                                    = "ipconfig${count.index}"
+    name                                    = "ipconfig-${var.vm_hostname}-${count.index + 1}"
     subnet_id                               = "${var.vnet_subnet_id}"
     private_ip_address_allocation           = "Dynamic"
-    public_ip_address_id                    = "${count.index == 0 ? azurerm_public_ip.vm.id : ""}"
+    # https://github.com/hashicorp/terraform/issues/11210
+    public_ip_address_id                    = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
   }
 }
+

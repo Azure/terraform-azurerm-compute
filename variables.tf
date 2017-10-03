@@ -97,3 +97,33 @@ variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default = "static"
 }
+
+variable "boot_diagnostics" {
+  description = "(Optional) Enable or Disable boot diagnostics"
+  default = "false"
+}
+
+variable "boot_diagnostics_sa_type" {
+  description = "(Optional) Storage account type for boot diagnostics"
+  default = "Standard_LRS"
+}
+  
+variable "public_ip" {
+  description = "(Optional) Add Public IP or not"
+  default = "true"
+}
+
+variable "data_sa_type" {
+  description = "Data Disk Storage Account type"
+  default = "Standard_LRS"
+}
+
+variable "data_disk_size_gb" {
+  description = "Storage data disk size size"
+  default = ""
+}
+
+variable "delete_os_disk_on_termination" {
+  description = "Delete datadisk when machine is terminated"
+  default = "false"
+}

@@ -37,3 +37,8 @@ output "availability_set_id" {
   description = "id of the availability set where the vms are provisioned."
   value = "${azurerm_availability_set.vm.id}"
 }
+
+output "vm_hostname" {
+  description = "hostname of the virtual machine"
+  value = "${concat(azurerm_virtual_machine.vm-linux.*.name, azurerm_virtual_machine.vm-windows.*.name)}"
+}
