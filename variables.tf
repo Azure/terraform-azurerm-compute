@@ -102,3 +102,12 @@ variable "delete_os_disk_on_termination" {
    description = "Delete datadisk when machine is terminated"
    default = "false"
 }
+variable "data_sa_type" {
+  description = "Data Disk Storage Account type"
+  default = "Standard_LRS"
+}
+
+variable "data_disk_size_gb" {
+  description = "Storage data disk size size"
+  default = ""
+}
