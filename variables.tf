@@ -97,3 +97,8 @@ variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default = "static"
 }
+
+variable "delete_os_disk_on_termination" {
+   description = "Delete datadisk when machine is terminated"
+   default = "false"
+}
