@@ -123,7 +123,7 @@ resource "azurerm_network_security_group" "vm" {
 
 resource "azurerm_network_interface" "vm" {
   count               = "${var.nb_instances}"
-  name                = "nic${count.index}"
+  name                = "nic-${var.vm_hostname}-${count.index}"
   location            = "${azurerm_resource_group.vm.location}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   network_security_group_id = "${azurerm_network_security_group.vm.id}"
