@@ -63,7 +63,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
   boot_diagnostics {
     enabled = "${var.boot_diagnostics}"
-    storage_uri = "${azurerm_storage_account.vm-sa.primary_blob_endpoint}"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
 }
 
