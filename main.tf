@@ -95,12 +95,12 @@ resource "azurerm_availability_set" "vm" {
 }
 
 resource "azurerm_public_ip" "vm" {
-  count                        = "${var.public_ip == "true" ? var.nb_instances : 0}"
-  name                         = "${var.vm_hostname}-publicIP"
+  count                        = "${var.nb_public_ip}"
+  name                         = "${var.vm_hostname}-${count.index}-publicIP"
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  domain_name_label            = "${var.public_ip_dns}-${count.index}"
+  domain_name_label            = "${element(var.public_ip_dns, count.index)}"
 }
 
 resource "azurerm_network_security_group" "vm" {
@@ -134,9 +134,5 @@ resource "azurerm_network_interface" "vm" {
     subnet_id                               = "${var.vnet_subnet_id}"
     private_ip_address_allocation           = "Dynamic"
     public_ip_address_id                    = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
-  }
-}
-
-
   }
 }

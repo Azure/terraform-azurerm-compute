@@ -12,8 +12,8 @@ variable "vnet_subnet_id"{
 }
 
 variable "public_ip_dns" {
-  description = "Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com"
-  default = ""
+  description = "Optional. One IP per boxe. globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com"
+  default = ["myvm-public-dns"]
 }
 
 variable "admin_password" {
@@ -98,7 +98,7 @@ variable "public_ip_address_allocation" {
   default = "static"
 }
 
-variable "public_ip" {
-  description = "(Optional) Add Public IP or not"
-  default = "true"
+variable "nb_public_ip" {
+  description = "(Optional) Number of public IP to use"
+  default = "1"
 }
