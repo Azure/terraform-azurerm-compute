@@ -12,8 +12,8 @@ variable "vnet_subnet_id"{
 }
 
 variable "public_ip_dns" {
-  description = "Optional globally unique per datacenter region domain name label to apply to the public ip address. e.g. thisvar.varlocation.cloudapp.azure.com"
-  default = ""
+  description = "Optional globally unique per datacenter region domain name label to apply to each public ip address. e.g. thisvar.varlocation.cloudapp.azure.com where you specify only thisvar here. This is an array of names which will pair up sequentially to the number of public ips defined in var.nb_public_ip. One name or empty string is required for every public ip. If no public ip is desired, then set this to an array with a single empty string."
+  default = [""]
 }
 
 variable "admin_password" {
@@ -96,6 +96,11 @@ variable "tags" {
 variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default = "static"
+}
+
+variable "nb_public_ip" {
+  description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
+  default = "1"
 }
 
 variable "delete_os_disk_on_termination" {
