@@ -16,37 +16,35 @@ Usage
 Provisions 2 Windows 2016 Datacenter Server VMs using `vm_os_simple` to a new VNet and opens up port 3389 for RDP access:
 
 ```hcl
-  module "mycompute" {
-    source = "Azure/compute/azurerm"
-    resource_group_name = "mycompute"
-    location = "East US 2"
-    admin_password = ComplxP@ssw0rd!
-    vm_os_simple = "WindowsServer"
-    public_ip_dns = "mywinsrv252"
-    remote_port = "3389"
-    nb_instances = 2
-    vnet_subnet_id = "${module.network.vnet_subnets[0]}"
-  }
-
-  module "network" {
-    source = "Azure/network/azurerm"
-    location = "East US 2"
-    resource_group_name = "mycompute"
-  }
-
-  output "vm_public_name"{
-    value = "${module.mycompute.public_ip_dns_name}"
-  }
-
-  output "vm_public_ip" {
-    value = "${module.mycompute.public_ip_address}"
-  }
-
-  output "vm_private_ips" {
-    value = "${module.mycompute.network_interface_private_ip}"
-  }
+module "mycompute" {
+  source = "Azure/compute/azurerm"
+  resource_group_name = "mycompute"
+  location = "East US 2"
+  admin_password = "ComplxP@ssw0rd!"
+  vm_os_simple = "WindowsServer"
+  public_ip_dns = "mywinsrv252"
+  remote_port = "3389"
+  nb_instances = 2
+  vnet_subnet_id = "${module.network.vnet_subnets[0]}"
 }
 
+module "network" {
+  source = "Azure/network/azurerm"
+  location = "East US 2"
+  resource_group_name = "mycompute"
+}
+
+output "vm_public_name"{
+  value = "${module.mycompute.public_ip_dns_name}"
+}
+
+output "vm_public_ip" {
+  value = "${module.mycompute.public_ip_address}"
+}
+
+output "vm_private_ips" {
+  value = "${module.mycompute.network_interface_private_ip}"
+}
 ```
 Provisions 2 Ubuntu 14.04 Server VMs using  `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` to a new VNet and opens up port 22 for SSH access with ~/.ssh/id_rsa.pub :
 
@@ -68,10 +66,10 @@ module "mycompute2" {
                           }
 }
   module "network" {
-    source = "Azure/compute/azurerm"
-    location = "westus"
+    source 		= "Azure/network/azurerm"
+    location 		= "westus"
     resource_group_name = "mycompute2"
-  }
+}
 
 ```
 Authors

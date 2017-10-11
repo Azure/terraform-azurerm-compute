@@ -13,6 +13,22 @@ resource "azurerm_resource_group" "vm" {
   tags     = "${var.tags}"
 }
 
+resource "random_id" "vm-sa" {
+  keepers = {
+    vm_hostname = "${var.vm_hostname}"
+  }
+  byte_length = 6
+}
+
+resource "azurerm_storage_account" "vm-sa" {
+  count = "${var.boot_diagnostics == "true" ? 1 : 0}"
+  name = "bootdiag${lower(random_id.vm-sa.hex)}"
+  resource_group_name = "${azurerm_resource_group.vm.name}"
+  location = "${var.location}"
+  account_type = "${var.boot_diagnostics_sa_type}"
+  tags = "${var.tags}"
+}
+
 resource "azurerm_virtual_machine" "vm-linux" {
   count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? 0 : var.nb_instances}"
   name                  = "${var.vm_hostname}${count.index}"
@@ -21,6 +37,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   availability_set_id   = "${azurerm_availability_set.vm.id}"
   vm_size               = "${var.vm_size}"
   network_interface_ids = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
+  delete_os_disk_on_termination = "${var.delete_os_disk_on_termination}"
 
   storage_image_reference {
     id        = "${var.vm_os_id}"
@@ -31,7 +48,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
 
   storage_os_disk {
-    name          = "osdisk${count.index}"
+    name          = "osdisk-${var.vm_hostname}-${count.index}"
     create_option = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
@@ -52,6 +69,10 @@ resource "azurerm_virtual_machine" "vm-linux" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+  }
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
@@ -62,6 +83,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   availability_set_id   = "${azurerm_availability_set.vm.id}"
   vm_size               = "${var.vm_size}"
   network_interface_ids = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
+  delete_os_disk_on_termination = "${var.delete_os_disk_on_termination}"
 
   storage_image_reference {
     id        = "${var.vm_os_id}"
@@ -82,6 +104,10 @@ resource "azurerm_virtual_machine" "vm-windows" {
     computer_name  = "${var.vm_hostname}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
+  }
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
 }
 
@@ -124,7 +150,7 @@ resource "azurerm_network_security_group" "vm" {
 
 resource "azurerm_network_interface" "vm" {
   count               = "${var.nb_instances}"
-  name                = "nic${count.index}"
+  name                = "nic-${var.vm_hostname}-${count.index}"
   location            = "${azurerm_resource_group.vm.location}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   network_security_group_id = "${azurerm_network_security_group.vm.id}"

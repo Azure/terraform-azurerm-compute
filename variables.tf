@@ -102,3 +102,18 @@ variable "nb_public_ip" {
   description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
   default = "1"
 }
+
+variable "delete_os_disk_on_termination" {
+   description = "Delete datadisk when machine is terminated"
+   default = "false"
+}
+
+variable "boot_diagnostics" {
+  description = "(Optional) Enable or Disable boot diagnostics"
+  default = "false"
+}
+
+variable "boot_diagnostics_sa_type" {
+   description = "(Optional) Storage account type for boot diagnostics"
+   default = "Standard_LRS"
+}
