@@ -13,9 +13,16 @@ resource "azurerm_resource_group" "vm" {
   tags     = "${var.tags}"
 }
 
+resource "random_id" "vm-sa" {
+  keepers = {
+    vm_hostname = "${var.vm_hostname}"
+  }
+  byte_length = 6
+}
+
 resource "azurerm_storage_account" "vm-sa" {
   count = "${var.boot_diagnostics == "true" ? 1 : 0}"
-  name = "${lower(replace(var.vm_hostname,"/[[:^alpha:]]/",""))}"
+  name = "bootdiag${lower(random_id.vm-sa.hex)}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   location = "${var.location}"
   account_type = "${var.boot_diagnostics_sa_type}"
