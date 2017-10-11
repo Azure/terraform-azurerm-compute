@@ -111,3 +111,9 @@ variable "data_disk_size_gb" {
   description = "Storage data disk size size"
   default = ""
 }
+
+variable "datadisk" {
+  type = "string"
+  description = "Set to true to add a datadisk."
+  default = "false"
+}
