@@ -57,8 +57,12 @@ Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM
 Advanced Usage
 -----
 
-The following example illustrates some of the configuration options available to deploy a virtual machine. Feel free to remove the Linux or Windows modules and corresponding outputs.  More specifically this provisions:
-New vnet for all vms
+The following example illustrates some of the configuration options available to deploy a virtual machine. Feel free to remove the Linux or Windows modules and corresponding outputs.  
+
+More specifically this provisions:
+
+1 - New vnet for all vms
+
 2 - Ubuntu 14.04 Server VMs using `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` which is configured with:
 
 - No public IP assigned, so access can only happen through another machine on the vnet.
