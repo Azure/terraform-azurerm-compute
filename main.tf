@@ -38,14 +38,6 @@ resource "azurerm_virtual_machine" "vm-linux" {
     managed_disk_type = "${var.storage_account_type}"
   }
 
-  storage_data_disk {
-    name              = "datadisk-${var.vm_hostname}-${count.index}"
-    create_option     = "Empty"
-    lun               = 0
-    disk_size_gb      = "${var.data_disk_size_gb}"
-    managed_disk_type = "${var.data_sa_type}"
- }
-  
   os_profile {
     computer_name  = "${var.vm_hostname}"
     admin_username = "${var.admin_username}"
@@ -137,14 +129,6 @@ resource "azurerm_virtual_machine" "vm-windows" {
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
   }
-
-  storage_data_disk {
-    name              = "datadisk-${var.vm_hostname}-${count.index}"
-    create_option     = "Empty"
-    lun               = 0
-    disk_size_gb      = "${var.data_disk_size_gb}"
-    managed_disk_type = "${var.data_sa_type}"
- }
 
   os_profile {
     computer_name  = "${var.vm_hostname}"
