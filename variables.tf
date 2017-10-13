@@ -127,8 +127,18 @@ variable "data_disk_size_gb" {
   default = ""
 }
 
-variable "datadisk" {
+variable "data_disk" {
   type = "string"
   description = "Set to true to add a datadisk."
   default = "false"
+}
+
+variable "boot_diagnostics" {
+  description = "(Optional) Enable or Disable boot diagnostics"
+  default = "false"
+}
+
+variable "boot_diagnostics_sa_type" {
+   description = "(Optional) Storage account type for boot diagnostics"
+   default = "Standard_LRS"
 }
