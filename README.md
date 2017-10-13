@@ -16,12 +16,11 @@ Simple Usage
 
 This contains the bare minimum options to be configured for the VM to be provisioned.  The entire code block provisions a Windows and a Linux VM, but feel free to delete one or the other and corresponding outputs. The outputs are also not necessary to provision, but included to make it convenient to know the address to connect to the VMs after provisioning completes.
 
-Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM using `vm_os_simple` to a new VNet and opens up ports 22 for SSH and 3389 for RDP access via the attached public IP to each VM.  The Ubuntu Server will use the ssh key found in the default location `~/.ssh/id_rsa.pub`.
+Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM using `vm_os_simple` to a new VNet and opens up ports 22 for SSH and 3389 for RDP access via the attached public IP to each VM.  All resources are provisioned into the default resource group called `terraform-compute`.  The Ubuntu Server will use the ssh key found in the default location `~/.ssh/id_rsa.pub`.
 
 ```hcl
   module "linuxservers" {
     source              = "Azure/compute/azurerm"
-    resource_group_name = "terraform-simplevms"
     location            = "West US 2"
     vm_os_simple        = "UbuntuServer"
     public_ip_dns       = ["linsimplevmips"] // change to a unique name per datacenter region
@@ -30,7 +29,6 @@ Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM
 
   module "windowsservers" {
     source              = "Azure/compute/azurerm"
-    resource_group_name = "terraform-simplevms"
     location            = "West US 2"
     vm_hostname         = "mywinvm" // line can be removed if only one VM module per resource group
     admin_password      = "ComplxP@ssw0rd!"
@@ -42,7 +40,7 @@ Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM
   module "network" {
     source              = "Azure/network/azurerm"
     location            = "West US 2"
-    resource_group_name = "terraform-simplevms"
+    resource_group_name = "terraform-compute"
   }
 
   output "linux_vm_public_name"{
