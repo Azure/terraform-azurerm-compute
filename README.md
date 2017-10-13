@@ -74,8 +74,7 @@ New vnet for all vms
 
 ```hcl 
   module "linuxservers" {
-    source = ".."
-    //source              = "Azure/compute/azurerm"
+    source              = "Azure/compute/azurerm"
     resource_group_name = "terraform-advancedvms"
     location            = "westus2"
     vm_hostname         = "mylinuxvm"
@@ -95,8 +94,7 @@ New vnet for all vms
   }
 
   module "windowsservers" {
-    source = ".."
-    //source              = "Azure/compute/azurerm"
+    source              = "Azure/compute/azurerm"
     resource_group_name = "terraform-advancedvms"
     location            = "westus2"
     vm_hostname         = "mywinvm"
