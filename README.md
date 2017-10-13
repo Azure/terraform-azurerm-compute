@@ -70,6 +70,7 @@ More specifically this provisions:
 - Boot diagnostics is enabled.
 - Additional tags are added to the resource group.
 - OS disk is deleted upon deletion of the VM
+- Add one 64GB premium managed data disk
 
 2 - Windows Server 2012 R2 VMs using `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` which is configured with:
 
@@ -91,6 +92,10 @@ More specifically this provisions:
     vnet_subnet_id      = "${module.network.vnet_subnets[0]}"
     boot_diagnostics    = "true"
     delete_os_disk_on_termination = "true"
+    data_disk           = "true"
+    data_disk_size_gb   = "64"
+    data_sa_type        = "Premium_LRS"
+    
     tags                = {
                             environment = "dev"
                             costcenter  = "it"
