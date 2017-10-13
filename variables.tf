@@ -95,7 +95,7 @@ variable "tags" {
 }
 variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
-  default = "static"
+  default = "dynamic"
 }
 
 variable "nb_public_ip" {
