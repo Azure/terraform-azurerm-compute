@@ -69,11 +69,13 @@ resource "azurerm_virtual_machine" "vm-linux" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+
+  tags = "${var.tags}"
+
   boot_diagnostics {
     enabled = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
-  tags = "${var.tags}"
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
@@ -124,7 +126,13 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+
   tags = "${var.tags}"
+
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+  }
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
@@ -157,7 +165,14 @@ resource "azurerm_virtual_machine" "vm-windows" {
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
+
   tags = "${var.tags}"
+
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+  }
+
 }
 
 resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
@@ -198,11 +213,13 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
+
+  tags = "${var.tags}"
+
   boot_diagnostics {
     enabled = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
-  tags = "${var.tags}"
 }
 
 resource "azurerm_availability_set" "vm" {
