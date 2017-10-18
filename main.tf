@@ -25,8 +25,8 @@ resource "azurerm_storage_account" "vm-sa" {
   name = "bootdiag${lower(random_id.vm-sa.hex)}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   location = "${var.location}"
-  account_tier = "${element(split("_", var.boot_diagnostrics_sa_type),0)}"
-  account_replication_type = "${element(split("_", var.boot_diagnostrics_sa_type),1)}"
+  account_tier = "${element(split("_", var.boot_diagnostics_sa_type),0)}"
+  account_replication_type = "${element(split("_", var.boot_diagnostics_sa_type),1)}"
   tags = "${var.tags}"
 }
 
