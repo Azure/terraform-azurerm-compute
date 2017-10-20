@@ -35,7 +35,7 @@ resource "azurerm_storage_account" "vm-sa" {
 
 resource "azurerm_virtual_machine" "vm-linux" {
   count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? 0 : var.nb_instances}"
-  name                  = "${var.vm_hostname}${count.index}"
+  name                  = "${var.vm_hostname}-${count.index}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
@@ -52,8 +52,8 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
 
   storage_os_disk {
-    name          = "osdisk-${var.vm_hostname}-${count.index}"
-    create_option = "FromImage"
+    name              = "osdisk-${var.vm_hostname}-${count.index}"
+    create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
   }
@@ -81,7 +81,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
 resource "azurerm_virtual_machine" "vm-windows" {
   count = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") ? var.nb_instances : 0}"
-  name                  = "${var.vm_hostname}${count.index}"
+  name                  = "${var.vm_hostname}-${count.index}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.vm.name}"
   availability_set_id   = "${azurerm_availability_set.vm.id}"
@@ -98,7 +98,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   }
 
   storage_os_disk {
-    name              = "osdisk${count.index}"
+    name              = "osdisk-${var.vm_hostname}-${count.index}"
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
@@ -116,7 +116,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
 }
 
 resource "azurerm_availability_set" "vm" {
-  name                         = "${var.vm_hostname}avset"
+  name                         = "${var.vm_hostname}-avset"
   location                     = "${azurerm_resource_group.vm.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   platform_fault_domain_count  = 2
