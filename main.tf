@@ -2,6 +2,10 @@ provider "azurerm" {
   version = "~> 0.2.2"
 }
 
+provider "random" {
+  version = "~> 1.0"
+}
+
 module "os" {
   source = "os"
   vm_os_simple = "${var.vm_os_simple}"
@@ -206,7 +210,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 }
 
 resource "azurerm_availability_set" "vm" {
-  name                         = "${var.vm_hostname}avset"
+  name                         = "${var.vm_hostname}-avset"
   location                     = "${azurerm_resource_group.vm.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   platform_fault_domain_count  = 2
@@ -224,19 +228,19 @@ resource "azurerm_public_ip" "vm" {
 }
 
 resource "azurerm_network_security_group" "vm" {
-  name                = "${var.vm_hostname}-nsg"
+  name                = "${var.vm_hostname}-${coalesce(var.remote_port,module.os.calculated_remote_port)}-nsg"
   location            = "${azurerm_resource_group.vm.location}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
 
   security_rule {
-    name                       = "allow_remote_in_all"
+    name                       = "allow_remote_${coalesce(var.remote_port,module.os.calculated_remote_port)}_in_all"
     description                = "Allow remote protocol in from all locations"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "${var.remote_port}"
+    destination_port_range     = "${coalesce(var.remote_port,module.os.calculated_remote_port)}"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
