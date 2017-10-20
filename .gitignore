@@ -23,3 +23,6 @@ Session.vim
 *~
 # auto-generated tag files
 tags
+
+# IDE configs
+.idea
