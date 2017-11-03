@@ -1,0 +1,5 @@
+location = "West US 2"
+ssh_key = "~/.ssh/tf_id_rsa.pub"
+resource_group_name = "azure_compute_e2e"
+vm_os_simple = "UbuntuServer"
+public_ip_dns = "linsimplevmips"

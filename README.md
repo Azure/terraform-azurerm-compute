@@ -141,6 +141,17 @@ More specifically this provisions:
 
 ```
 
+Run Test
+-----
+### Requirements
+- [Ruby] **(~> 2.4)**
+- [Bundler] **(~> 1.15)**
+- [Terraform] **(~> 0.10.8)**
+
+### Quick Start
+1. `bundle install`
+2. `bundle exec kitchen test`
+
 Authors
 =======
 Originally created by [David Tesar](http://github.com/dtzar)
