@@ -1,0 +1,18 @@
+---
+
+install:
+  - apt-get install unzip
+  - wget https://releases.hashicorp.com/terraform/0.10.8/terraform_0.10.8_linux_amd64.zip
+  - unzip terraform_0.10.8_linux_amd64.zip
+  - mv ./terraform test/terraform
+
+before_script:
+  - cd test/
+  - ./terraform init
+
+script:
+  - ./terraform plan
+  - ./terraform apply
+
+after_script:
+  - ./terraform destroy -force
