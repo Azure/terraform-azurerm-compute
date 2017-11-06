@@ -105,7 +105,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
   }
 
   storage_data_disk {
-    name              = "${format("datadisk-%s-%d", var.vm_hostname, count.index)}"
+    name              = "datadisk-${var.vm_hostname}-${count.index}"
     create_option     = "Empty"
     lun               = 0
     disk_size_gb      = "${var.data_disk_size_gb}"
@@ -204,7 +204,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
   }
 
   storage_data_disk {
-    name              = "${format("datadisk-%s-%d", var.vm_hostname, count.index)}"
+    name              = "datadisk-${var.vm_hostname}-${count.index}"
     create_option     = "Empty"
     lun               = 0
     disk_size_gb      = "${var.data_disk_size_gb}"
