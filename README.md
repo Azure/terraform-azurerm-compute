@@ -144,10 +144,12 @@ More specifically this provisions:
 Run Test
 -----
 ### Requirements
-- [Ruby] **(~> 2.4)**
-- [Bundler] **(~> 1.15)**
-- [Terraform] **(~> 0.10.8)**
-- [SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
+- [Git](https://git-scm.com/downloads)
+- [Ruby **(~> 2.4)**](https://www.ruby-lang.org/en/downloads/)
+- [Bundler **(~> 1.15)**](https://bundler.io/)
+- [Terraform **(~> 0.10.8)**](https://www.terraform.io/downloads.html)
+- [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
+- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)(save the key in ~/.ssh/tf_id_rsa)
 
 ### Quick Start
 1. `bundle install`
