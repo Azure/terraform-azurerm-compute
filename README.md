@@ -147,6 +147,7 @@ Run Test
 - [Ruby] **(~> 2.4)**
 - [Bundler] **(~> 1.15)**
 - [Terraform] **(~> 0.10.8)**
+- [SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
 
 ### Quick Start
 1. `bundle install`
