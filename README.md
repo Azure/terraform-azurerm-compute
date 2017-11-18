@@ -145,7 +145,7 @@ Run Test
 -----
 ### Requirements
 - [Git](https://git-scm.com/downloads)
-- [Ruby **(~> 2.4)**](https://www.ruby-lang.org/en/downloads/)
+- [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
 - [Bundler **(~> 1.15)**](https://bundler.io/)
 - [Terraform **(~> 0.10.8)**](https://www.terraform.io/downloads.html)
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
