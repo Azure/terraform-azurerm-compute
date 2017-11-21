@@ -10,13 +10,13 @@ os:
 before_install:
   - gem update --system
   - gem --version
+  - curl --output terraform.zip https://releases.hashicorp.com/terraform/0.10.8/terraform_0.10.8_linux_amd64.zip
+  - echo b786c0cf936e24145fad632efd0fe48c831558cc9e43c071fffd93f35e3150db terraform.zip | sha256sum -c
+  - unzip terraform.zip
+  - mkdir /usr/local/terraform
+  - mv terraform /usr/local/terraform
+  - rm -f terraform && rm -f terraform_hash && rm -f terraform.zip
 install:
-  - curl --output terraform.zip https://releases.hashicorp.com/terraform/0.10.8/terraform_0.10.8_linux_amd64.zip \
-    && echo b786c0cf936e24145fad632efd0fe48c831558cc9e43c071fffd93f35e3150db terraform.zip | sha256sum -c \
-    && unzip terraform.zip \
-    && mkdir /usr/local/terraform \
-    && mv terraform /usr/local/terraform \
-    && rm -f terraform && rm -f terraform_hash && rm -f terraform.zip
   - bundle install
 script:
   - rake build
