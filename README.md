@@ -149,11 +149,12 @@ Run Test
 - [Bundler **(~> 1.15)**](https://bundler.io/)
 - [Terraform **(~> 0.10.8)**](https://www.terraform.io/downloads.html)
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
-- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)(save the key in ~/.ssh/tf_id_rsa)
+- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)(save the key in ~/.ssh/id_rsa)
 
 ### Quick Start
 1. `bundle install`
-2. `bundle exec kitchen test`
+2. `rake build`
+3. `rake e2e`
 
 Authors
 =======

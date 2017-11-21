@@ -7,7 +7,7 @@ provider "random" {
 }
 
 module "os" {
-  source = "os"
+  source       = "./os"
   vm_os_simple = "${var.vm_os_simple}"
 }
 
@@ -21,16 +21,17 @@ resource "random_id" "vm-sa" {
   keepers = {
     vm_hostname = "${var.vm_hostname}"
   }
+
   byte_length = 6
 }
 
 resource "azurerm_storage_account" "vm-sa" {
-  count = "${var.boot_diagnostics == "true" ? 1 : 0}"
-  name = "bootdiag${lower(random_id.vm-sa.hex)}"
+  count               = "${var.boot_diagnostics == "true" ? 1 : 0}"
+  name                = "bootdiag${lower(random_id.vm-sa.hex)}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
-  location = "${var.location}"
-  account_type = "${var.boot_diagnostics_sa_type}"
-  tags = "${var.tags}"
+  location            = "${var.location}"
+  account_type        = "${var.boot_diagnostics_sa_type}"
+  tags                = "${var.tags}"
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
@@ -65,7 +66,6 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
 
   os_profile_linux_config {
-    
     disable_password_authentication = true
 
     ssh_keys {
@@ -73,10 +73,12 @@ resource "azurerm_virtual_machine" "vm-linux" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+
   boot_diagnostics {
-    enabled = "${var.boot_diagnostics}"
+    enabled     = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
+
   tags = "${var.tags}"
 }
 
@@ -120,7 +122,6 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
   }
 
   os_profile_linux_config {
-    
     disable_password_authentication = true
 
     ssh_keys {
@@ -128,6 +129,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+
   tags = "${var.tags}"
 }
 
@@ -161,6 +163,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
+
   tags = "${var.tags}"
 }
 
@@ -195,17 +198,19 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
     lun               = 0
     disk_size_gb      = "${var.data_disk_size_gb}"
     managed_disk_type = "${var.data_sa_type}"
- }
+  }
 
   os_profile {
     computer_name  = "${var.vm_hostname}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
+
   boot_diagnostics {
-    enabled = "${var.boot_diagnostics}"
+    enabled     = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
+
   tags = "${var.tags}"
 }
 
@@ -254,9 +259,9 @@ resource "azurerm_network_interface" "vm" {
   network_security_group_id = "${azurerm_network_security_group.vm.id}"
 
   ip_configuration {
-    name                                    = "ipconfig${count.index}"
-    subnet_id                               = "${var.vnet_subnet_id}"
-    private_ip_address_allocation           = "Dynamic"
-    public_ip_address_id                    = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
+    name                          = "ipconfig${count.index}"
+    subnet_id                     = "${var.vnet_subnet_id}"
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
   }
 }

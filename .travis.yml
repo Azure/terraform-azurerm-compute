@@ -1,0 +1,14 @@
+# Build matrix / environment variable are explained on:
+# http://about.travis-ci.org/docs/user/build-configuration/
+# This file can be validated on:
+# http://lint.travis-ci.org/
+
+before_install:
+  - gem update --system
+  - gem --version
+os:
+  - linux
+  - osx
+language: ruby
+rvm:
+  - 2.3

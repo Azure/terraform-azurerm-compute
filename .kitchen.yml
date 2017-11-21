@@ -15,7 +15,7 @@ platforms:
 
 transport:
   name: "ssh"
-  ssh_key: ~/.ssh/tf_id_rsa
+  ssh_key: ~/.ssh/id_rsa
 
 verifier:
   name: "terraform"
