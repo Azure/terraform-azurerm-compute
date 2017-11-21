@@ -2,8 +2,8 @@
 # http://about.travis-ci.org/docs/user/build-configuration/
 # This file can be validated on:
 # http://lint.travis-ci.org/
-dist:trusty
-sudo:true
+dist: trusty
+sudo: true
 language: ruby
 rvm:
   - 2.3
