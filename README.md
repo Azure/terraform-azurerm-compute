@@ -1,3 +1,6 @@
+# terraform-azurerm-compute #
+[![Build Status](https://travis-ci.org/metacpp/terraform-azurerm-compute.svg?branch=master)](https://travis-ci.org/metacpp/terraform-azurerm-compute)
+
 Deploys 1+ Virtual Machines to your provided VNet
 =================================================
 
