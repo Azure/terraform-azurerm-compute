@@ -18,6 +18,7 @@ before_install:
   - sudo mkdir /usr/local/terraform
   - sudo mv terraform /usr/local/terraform
   - rm -f terraform && rm -f terraform_hash && rm -f terraform.zip
+  - export PATH="/usr/local/terraform":$PATH
 install:
   - bundle install
 script:
