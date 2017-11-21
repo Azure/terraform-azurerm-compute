@@ -3,7 +3,7 @@
 # This file can be validated on:
 # http://lint.travis-ci.org/
 dist:trusty
-sudo:required
+sudo:true
 language: ruby
 rvm:
   - 2.3
