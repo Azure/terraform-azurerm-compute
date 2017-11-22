@@ -22,6 +22,9 @@ before_install:
   # Update Gem.
   - gem update --system
   - gem --version
+  # Install GPG for OS X
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install gpg; fi
+install:
   # Import hashicorp's keys.
   - curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import
   # Download the binary and signature files.
@@ -39,7 +42,7 @@ before_install:
   - sudo mv terraform /usr/local/terraform
   - rm -f terraform && rm -f terraform_hash && rm -f terraform.zip
   - export PATH="/usr/local/terraform":$PATH
-install:
+  # Install gems.
   - bundle install
 script:
   - rake build
