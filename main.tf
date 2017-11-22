@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "~> 0.2.2"
+  version = "~> 0.3"
 }
 
 provider "random" {
@@ -29,7 +29,8 @@ resource "azurerm_storage_account" "vm-sa" {
   name = "bootdiag${lower(random_id.vm-sa.hex)}"
   resource_group_name = "${azurerm_resource_group.vm.name}"
   location = "${var.location}"
-  account_type = "${var.boot_diagnostics_sa_type}"
+  account_tier = "${element(split("_", var.boot_diagnostics_sa_type),0)}"
+  account_replication_type = "${element(split("_", var.boot_diagnostics_sa_type),1)}"
   tags = "${var.tags}"
 }
 
@@ -73,11 +74,13 @@ resource "azurerm_virtual_machine" "vm-linux" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+
+  tags = "${var.tags}"
+
   boot_diagnostics {
     enabled = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
-  tags = "${var.tags}"
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
@@ -106,7 +109,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
   }
 
   storage_data_disk {
-    name              = "${format("datadisk-%s-%d", var.vm_hostname, count.index)}"
+    name              = "datadisk-${var.vm_hostname}-${count.index}"
     create_option     = "Empty"
     lun               = 0
     disk_size_gb      = "${var.data_disk_size_gb}"
@@ -128,7 +131,13 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
       key_data = "${file("${var.ssh_key}")}"
     }
   }
+
   tags = "${var.tags}"
+
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+  }
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
@@ -161,7 +170,16 @@ resource "azurerm_virtual_machine" "vm-windows" {
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
+
   tags = "${var.tags}"
+
+  os_profile_windows_config {}
+
+  boot_diagnostics {
+    enabled = "${var.boot_diagnostics}"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+  }
+
 }
 
 resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
@@ -190,7 +208,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
   }
 
   storage_data_disk {
-    name              = "${format("datadisk-%s-%d", var.vm_hostname, count.index)}"
+    name              = "datadisk-${var.vm_hostname}-${count.index}"
     create_option     = "Empty"
     lun               = 0
     disk_size_gb      = "${var.data_disk_size_gb}"
@@ -202,11 +220,15 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
   }
-  boot_diagnostics {
+
+  tags = "${var.tags}"
+
+ os_profile_windows_config {}
+ 
+ boot_diagnostics {
     enabled = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
-  tags = "${var.tags}"
 }
 
 resource "azurerm_availability_set" "vm" {
