@@ -18,7 +18,7 @@ matrix:
 before_install:
   # Update Gem.
   - gem update --system
-  - gem --
+  - gem --version
   # Import hashicorp's keys.
   - curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import
   # Download the binary and signature files.
