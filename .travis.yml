@@ -31,7 +31,7 @@ before_install:
   # Verify the signature file is untampered.
   - gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRAFORM_VERSION}_SHA256SUMS
   # Verify the SHASUM matches the binary.
-  - shasum -a 256 -c terraform_${TERRAFORM_VERSION}_SHA256SUMS
+  - shasum -a 256 -c terraform_${TERRAFORM_VERSION}_SHA256SUMS 2>&1 | grep "${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip:\sOK"
   # Install terraform locally and add into PATH.
   - mv terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip terraform.zip
   - unzip terraform.zip
