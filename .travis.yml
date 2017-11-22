@@ -16,10 +16,21 @@ matrix:
     - os: osx
       env: TERRAFORM_OS_ARCH=darwin_amd64 TERRAFORM_CHECK_SUM=3f05acdf0a9e04ba7e3bda18521feb0b310462dcce62c454854a40519b1695ed
 before_install:
+  # Update Gem.
   - gem update --system
-  - gem --version
-  - curl --output terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip
-  - echo $TERRAFORM_CHECK_SUM terraform.zip | sha256sum -c
+  - gem --
+  # Import hashicorp's keys.
+  - curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import
+  # Download the binary and signature files.
+  - curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip
+  - curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS
+  - curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig
+  # Verify the signature file is untampered.
+  - gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRAFORM_VERSION}_SHA256SUMS
+  # Verify the SHASUM matches the binary.
+  - shasum -a 256 -c terraform_${TERRAFORM_VERSION}_SHA256SUMS
+  # Install terraform locally and add into PATH.
+  - mv terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip terraform.zip
   - unzip terraform.zip
   - sudo mkdir /usr/local/terraform
   - sudo mv terraform /usr/local/terraform
