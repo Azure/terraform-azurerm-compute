@@ -16,8 +16,8 @@ matrix:
   include:
     - os: linux
       env: TERRAFORM_OS_ARCH=linux_amd64
-    - os: osx
-      env: TERRAFORM_OS_ARCH=darwin_amd64
+    # - os: osx
+    #   env: TERRAFORM_OS_ARCH=darwin_amd64
 before_install:
   # Update Gem.
   - gem update --system
