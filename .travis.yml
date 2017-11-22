@@ -19,7 +19,7 @@ before_install:
   - gem update --system
   - gem --version
   - curl --output terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip
-  - echo ${TERRAFORM_CHECK_SUM} terraform.zip | sha256sum -c
+  - echo $TERRAFORM_CHECK_SUM terraform.zip | sha256sum -c
   - unzip terraform.zip
   - sudo mkdir /usr/local/terraform
   - sudo mv terraform /usr/local/terraform
