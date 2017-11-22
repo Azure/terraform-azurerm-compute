@@ -1,13 +1,13 @@
 variable "resource_group_name" {
   description = "The name of the resource group in which the resources will be created"
-  default     = "compute"
+  default     = "terraform-compute"
 }
 
 variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
 
-variable "vnet_subnet_id"{
+variable "vnet_subnet_id" {
   description = "The subnet id of the virtual network where the virtual machines will reside."
 }
 
@@ -26,7 +26,7 @@ variable "ssh_key" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
-variable "remote_port"{
+variable "remote_port" {
   description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
   default = ""
 }
@@ -95,7 +95,7 @@ variable "tags" {
 }
 variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
-  default = "static"
+  default = "dynamic"
 }
 
 variable "nb_public_ip" {
