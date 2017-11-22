@@ -134,7 +134,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
   tags = "${var.tags}"
 
   boot_diagnostics {
-    enabled = "${var.boot_diagnostics}"
+    enabled     = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
 }
@@ -175,10 +175,9 @@ resource "azurerm_virtual_machine" "vm-windows" {
   os_profile_windows_config {}
 
   boot_diagnostics {
-    enabled = "${var.boot_diagnostics}"
+    enabled     = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
-
 }
 
 resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
@@ -220,12 +219,12 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
     admin_password = "${var.admin_password}"
   }
 
- tags = "${var.tags}"
+  tags = "${var.tags}"
 
- os_profile_windows_config {}
- 
- boot_diagnostics {
-    enabled = "${var.boot_diagnostics}"
+  os_profile_windows_config {}
+
+  boot_diagnostics {
+    enabled     = "${var.boot_diagnostics}"
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
 }
