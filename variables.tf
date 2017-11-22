@@ -13,12 +13,12 @@ variable "vnet_subnet_id" {
 
 variable "public_ip_dns" {
   description = "Optional globally unique per datacenter region domain name label to apply to each public ip address. e.g. thisvar.varlocation.cloudapp.azure.com where you specify only thisvar here. This is an array of names which will pair up sequentially to the number of public ips defined in var.nb_public_ip. One name or empty string is required for every public ip. If no public ip is desired, then set this to an array with a single empty string."
-  default = [""]
+  default     = [""]
 }
 
 variable "admin_password" {
   description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure"
-  default = ""
+  default     = ""
 }
 
 variable "ssh_key" {
@@ -28,7 +28,7 @@ variable "ssh_key" {
 
 variable "remote_port" {
   description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
-  default = ""
+  default     = ""
 }
 
 variable "admin_username" {
@@ -53,83 +53,85 @@ variable "nb_instances" {
 
 variable "vm_hostname" {
   description = "local name of the VM"
-  default = "myvm"
+  default     = "myvm"
 }
 
 variable "vm_os_simple" {
   description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
-  default = ""
+  default     = ""
 }
 
 variable "vm_os_publisher" {
   description = "The name of the publisher of the image that you want to deploy.  Not necessary if using vm_os_simple."
-  default = ""
+  default     = ""
 }
 
 variable "vm_os_offer" {
   description = "The name of the offer of the image that you want to deploy. Not necessary if using vm_os_simple."
-  default = ""
+  default     = ""
 }
 
 variable "vm_os_sku" {
   description = "The sku of the image that you want to deploy. Not necessary if using vm_os_simple."
-  default = ""
+  default     = ""
 }
 
 variable "vm_os_version" {
   description = "The version of the image that you want to deploy."
-  default = "latest"
+  default     = "latest"
 }
 
 variable "vm_os_id" {
   description = "The ID of the image that you want to deploy if you are using a custom image."
-  default = ""
+  default     = ""
 }
 
 variable "tags" {
-  type = "map"
+  type        = "map"
   description = "A map of the tags to use on the resources that are deployed with this module."
+
   default = {
     source = "terraform"
   }
 }
+
 variable "public_ip_address_allocation" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
-  default = "dynamic"
+  default     = "dynamic"
 }
 
 variable "nb_public_ip" {
   description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
-  default = "1"
+  default     = "1"
 }
 
 variable "delete_os_disk_on_termination" {
-   description = "Delete datadisk when machine is terminated"
-   default = "false"
+  description = "Delete datadisk when machine is terminated"
+  default     = "false"
 }
 
 variable "data_sa_type" {
   description = "Data Disk Storage Account type"
-  default = "Standard_LRS"
+  default     = "Standard_LRS"
 }
 
 variable "data_disk_size_gb" {
   description = "Storage data disk size size"
-  default = ""
+  default     = ""
 }
 
 variable "data_disk" {
-  type = "string"
+  type        = "string"
   description = "Set to true to add a datadisk."
-  default = "false"
+  default     = "false"
 }
 
 variable "boot_diagnostics" {
   description = "(Optional) Enable or Disable boot diagnostics"
-  default = "false"
+  default     = "false"
 }
 
 variable "boot_diagnostics_sa_type" {
-   description = "(Optional) Storage account type for boot diagnostics"
-   default = "Standard_LRS"
+  description = "(Optional) Storage account type for boot diagnostics"
+  default     = "Standard_LRS"
 }

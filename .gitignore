@@ -26,3 +26,9 @@ tags
 
 # IDE configs
 .idea
+
+# Ruby download package lock file.
+Gemfile.lock
+
+# Test Kitchen files.
+.kitchen

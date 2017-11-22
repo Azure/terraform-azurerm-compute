@@ -4,7 +4,7 @@ variable "vm_os_simple" {
 
 # Definition of the standard OS with "SimpleName" = "publisher,offer,sku"
 variable "standard_os" {
-  default  = {
+  default = {
     "UbuntuServer"  = "Canonical,UbuntuServer,16.04-LTS"
     "WindowsServer" = "MicrosoftWindowsServer,WindowsServer,2016-Datacenter"
     "RHEL"          = "RedHat,RHEL,7.3"
@@ -13,5 +13,5 @@ variable "standard_os" {
     "Debian"        = "credativ,Debian,8"
     "CoreOS"        = "CoreOS,CoreOS,Stable"
     "SLES"          = "SUSE,SLES,12-SP2"
-    }
+  }
 }

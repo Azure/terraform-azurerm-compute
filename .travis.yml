@@ -1,0 +1,48 @@
+# Build matrix / environment variable are explained on:
+# http://about.travis-ci.org/docs/user/build-configuration/
+# This file can be validated on:
+# http://lint.travis-ci.org/
+dist: trusty
+sudo: required
+language: ruby
+rvm:
+  - 2.3
+env:
+  global:
+  - TERRAFORM_VERSION=0.10.8
+  matrix:
+  - TERRAFORM_OS_ARCH=linux_amd64
+matrix:
+  include:
+    - os: linux
+      env: TERRAFORM_OS_ARCH=linux_amd64
+    # - os: osx
+    #   env: TERRAFORM_OS_ARCH=darwin_amd64
+before_install:
+  # Update Gem.
+  - gem update --system
+  - gem --version
+  # Install GPG for OS X
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list gpg > /dev/null 2>&1 || brew install gpg; fi
+install:
+  # Import hashicorp's keys.
+  - curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import
+  # Download the binary and signature files.
+  - curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip
+  - curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS
+  - curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig
+  # Verify the signature file is untampered.
+  - gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRAFORM_VERSION}_SHA256SUMS
+  # Verify the SHASUM matches the binary.
+  - shasum -a 256 -c terraform_${TERRAFORM_VERSION}_SHA256SUMS 2>&1 | grep "${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip:\sOK"
+  # Install terraform locally and add into PATH.
+  - mv terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip terraform.zip
+  - unzip terraform.zip
+  - sudo mkdir /usr/local/terraform
+  - sudo mv terraform /usr/local/terraform
+  - rm -f terraform && rm -f terraform_hash && rm -f terraform.zip
+  - export PATH="/usr/local/terraform":$PATH
+  # Install gems.
+  - bundle install
+script:
+  - rake build
