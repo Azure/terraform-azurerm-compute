@@ -23,7 +23,7 @@ before_install:
   - gem update --system
   - gem --version
   # Install GPG for OS X
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install gpg; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew upgrade gpg; fi
 install:
   # Import hashicorp's keys.
   - curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import
