@@ -1,7 +1,7 @@
 ---
 driver:
   name: "terraform"
-  directory: "test/integration/fixtures"
+  root_module_directory: "test/integration/fixtures"
   parallelism: 1
   variable_files:
     - "test/integration/fixtures/testing.tfvars"
