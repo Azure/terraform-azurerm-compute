@@ -12,4 +12,4 @@ jobs:
     - stage: rake build
       install: true
       script:
-      - docker run -v $PWD:/tf-test/module --rm microsoft/terraform-test rake build
+      - docker run -v $PWD:/tf-test/module --rm microsoft/terraform-test rake -f ../Rakefile build
