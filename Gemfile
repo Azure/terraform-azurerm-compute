@@ -13,6 +13,6 @@ group :test do
   gem 'rspec', '~>3.7.0'
   gem 'test-kitchen', '~>1.16.0'
   git 'https://github.com/Azure/terramodtest.git' do
-    gem 'terramodtest', :tag => 'v0.2.0'
+    gem 'terramodtest', :tag => 'v0.1.0'
   end
 end
