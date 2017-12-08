@@ -15,9 +15,8 @@ env:
 before_install:
   # Bake the image.
   - docker build -t ${IMAGE_NAME} .
+
+script:
   # Run the container.
   - docker run ${IMAGE_NAME} /bin/sh -c  "rake build"
   - docker ps -a
-
-script:
-  - rake build
