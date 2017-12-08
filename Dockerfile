@@ -1,7 +1,9 @@
 FROM microsoft/terraform-test:0.11.1
 
-RUN mkdir /usr/src/terraform-azure-compute
-COPY . /usr/src/terraform-azure-compute
+ENV MODULE_NAME terraform-azurerm-compute
 
-WORKDIR /usr/src/terraform-azure-compute
+RUN mkdir /usr/src/${MODULE_NAME}
+COPY . /usr/src/${MODULE_NAME}
+
+WORKDIR /usr/src/${MODULE_NAME}
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]
