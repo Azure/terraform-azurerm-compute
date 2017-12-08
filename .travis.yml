@@ -4,8 +4,6 @@
 # http://lint.travis-ci.org/
 sudo: required
 
-language: ruby
-
 services:
   - docker
 
