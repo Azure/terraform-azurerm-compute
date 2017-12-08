@@ -9,7 +9,7 @@ rvm:
   - 2.3
 env:
   global:
-  - TERRAFORM_VERSION=0.10.8
+  - TERRAFORM_VERSION=0.11.1
   matrix:
   - TERRAFORM_OS_ARCH=linux_amd64
 matrix:
