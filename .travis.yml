@@ -12,11 +12,12 @@ services:
 env:
   - TERRAFORM_VERSION=0.11.1
   - IMAGE_NAME=azure-compute-module
+
 before_install:
   # Bake the image.
   - docker build -t ${IMAGE_NAME} .
   # Run the container.
-  - docker run ${IMAGE_NAME}
+  - docker run ${IMAGE_NAME} /bin/sh -c  "rake build"
   - docker ps -a
 
 script:
