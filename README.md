@@ -146,14 +146,14 @@ More specifically this provisions:
 
 Test
 -----
-### Configurations
+
+### Configuration Prerequisites
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
-- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)(save the key in ~/.ssh/id_rsa)
+- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) Save the key in ~/.ssh/id_rsa.  This is not required for Windows deployments.
 
+We provide 2 ways to build, run, and test the module on a local development machine:
 
-We provide 2 ways to build, run, and test module on local dev box:
-
-### Native(Mac/Linux)
+### Native (Mac/Linux)
 
 #### Prerequisites
 - [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
@@ -161,10 +161,13 @@ We provide 2 ways to build, run, and test module on local dev box:
 - [Terraform **(~> 0.11.0)**](https://www.terraform.io/downloads.html)
 
 #### Quick Run
+
 We provide simple script to quickly set up module development environment:
+
 ```sh
 $ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
 ```
+
 Then simply run it in local shell:
 ```sh
 $ bundle install
@@ -173,16 +176,41 @@ $ rake e2e
 ```
 
 ### Docker
-We provide Dockerfile to build and run module development environment locally:
+
+We provide a Dockerfile to build a new image based on the Docker hub image which adds some additional tools and ruby packages (see Custom Image section).  Alternatively, use only the Docker hub image (see Dockerhub Image section).
+
 #### Prerequisites
+
 - [Docker](https://www.docker.com/community-edition#/download)
-#### Quick Run
+
+#### Custom Image
+
+This builds the custom image:
+
 ```sh
 $ docker build -t azure-compute .
-$ docker run -it azure-compute /bin/sh
-$ rake build
-$ rake e2e
 ```
+Setup the environment variable which specifies the root path of the module code on the local machine.
+
+```shell
+export MODULE_PATH=/user/me/source/Azure/terraform-azurerm-compute
+```
+
+This runs the build tests:
+
+```sh
+docker run -v ~/.ssh:/root/.ssh/ -v $MODULE_PATH/logs:/tf-test/module/.kitchen -v $MODULE_PATH:/tf-test/module -e ARM_CLIENT_ID -e ARM_TENANT_ID -e ARM_SUBSCRIPTION_ID -e ARM_CLIENT_SECRET -e ARM_TEST_LOCATION -e ARM_TEST_LOCATION_ALT --rm azure-compute rake -f ../Rakefile build
+```
+
+This runs the end to end tests:
+
+```sh
+docker run -v ~/.ssh:/root/.ssh/ -v $MODULE_PATH/logs:/tf-test/module/.kitchen -v $MODULE_PATH:/tf-test/module -e ARM_CLIENT_ID -e ARM_TENANT_ID -e ARM_SUBSCRIPTION_ID -e ARM_CLIENT_SECRET -e ARM_TEST_LOCATION -e ARM_TEST_LOCATION_ALT --rm azure-compute rake -f ../Rakefile e2e
+```
+
+#### Dockerhub Image
+
+Please [see these instructions](https://github.com/Azure/terraform-test) on how to use this image for testing.
 
 Authors
 =======
