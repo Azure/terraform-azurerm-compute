@@ -43,6 +43,8 @@ Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM
   module "network" {
     source              = "Azure/network/azurerm"
     location            = "West US 2"
+    allow_rdp_traffic   = "true"
+    allow_ssh_traffic   = "true"
     resource_group_name = "terraform-compute"
   }
 
@@ -96,7 +98,6 @@ More specifically this provisions:
     data_disk           = "true"
     data_disk_size_gb   = "64"
     data_sa_type        = "Premium_LRS"
-    
     tags                = {
                             environment = "dev"
                             costcenter  = "it"
@@ -123,6 +124,8 @@ More specifically this provisions:
   module "network" {
     source = "Azure/network/azurerm"
     location = "westus2"
+    allow_rdp_traffic   = "true"
+    allow_ssh_traffic   = "true"
     resource_group_name = "terraform-advancedvms"
   }
 
@@ -146,14 +149,14 @@ More specifically this provisions:
 
 Test
 -----
+
 ### Configurations
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
-- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)(save the key in ~/.ssh/id_rsa)
+- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) Save the key in ~/.ssh/id_rsa.  This is not required for Windows deployments.
 
+We provide 2 ways to build, run, and test the module on a local development machine.  [Native (Mac/Linux)](#native-maclinux) or [Docker](#docker).
 
-We provide 2 ways to build, run, and test module on local dev box:
-
-### Native(Mac/Linux)
+### Native (Mac/Linux)
 
 #### Prerequisites
 - [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
@@ -161,10 +164,13 @@ We provide 2 ways to build, run, and test module on local dev box:
 - [Terraform **(~> 0.11.0)**](https://www.terraform.io/downloads.html)
 
 #### Quick Run
+
 We provide simple script to quickly set up module development environment:
+
 ```sh
 $ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
 ```
+
 Then simply run it in local shell:
 ```sh
 $ bundle install
@@ -173,15 +179,31 @@ $ rake e2e
 ```
 
 ### Docker
-We provide Dockerfile to build and run module development environment locally:
+
+We provide a Dockerfile to build a new image based `FROM` the `microsoft/terraform-test` Docker hub image which adds additional tools / packages specific for this module (see Custom Image section).  Alternatively use only the `microsoft/terraform-test` Docker hub image [by using these instructions](https://github.com/Azure/terraform-test).
+
 #### Prerequisites
+
 - [Docker](https://www.docker.com/community-edition#/download)
-#### Quick Run
+
+#### Custom Image
+
+This builds the custom image:
+
 ```sh
-$ docker build -t azure-compute .
-$ docker run -it azure-compute /bin/sh
-$ rake build
-$ rake e2e
+$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
+```
+
+This runs the build and unit tests:
+
+```sh
+$ docker run --rm azure-compute /bin/bash -c "rake build"
+```
+
+This runs the end to end tests:
+
+```sh
+$ docker run -v ~/.ssh:/root/.ssh/ --rm azure-compute /bin/bash -c "rake e2e"
 ```
 
 Authors
