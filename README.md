@@ -154,7 +154,7 @@ Test
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
 - [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) Save the key in ~/.ssh/id_rsa.  This is not required for Windows deployments.
 
-We provide 2 ways to build, run, and test the module on a local development machine:
+We provide 2 ways to build, run, and test the module on a local development machine.  [Native (Mac/Linux)](#native-maclinux) or [Docker](#docker).
 
 ### Native (Mac/Linux)
 
@@ -180,7 +180,7 @@ $ rake e2e
 
 ### Docker
 
-We provide a Dockerfile to build a new image based on the Docker hub image which adds some additional tools and ruby packages (see Custom Image section).  Alternatively, use only the Docker hub image (see Dockerhub Image section).
+We provide a Dockerfile to build a new image based `FROM` the `microsoft/terraform-test` Docker hub image which adds additional tools / packages specific for this module (see Custom Image section).  Alternatively use only the `microsoft/terraform-test` Docker hub image [by using these instructions](https://github.com/Azure/terraform-test).
 
 #### Prerequisites
 
@@ -210,10 +210,6 @@ This runs the end to end tests:
 ```sh
 docker run -v ~/.ssh:/root/.ssh/ -v $MODULE_PATH/logs:/tf-test/module/.kitchen -v $MODULE_PATH:/tf-test/module -e ARM_CLIENT_ID -e ARM_TENANT_ID -e ARM_SUBSCRIPTION_ID -e ARM_CLIENT_SECRET -e ARM_TEST_LOCATION -e ARM_TEST_LOCATION_ALT --rm azure-compute rake -f ../Rakefile e2e
 ```
-
-#### Dockerhub Image
-
-Please [see these instructions](https://github.com/Azure/terraform-test) on how to use this image for testing.
 
 Authors
 =======
