@@ -144,7 +144,7 @@ More specifically this provisions:
 
 ```
 
-Quick Steps
+Test Module
 -----
 ### Configurations
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
