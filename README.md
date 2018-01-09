@@ -43,6 +43,8 @@ Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM
   module "network" {
     source              = "Azure/network/azurerm"
     location            = "West US 2"
+    allow_rdp_traffic   = "true"
+    allow_ssh_traffic   = "true"
     resource_group_name = "terraform-compute"
   }
 
@@ -96,7 +98,6 @@ More specifically this provisions:
     data_disk           = "true"
     data_disk_size_gb   = "64"
     data_sa_type        = "Premium_LRS"
-    
     tags                = {
                             environment = "dev"
                             costcenter  = "it"
@@ -123,6 +124,8 @@ More specifically this provisions:
   module "network" {
     source = "Azure/network/azurerm"
     location = "westus2"
+    allow_rdp_traffic   = "true"
+    allow_ssh_traffic   = "true"
     resource_group_name = "terraform-advancedvms"
   }
 
