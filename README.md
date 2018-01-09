@@ -144,37 +144,44 @@ More specifically this provisions:
 
 ```
 
-Run Test
+Quick Steps
 -----
-### Environment
-#### Tools and SDKs
-- [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
-- [Bundler **(~> 1.15)**](https://bundler.io/)
-- [Terraform **(~> 0.11.0)**](https://www.terraform.io/downloads.html)
-#### Configurations
+### Configurations
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
 - [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)(save the key in ~/.ssh/id_rsa)
 
-### Ruby Geek
-We provide Gist to setup module development environment with simple command:
+
+We provide 2 ways to build, run, and test module on local dev box:
+
+### Native(Mac/Linux)
+
+#### Prerequisites
+- [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
+- [Bundler **(~> 1.15)**](https://bundler.io/)
+- [Terraform **(~> 0.11.0)**](https://www.terraform.io/downloads.html)
+
+#### Quick Run
+We provide simple script to quickly set up module development environment:
 ```sh
-$ curl -sSL https://gist.githubusercontent.com/metacpp/3dc40a9e9b5ede5771267358b9a95a30/raw/132ca24bcafd3edd68f8db2af0a15ff200480767/terra-mod-setup.sh | sudo bash
+$ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
 ```
-#### Run
+Then simply run it in local shell:
 ```sh
 $ bundle install
 $ rake build
 $ rake e2e
 ```
 
-### Docker Geek
+### Docker
 We provide Dockerfile to build and run module development environment locally:
-#### Tool
+#### Prerequisites
 - [Docker](https://www.docker.com/community-edition#/download)
-#### Run
+#### Quick Run
 ```sh
 $ docker build -t azure-compute .
-$ docker run azure-compute /bin/sh -c  "rake build"
+$ docker run -it azure-compute /bin/sh
+$ rake build
+$ rake e2e
 ```
 
 Authors
