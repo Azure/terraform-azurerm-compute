@@ -150,7 +150,7 @@ More specifically this provisions:
 Test
 -----
 
-### Configuration Prerequisites
+### Configurations
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
 - [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) Save the key in ~/.ssh/id_rsa.  This is not required for Windows deployments.
 
@@ -191,24 +191,19 @@ We provide a Dockerfile to build a new image based `FROM` the `microsoft/terrafo
 This builds the custom image:
 
 ```sh
-$ docker build -t azure-compute .
-```
-Setup the environment variable which specifies the root path of the module code on the local machine.
-
-```shell
-export MODULE_PATH=/user/me/source/Azure/terraform-azurerm-compute
+$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
 ```
 
-This runs the build tests:
+This runs the build and unit tests:
 
 ```sh
-docker run -v ~/.ssh:/root/.ssh/ -v $MODULE_PATH/logs:/tf-test/module/.kitchen -v $MODULE_PATH:/tf-test/module -e ARM_CLIENT_ID -e ARM_TENANT_ID -e ARM_SUBSCRIPTION_ID -e ARM_CLIENT_SECRET -e ARM_TEST_LOCATION -e ARM_TEST_LOCATION_ALT --rm azure-compute rake -f ../Rakefile build
+$ docker run --rm azure-compute /bin/bash -c "rake build"
 ```
 
 This runs the end to end tests:
 
 ```sh
-docker run -v ~/.ssh:/root/.ssh/ -v $MODULE_PATH/logs:/tf-test/module/.kitchen -v $MODULE_PATH:/tf-test/module -e ARM_CLIENT_ID -e ARM_TENANT_ID -e ARM_SUBSCRIPTION_ID -e ARM_CLIENT_SECRET -e ARM_TEST_LOCATION -e ARM_TEST_LOCATION_ALT --rm azure-compute rake -f ../Rakefile e2e
+$ docker run -v ~/.ssh:/root/.ssh/ --rm azure-compute /bin/bash -c "rake e2e"
 ```
 
 Authors
