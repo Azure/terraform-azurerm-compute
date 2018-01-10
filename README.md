@@ -191,7 +191,7 @@ We provide a Dockerfile to build a new image based `FROM` the `microsoft/terrafo
 This builds the custom image:
 
 ```sh
-$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
+$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
 ```
 
 This runs the build and unit tests:
