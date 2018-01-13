@@ -20,5 +20,5 @@ jobs:
     - stage: rake build
       install: true
       script:
-      - docker build -t ${IMAGE_NAME} .
+      - docker build --build-arg BUILD_TERRAFORM_VERSION=${TERRAFORM_VERSION} -t ${IMAGE_NAME} .
       - docker run ${IMAGE_NAME} rake build
