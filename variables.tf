@@ -61,29 +61,34 @@ variable "vm_os_simple" {
   default     = ""
 }
 
+variable "vm_os_id" {
+  description = "The resource ID of the image that you want to deploy if you are using a custom image.Note, need to provide is_windows_image = true for windows custom images."
+  default     = ""
+}
+
+variable "is_windows_image" {
+  description = "Boolean flag to notify when the custom image is windows based. Only used in conjunction with vm_os_id"
+  default     = false
+}
+
 variable "vm_os_publisher" {
-  description = "The name of the publisher of the image that you want to deploy.  Not necessary if using vm_os_simple."
+  description = "The name of the publisher of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   default     = ""
 }
 
 variable "vm_os_offer" {
-  description = "The name of the offer of the image that you want to deploy. Not necessary if using vm_os_simple."
+  description = "The name of the offer of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   default     = ""
 }
 
 variable "vm_os_sku" {
-  description = "The sku of the image that you want to deploy. Not necessary if using vm_os_simple."
+  description = "The sku of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   default     = ""
 }
 
 variable "vm_os_version" {
-  description = "The version of the image that you want to deploy."
+  description = "The version of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   default     = "latest"
-}
-
-variable "vm_os_id" {
-  description = "The ID of the image that you want to deploy if you are using a custom image."
-  default     = ""
 }
 
 variable "tags" {

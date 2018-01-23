@@ -47,10 +47,10 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
   storage_image_reference {
     id        = "${var.vm_os_id}"
-    publisher = "${coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher)}"
-    offer     = "${coalesce(var.vm_os_offer, module.os.calculated_value_os_offer)}"
-    sku       = "${coalesce(var.vm_os_sku, module.os.calculated_value_os_sku)}"
-    version   = "${var.vm_os_version}"
+    publisher = "${var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""}"
+    offer     = "${var.vm_os_id == "" ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""}"
+    sku       = "${var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""}"
+    version   = "${var.vm_os_id == "" ? var.vm_os_version : ""}"
   }
 
   storage_os_disk {
@@ -95,10 +95,10 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
 
   storage_image_reference {
     id        = "${var.vm_os_id}"
-    publisher = "${coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher)}"
-    offer     = "${coalesce(var.vm_os_offer, module.os.calculated_value_os_offer)}"
-    sku       = "${coalesce(var.vm_os_sku, module.os.calculated_value_os_sku)}"
-    version   = "${var.vm_os_version}"
+    publisher = "${var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""}"
+    offer     = "${var.vm_os_id == "" ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""}"
+    sku       = "${var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""}"
+    version   = "${var.vm_os_id == "" ? var.vm_os_version : ""}"
   }
 
   storage_os_disk {
@@ -140,7 +140,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
-  count                         = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") && var.data_disk == "false" ? var.nb_instances : 0}"
+  count                         = "${(contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") || (var.vm_os_id != "" && var.is_windows_image == true)) && var.data_disk == "false" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
@@ -151,10 +151,10 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
   storage_image_reference {
     id        = "${var.vm_os_id}"
-    publisher = "${coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher)}"
-    offer     = "${coalesce(var.vm_os_offer, module.os.calculated_value_os_offer)}"
-    sku       = "${coalesce(var.vm_os_sku, module.os.calculated_value_os_sku)}"
-    version   = "${var.vm_os_version}"
+    publisher = "${var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""}"
+    offer     = "${var.vm_os_id == "" ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""}"
+    sku       = "${var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""}"
+    version   = "${var.vm_os_id == "" ? var.vm_os_version : ""}"
   }
 
   storage_os_disk {
@@ -181,7 +181,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
 }
 
 resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
-  count                         = "${contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") && var.data_disk == "true" ? var.nb_instances : 0}"
+  count                         = "${(contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") || (var.vm_os_id != "" && var.is_windows_image == true)) && var.data_disk == "true" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
@@ -192,10 +192,10 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 
   storage_image_reference {
     id        = "${var.vm_os_id}"
-    publisher = "${coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher)}"
-    offer     = "${coalesce(var.vm_os_offer, module.os.calculated_value_os_offer)}"
-    sku       = "${coalesce(var.vm_os_sku, module.os.calculated_value_os_sku)}"
-    version   = "${var.vm_os_version}"
+    publisher = "${var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""}"
+    offer     = "${var.vm_os_id == "" ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""}"
+    sku       = "${var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""}"
+    version   = "${var.vm_os_id == "" ? var.vm_os_version : ""}"
   }
 
   storage_os_disk {
