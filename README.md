@@ -42,7 +42,10 @@ Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM
 
   module "network" {
     source              = "Azure/network/azurerm"
+    version             = "~> 1.1.1"
     location            = "West US 2"
+    allow_rdp_traffic   = "true"
+    allow_ssh_traffic   = "true"
     resource_group_name = "terraform-compute"
   }
 
@@ -120,8 +123,11 @@ More specifically this provisions:
   }
 
   module "network" {
-    source = "Azure/network/azurerm"
-    location = "westus2"
+    source              = "Azure/network/azurerm"
+    version             = "~> 1.1.1"
+    location            = "westus2"
+    allow_rdp_traffic   = "true"
+    allow_ssh_traffic   = "true"
     resource_group_name = "terraform-advancedvms"
   }
 
