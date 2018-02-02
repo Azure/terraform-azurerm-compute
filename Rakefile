@@ -26,29 +26,17 @@ namespace :static do
 end
 
 namespace :integration do
-  task :converge do 
-    exit_code = `kitchen converge`
-    if exit_code != 0
-      raise "ERROR: Test kitchen converge failed! #{exit_code}\n"
-    end
+  task :converge do
+    kitchen_converge
   end
   task :verify do
-    exit_code = `kitchen verify`
-    if exit_code != 0
-      raise "ERROR: Test kitchen verify failed! #{exit_code}\n"
-    end
+    kitchen_verify
   end
   task :test do
-    exit_code = `kitchen test`
-    if exit_code != 0
-      raise "ERROR: Test kitchen test failed! #{exit_code}\n"
-    end
+    kitchen_test
   end
   task :destroy do
-    exit_code = `kitchen destroy`
-    if exit_code != 0
-      raise "ERROR: Test kitchen destroy failed! #{exit_code}\n"
-    end
+    kitchen_destroy
   end
 end
 
