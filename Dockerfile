@@ -23,5 +23,7 @@ ENV ARM_TEST_LOCATION_ALT=${BUILD_ARM_TEST_LOCATION_ALT}
 RUN mkdir /usr/src/${MODULE_NAME}
 COPY . /usr/src/${MODULE_NAME}
 
+RUN ssh-keygen -q -t rsa -b 4096 -f $HOME/.ssh/id_rsa
+
 WORKDIR /usr/src/${MODULE_NAME}
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]
