@@ -274,9 +274,10 @@ resource "azurerm_network_interface" "vm" {
   network_security_group_id = "${azurerm_network_security_group.vm.id}"
 
   ip_configuration {
-    name                          = "ipconfig${count.index}"
-    subnet_id                     = "${var.vnet_subnet_id}"
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
+    name                                    = "ipconfig${count.index}"
+    subnet_id                               = "${var.vnet_subnet_id}"
+    private_ip_address_allocation           = "Dynamic"
+    public_ip_address_id                    = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
+    load_balancer_backend_address_pools_ids = ["${var.lb_backend_pool_ids}"]
   }
 }

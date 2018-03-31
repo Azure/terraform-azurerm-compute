@@ -140,3 +140,9 @@ variable "boot_diagnostics_sa_type" {
   description = "(Optional) Storage account type for boot diagnostics"
   default     = "Standard_LRS"
 }
+
+variable "lb_backend_pool_ids" {
+  type        = "list"
+  description = "(Optional) Backend address pool ids of the loadbalancer "
+  default     = []
+}
