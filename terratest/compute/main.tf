@@ -12,7 +12,7 @@ module "ubuntuservers" {
     admin_username                  = "${var.admin_username}"
     admin_password                  = "${var.admin_password}"
     vm_os_simple                    = "${var.vm_os_simple_1}"
-    public_ip_dns                   = ["ubuntusimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
+    public_ip_dns                   = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
     vnet_subnet_id                  = "${module.network.vnet_subnets[0]}"
     ssh_key                         = "${var.ssh_key}"
     resource_group_name             = "${var.resource_group_name}"
@@ -22,7 +22,7 @@ module "ubuntuservers" {
 module "debianservers" {
     source                          = "Azure/compute/azurerm"
     location                        = "${var.location}"
-    vm_hostname                     = "mylinvm" // line can be removed if only one VM module per resource group
+    vm_hostname                     = "mylinvm"
     admin_username                  = "${var.admin_username}"
     admin_password                  = "${var.admin_password}"
     vm_os_simple                    = "${var.vm_os_simple_2}"
