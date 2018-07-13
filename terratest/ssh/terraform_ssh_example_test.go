@@ -64,7 +64,7 @@ func testSSHToPublicHost(t *testing.T, terraformOptions *terraform.Options, addr
 	publicIP := terraform.Output(t, terraformOptions, address)
 
 	// Read private key from given file
-	buffer, err := ioutil.ReadFile(os.Args[2])
+	buffer, err := ioutil.ReadFile(os.Args[len(os.Args)-1])
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,7 +74,7 @@ func testSSHToPublicHost(t *testing.T, terraformOptions *terraform.Options, addr
 	publicHost := ssh.Host{
 		Hostname:    publicIP,
 		SshKeyPair:  &keyPair,
-		SshUserName: os.Args[1],
+		SshUserName: os.Args[len(os.Args)-2],
 	}
 
 	// It can take a minute or so for the virtual machine to boot up, so retry a few times
