@@ -35,7 +35,7 @@ RUN mv terraform /usr/local/bin
 
 # Install required go packages
 ENV GOPATH $HOME/terratest/ssh
-ENV PATH /usr/local/go/bin:/usr/local/bin:/usr/bin
+ENV PATH /usr/local/go/bin:/usr/local/bin:/usr/bin:$PATH
 RUN /bin/bash -c "go get github.com/gruntwork-io/terratest/modules/ssh"
 RUN /bin/bash -c "go get github.com/gruntwork-io/terratest/modules/retry"
 RUN /bin/bash -c "go get github.com/gruntwork-io/terratest/modules/terraform"

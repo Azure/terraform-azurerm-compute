@@ -20,7 +20,5 @@ jobs:
     - stage: rake full
       install: true
       script:
-      - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash ./travis/run_on_pull_requests; fi'
-      - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./travis/run_on_non_pull_requests; fi'
       - docker build --build-arg BUILD_TERRAFORM_VERSION=${TERRAFORM_VERSION} --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t ${IMAGE_NAME} . 
       - docker run ${IMAGE_NAME} rake full
