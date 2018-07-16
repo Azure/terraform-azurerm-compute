@@ -1,5 +1,5 @@
 # Pull the base image with given version.
-ARG BUILD_TERRAFORM_VERSION="0.11.1"
+ARG BUILD_TERRAFORM_VERSION="0.11.3"
 FROM microsoft/terraform-test:${BUILD_TERRAFORM_VERSION}
 
 ARG MODULE_NAME="terraform-azurerm-compute"
@@ -27,11 +27,10 @@ WORKDIR /usr/src/${MODULE_NAME}
 RUN ssh-keygen -q -t rsa -b 4096 -f $HOME/.ssh/id_rsa
 
 # Install new version of terraform and golang
-RUN apt-get install -y unzip >/dev/null
 RUN wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip >/dev/null 2>&1
 RUN unzip terraform_0.11.7_linux_amd64.zip >/dev/null
-RUN wget https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz >/dev/null 2>&1
-RUN tar -zxvf go1.9.2.linux-amd64.tar.gz -C /usr/local/ >/dev/null
+RUN wget https://storage.googleapis.com/golang/go1.10.3.linux-amd64.tar.gz >/dev/null 2>&1
+RUN tar -zxvf go1.10.3.linux-amd64.tar.gz -C /usr/local/ >/dev/null
 RUN mv terraform /usr/local/bin
 
 # Install required go packages
