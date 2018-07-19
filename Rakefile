@@ -20,7 +20,7 @@ end
 
 namespace :integration do
   task :test do
-    success = system ("go test -v terratest/ssh/terraform_ssh_example_test.go -timeout 20m -args azureuser ~/.ssh/id_rsa")
+    success = system ("go test -v ./test/compute/ -timeout 20m -args azureuser ~/.ssh/id_rsa")
     if not success 
       raise "ERROR: Go test failed!\n".red
     end
