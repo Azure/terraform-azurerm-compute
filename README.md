@@ -162,7 +162,7 @@ We provide 2 ways to build, run, and test the module on a local development mach
 
 - [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
 - [Bundler **(~> 1.15)**](https://bundler.io/)
-- [Terraform **(~> 0.11.0)**](https://www.terraform.io/downloads.html)
+- [Terraform **(~> 0.11.7)**](https://www.terraform.io/downloads.html)
 - [Golang **(~> 1.10.3)**](https://golang.org/dl/)
 
 #### Quick Run
@@ -171,11 +171,14 @@ We provide simple script to quickly set up module development environment:
 
 ```sh
 curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
+export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/versions/${RUBY_VERSION}/bin:/usr/local/go/bin:$PATH"
+export GOPATH="$HOME/go"
 ```
 
 Then simply run it in local shell:
 
 ```sh
+cd /your/work/directory
 bundle install
 rake build
 rake e2e

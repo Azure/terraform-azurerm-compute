@@ -2,13 +2,13 @@
 
 Use terraform azure module "compute" to deploy one or more virtual machines on azure. Then use terratest to ssh to virtual machines.
 
-## Compute
+## Fixture
 
 These terraform files enable users to deploy one or more virtual machines on azure, as well as virtual network. To use these files, you should provide path to ssh public key file in [fixture/terraform.tfvars](/test/fixture/terraform.tfvars). You can just test the infrastructure code manually without terratest.
 
-## SSH
+## Compute
 
-This folder includes three files, but two of them are not used. Most importantly, [compute/terraform_ssh_example_test.go](/test/compute/terraform_ssh_example_test.go) is the main go test file which represents the whole process of testing the module. First, it uses terraform compute module to deploy virtual machines on azure. After that, it calls functions from terratest ssh section, so as to ssh to these virtual machines and check whether they are running properly. Next, everything will be cleaned up after validation. Of course you can write your own test code, or even take advantage of deprecated methods. Finally, in order to make this program work, you should provide your own ssh private key.
+This folder includes only one file. [compute/terraform_ssh_example_test.go](/test/compute/terraform_ssh_example_test.go) is the go test file which represents the whole process of testing the module. First, it uses terraform compute module to deploy virtual machines on azure. After that, it calls functions from terratest ssh section, so as to ssh to these virtual machines and check whether they are running properly. Next, everything will be cleaned up after validation. Of course you can write your own test code, or even take advantage of deprecated methods. Finally, in order to make this program work, you should provide your own ssh private key.
 
 ## Running this module manually
 
@@ -41,6 +41,10 @@ This folder includes three files, but two of them are not used. Most importantly
 1. Direct to folder [compute](/test/compute) and make sure all packages are installed, such as executing `go get github.com/gruntwork-io/terratest/modules/terraform`, etc.
 
 1. Run `go test -timeout timelimit -args username path/to/your/private/key`. For example, `go test -timeout 20m -args azureuser id_rsa`. Be aware that `-timeout` is set to 10 minutes by default and can be omitted, but it should be defined before `-args`.
+
+## Postscript
+
+This is a universal manual which is written based on official terratest document. To test the compute module using Mac or Linux more conveniently or to take advantage of docker, you may refer to [README.md/Test](#test).
 
 ## Reference
 
