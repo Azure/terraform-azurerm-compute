@@ -170,18 +170,39 @@ We provide 2 ways to build, run, and test the module on a local development mach
 We provide simple script to quickly set up module development environment:
 
 ```sh
-curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
-export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/versions/${RUBY_VERSION}/bin:/usr/local/go/bin:$PATH"
-export GOPATH="$HOME/go"
+$ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
+$ export GOPATH="$HOME/go"
+$ export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/versions/${RUBY_VERSION}/bin:/usr/local/go/bin:$GOPATH/bin:$PATH"
 ```
 
-Then simply run it in local shell:
+Then install go packages:
 
 ```sh
-cd /your/work/directory
-bundle install
-rake build
-rake e2e
+$ go get github.com/gruntwork-io/terratest/modules/ssh
+$ go get github.com/gruntwork-io/terratest/modules/retry
+$ go get github.com/gruntwork-io/terratest/modules/terraform
+$ go get github.com/gruntwork-io/terratest/modules/test-structure
+$ cd /your/directory/for/this/module
+```
+
+Alternatively, you may use dep ensure instead of installing go packages manually:
+
+```sh
+$ mkdir $GOPATH $GOPATH/bin $GOPATH/src
+$ curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+$ cp -r /your/directory/for/this/module $GOPATH/src
+$ cd $GOPATH/src/{directory_name}/test/compute
+$ dep init
+$ dep ensure
+$ cd ../..
+```
+
+Finally simply run it in local shell:
+
+```sh
+$ bundle install
+$ rake build
+$ rake e2e
 ```
 
 ### Docker
@@ -197,25 +218,25 @@ We provide a Dockerfile to build a new image based `FROM` the `microsoft/terrafo
 This builds the custom image:
 
 ```sh
-docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
+$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
 ```
 
 This runs the build and unit tests:
 
 ```sh
-docker run --rm azure-compute /bin/bash -c "bundle install && rake build"
+$ docker run --rm azure-compute /bin/bash -c "bundle install && rake build"
 ```
 
 This runs the end to end tests:
 
 ```sh
-docker run --rm azure-compute /bin/bash -c "bundle install && rake e2e"
+$ docker run --rm azure-compute /bin/bash -c "bundle install && rake e2e"
 ```
 
 This runs the full tests:
 
 ```sh
-docker run azure-compute rake full
+$ docker run --rm azure-compute /bin/bash -c "bundle install && rake full"
 ```
 
 ## Authors
