@@ -171,28 +171,12 @@ We provide simple script to quickly set up module development environment:
 
 ```sh
 $ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
-$ export GOPATH="$HOME/go"
-$ export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/versions/${RUBY_VERSION}/bin:/usr/local/go/bin:$GOPATH/bin:$PATH"
 ```
 
-Then install go packages:
+Then use dep ensure to install go packages:
 
 ```sh
-$ go get github.com/gruntwork-io/terratest/modules/ssh
-$ go get github.com/gruntwork-io/terratest/modules/retry
-$ go get github.com/gruntwork-io/terratest/modules/terraform
-$ go get github.com/gruntwork-io/terratest/modules/test-structure
-$ cd /your/directory/for/this/module
-```
-
-Alternatively, you may use dep ensure instead of installing go packages manually:
-
-```sh
-$ mkdir $GOPATH $GOPATH/bin $GOPATH/src
-$ curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-$ cp -r /your/directory/for/this/module $GOPATH/src
 $ cd $GOPATH/src/{directory_name}/test/compute
-$ dep init
 $ dep ensure
 $ cd ../..
 ```
