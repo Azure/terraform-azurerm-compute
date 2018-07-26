@@ -33,6 +33,5 @@ RUN ssh-keygen -q -t rsa -b 4096 -f $HOME/.ssh/id_rsa
 ENV GOPATH /go
 ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 RUN /bin/bash -c "curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh"
-RUN /bin/bash -c "dep ensure"
 
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]

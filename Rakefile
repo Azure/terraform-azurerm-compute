@@ -19,6 +19,12 @@ namespace :static do
 end
 
 namespace :integration do
+  task :ensure do
+    success = system ("dep ensure")
+    if not success 
+      raise "ERROR: Dep ensure failed!\n".red
+    end
+  end
   task :test do
     success = system ("go test -v ./test/ -timeout 20m -args azureuser ~/.ssh/id_rsa")
     if not success 
@@ -37,7 +43,7 @@ task :build => [ 'prereqs', 'validate' ]
 
 task :unit => []
 
-task :e2e => [ 'integration:test' ]
+task :e2e => [ 'integration:ensure', 'integration:test' ]
 
 task :default => [ 'build' ]
 
