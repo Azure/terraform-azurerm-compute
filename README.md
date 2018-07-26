@@ -193,7 +193,7 @@ $ rake e2e
 
 We provide a Dockerfile to build a new image based `FROM` the `microsoft/terraform-test` Docker hub image which adds additional tools / packages specific for this module (see Custom Image section).  Alternatively use only the `microsoft/terraform-test` Docker hub image [by using these instructions](https://github.com/Azure/terraform-test).
 
-#### Prerequisites (Docker)
+#### Prerequisites
 
 - [Docker](https://www.docker.com/community-edition#/download)
 

@@ -17,7 +17,7 @@ import (
 func TestTerraformSshExample(t *testing.T) {
   t.Parallel()
 
-  exampleFolder := "../fixture"
+  exampleFolder := "./fixture"
 
   // At the end of the test, run `terraform destroy` to clean up any resources that were created
   defer test_structure.RunTestStage(t, "teardown", func() {
