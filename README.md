@@ -1,6 +1,6 @@
 # terraform-azurerm-compute
 
-[![Build Status](https://travis-ci.org/foreverXZC/terraform-azurerm-compute.svg?branch=master)](https://travis-ci.org/foreverXZC/terraform-azurerm-compute)
+[![Build Status](https://travis-ci.org/Azure/terraform-azurerm-compute.svg?branch=master)](https://travis-ci.org/Azure/terraform-azurerm-compute)
 
 ## Deploys 1+ Virtual Machines to your provided VNet
 
@@ -176,9 +176,8 @@ $ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env
 Then use dep ensure to install go packages:
 
 ```sh
-$ cd $GOPATH/src/{directory_name}/test/compute
+$ cd $GOPATH/src/{directory_name}/
 $ dep ensure
-$ cd ../..
 ```
 
 Finally simply run it in local shell:
