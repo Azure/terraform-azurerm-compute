@@ -173,16 +173,10 @@ We provide simple script to quickly set up module development environment:
 $ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env_setup.sh | sudo bash
 ```
 
-Then use dep ensure to install go packages:
+Then simply run it in local shell:
 
 ```sh
 $ cd $GOPATH/src/{directory_name}/
-$ dep ensure
-```
-
-Finally simply run it in local shell:
-
-```sh
 $ bundle install
 $ rake build
 $ rake e2e
