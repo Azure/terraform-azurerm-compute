@@ -1,8 +1,8 @@
-# terraform-azurerm-compute #
+# terraform-azurerm-compute
+
 [![Build Status](https://travis-ci.org/Azure/terraform-azurerm-compute.svg?branch=master)](https://travis-ci.org/Azure/terraform-azurerm-compute)
 
-Deploys 1+ Virtual Machines to your provided VNet
-=================================================
+## Deploys 1+ Virtual Machines to your provided VNet
 
 This Terraform module deploys Virtual Machines in Azure with the following characteristics:
 
@@ -14,8 +14,7 @@ This Terraform module deploys Virtual Machines in Azure with the following chara
 
 > Note: Terraform module registry is incorrect in the number of required parameters since it only deems required based on variables with non-existent values.  The actual minimum required variables depends on the configuration and is specified below in the usage.
 
-Simple Usage
------
+## Simple Usage
 
 This contains the bare minimum options to be configured for the VM to be provisioned.  The entire code block provisions a Windows and a Linux VM, but feel free to delete one or the other and corresponding outputs. The outputs are also not necessary to provision, but included to make it convenient to know the address to connect to the VMs after provisioning completes.
 
@@ -58,8 +57,7 @@ Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM
   }
 ```
 
-Advanced Usage
------
+## Advanced Usage
 
 The following example illustrates some of the configuration options available to deploy a virtual machine. Feel free to remove the Linux or Windows modules and corresponding outputs.
 
@@ -81,7 +79,7 @@ More specifically this provisions:
 - Two Public IP addresses (one for each VM)
 - Opens up port 3389 for RDP access using the password as shown
 
-```hcl 
+```hcl
   module "linuxservers" {
     source              = "Azure/compute/azurerm"
     resource_group_name = "terraform-advancedvms"
@@ -149,10 +147,10 @@ More specifically this provisions:
 
 ```
 
-Test
------
+## Test
 
 ### Configurations
+
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
 - [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) Save the key in ~/.ssh/id_rsa.  This is not required for Windows deployments.
 
@@ -161,9 +159,11 @@ We provide 2 ways to build, run, and test the module on a local development mach
 ### Native (Mac/Linux)
 
 #### Prerequisites
+
 - [Ruby **(~> 2.3)**](https://www.ruby-lang.org/en/downloads/)
 - [Bundler **(~> 1.15)**](https://bundler.io/)
-- [Terraform **(~> 0.11.0)**](https://www.terraform.io/downloads.html)
+- [Terraform **(~> 0.11.7)**](https://www.terraform.io/downloads.html)
+- [Golang **(~> 1.10.3)**](https://golang.org/dl/)
 
 #### Quick Run
 
@@ -174,7 +174,9 @@ $ curl -sSL https://raw.githubusercontent.com/Azure/terramodtest/master/tool/env
 ```
 
 Then simply run it in local shell:
+
 ```sh
+$ cd $GOPATH/src/{directory_name}/
 $ bundle install
 $ rake build
 $ rake e2e
@@ -208,11 +210,16 @@ This runs the end to end tests:
 $ docker run --rm azure-compute /bin/bash -c "bundle install && rake e2e"
 ```
 
-Authors
-=======
+This runs the full tests:
+
+```sh
+$ docker run --rm azure-compute /bin/bash -c "bundle install && rake full"
+```
+
+## Authors
+
 Originally created by [David Tesar](http://github.com/dtzar)
 
-License
-=======
+## License
 
 [MIT](LICENSE)
