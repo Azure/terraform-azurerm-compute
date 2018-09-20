@@ -101,6 +101,7 @@ More specifically this provisions:
                             environment = "dev"
                             costcenter  = "it"
                           }
+    enable_accelerated_networking = "true"
   }
 
   module "windowsservers" {
@@ -118,6 +119,7 @@ More specifically this provisions:
     vm_os_sku           = "2012-R2-Datacenter"
     vm_size             = "Standard_DS2_V2"
     vnet_subnet_id      = "${module.network.vnet_subnets[0]}"
+    enable_accelerated_networking = "true"
   }
 
   module "network" {
