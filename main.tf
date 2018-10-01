@@ -172,7 +172,9 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
   tags = "${var.tags}"
 
-  os_profile_windows_config {}
+  os_profile_windows_config {
+    provision_vm_agent = true
+  }
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
@@ -221,7 +223,9 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 
   tags = "${var.tags}"
 
-  os_profile_windows_config {}
+  os_profile_windows_config {
+    provision_vm_agent = true
+  }
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
