@@ -240,6 +240,7 @@ resource "azurerm_availability_set" "vm" {
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
   managed                      = true
+  tags                         = "${var.tags}"
 }
 
 resource "azurerm_public_ip" "vm" {
@@ -249,6 +250,7 @@ resource "azurerm_public_ip" "vm" {
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
   domain_name_label            = "${element(var.public_ip_dns, count.index)}"
+  tags                         = "${var.tags}"
 }
 
 resource "azurerm_network_security_group" "vm" {
@@ -268,6 +270,8 @@ resource "azurerm_network_security_group" "vm" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  tags = "${var.tags}"
 }
 
 resource "azurerm_network_interface" "vm" {
@@ -283,4 +287,6 @@ resource "azurerm_network_interface" "vm" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
   }
+
+  tags = "${var.tags}"
 }
