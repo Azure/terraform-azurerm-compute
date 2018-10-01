@@ -1,5 +1,5 @@
 provider "azurerm" {
-  version = "~> 0.3"
+  version = ">= 1.1.0"
 }
 
 provider "random" {
@@ -36,7 +36,7 @@ resource "azurerm_storage_account" "vm-sa" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count                         = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer") && var.is_windows_image != "true" && var.data_disk == "false" ? var.nb_instances : 0}"
+  count                         = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows") && var.is_windows_image != "true" && var.data_disk == "false" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
@@ -84,7 +84,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
-  count                         = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer")  && var.is_windows_image != "true"  && var.data_disk == "true" ? var.nb_instances : 0}"
+  count                         = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")  && var.is_windows_image != "true"  && var.data_disk == "true" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
@@ -140,7 +140,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
-  count                         = "${(((var.vm_os_id != "" && var.is_windows_image == "true") || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer")) && var.data_disk == "false") ? var.nb_instances : 0}"
+  count                         = "${((var.is_windows_image == "true" || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")) && var.data_disk == "false") ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
@@ -172,7 +172,9 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
   tags = "${var.tags}"
 
-  os_profile_windows_config {}
+  os_profile_windows_config {
+    provision_vm_agent = true
+  }
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
@@ -181,7 +183,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
 }
 
 resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
-  count                         = "${((var.vm_os_id != "" && var.is_windows_image == "true") || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "WindowsServer")) && var.data_disk == "true" ? var.nb_instances : 0}"
+  count                         = "${(var.is_windows_image == "true" || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")) && var.data_disk == "true" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
@@ -221,7 +223,9 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 
   tags = "${var.tags}"
 
-  os_profile_windows_config {}
+  os_profile_windows_config {
+    provision_vm_agent = true
+  }
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
@@ -236,6 +240,7 @@ resource "azurerm_availability_set" "vm" {
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
   managed                      = true
+  tags                         = "${var.tags}"
 }
 
 resource "azurerm_public_ip" "vm" {
@@ -245,6 +250,7 @@ resource "azurerm_public_ip" "vm" {
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
   domain_name_label            = "${element(var.public_ip_dns, count.index)}"
+  tags                         = "${var.tags}"
 }
 
 resource "azurerm_network_security_group" "vm" {
@@ -264,6 +270,8 @@ resource "azurerm_network_security_group" "vm" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  tags = "${var.tags}"
 }
 
 resource "azurerm_network_interface" "vm" {
@@ -280,4 +288,6 @@ resource "azurerm_network_interface" "vm" {
     public_ip_address_id                    = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
     load_balancer_backend_address_pools_ids = ["${var.lb_backend_pool_ids}"]
   }
+
+  tags = "${var.tags}"
 }
