@@ -7,16 +7,18 @@ resource "random_id" "ip_dns" {
 }
 
 module "ubuntuservers" {
-  source                       = "../../"
-  location                     = "${var.location}"
-  admin_username               = "${var.admin_username}"
-  admin_password               = "${var.admin_password}"
-  vm_os_simple                 = "${var.vm_os_simple_1}"
-  public_ip_dns                = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
-  vnet_subnet_id               = "${module.network.vnet_subnets[0]}"
-  ssh_key                      = "${var.ssh_key}"
-  resource_group_name          = "${var.resource_group_name}-${random_id.ip_dns.hex}"
-  public_ip_address_allocation = "static"
+  source                        = "../../"
+  location                      = "${var.location}"
+  admin_username                = "${var.admin_username}"
+  admin_password                = "${var.admin_password}"
+  vm_os_simple                  = "${var.vm_os_simple_1}"
+  public_ip_dns                 = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
+  vnet_subnet_id                = "${module.network.vnet_subnets[0]}"
+  ssh_key                       = "${var.ssh_key}"
+  resource_group_name           = "${var.resource_group_name}-${random_id.ip_dns.hex}"
+  public_ip_address_allocation  = "static"
+  enable_accelerated_networking = "true"
+  vm_size                       = "Standard_DS2_V2"
 }
 
 module "debianservers" {
