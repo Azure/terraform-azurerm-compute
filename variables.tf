@@ -106,7 +106,7 @@ variable "public_ip_address_allocation" {
 
 variable "nb_public_ip" {
   description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
-  default     = "1"
+  default     = "0"
 }
 
 variable "delete_os_disk_on_termination" {
