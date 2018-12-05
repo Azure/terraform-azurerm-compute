@@ -36,6 +36,10 @@ variable "admin_username" {
   default     = "azureuser"
 }
 
+variable "custom_data" {
+  description = "The custom data to supply to the machine. This can be used as a cloud-init for Linux systems."
+  default     = ""
+}
 variable "storage_account_type" {
   description = "Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS."
   default     = "Premium_LRS"
