@@ -64,6 +64,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     computer_name  = "${var.vm_hostname}${count.index}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
+    custom_data    = "${var.custom_data}"
   }
 
   os_profile_linux_config {
@@ -120,6 +121,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
     computer_name  = "${var.vm_hostname}${count.index}"
     admin_username = "${var.admin_username}"
     admin_password = "${var.admin_password}"
+    custom_data    = "${var.custom_data}"
   }
 
   os_profile_linux_config {
