@@ -1,15 +1,15 @@
-location = "westus2"
+location            = "westus2"
 
-ssh_key = "~/.ssh/id_rsa.pub"
+ssh_key             = "~/.ssh/id_rsa.pub"
 
 resource_group_name = "terraform-compute"
 
-vm_os_simple_1 = "UbuntuServer"
+vm_os_simple_1      = "UbuntuServer"
 
-vm_os_simple_2 = "Debian"
+vm_os_simple_2      = "Debian"
 
-admin_username = "azureuser"
+admin_username      = "azureuser"
 
-admin_password = "P@ssw0rd12345!"
+admin_password      = "P@ssw0rd12345!"
 
 custom_data         = ""
