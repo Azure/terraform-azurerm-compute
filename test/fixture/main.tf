@@ -18,7 +18,7 @@ module "ubuntuservers" {
   resource_group_name           = "${var.resource_group_name}-${random_id.ip_dns.hex}"
   public_ip_address_allocation  = "static"
   enable_accelerated_networking = "true"
-  vm_size                       = "Standard_DS2_V2"r
+  vm_size                       = "Standard_DS2_V2"
 }
 
 module "debianservers" {
