@@ -18,7 +18,7 @@ module "ubuntuservers" {
   resource_group_name           = "${var.resource_group_name}-${random_id.ip_dns.hex}"
   public_ip_address_allocation  = "static"
   enable_accelerated_networking = "true"
-  vm_size                       = "Standard_DS2_V2"
+  vm_size                       = "Standard_DS2_V2"r
 }
 
 module "debianservers" {
@@ -27,6 +27,7 @@ module "debianservers" {
   vm_hostname                  = "mylinvm"
   admin_username               = "${var.admin_username}"
   admin_password               = "${var.admin_password}"
+  custom_data                  = "${var.custom_data}"
   vm_os_simple                 = "${var.vm_os_simple_2}"
   public_ip_dns                = ["debiansimplevmips-${random_id.ip_dns.hex}"]        // change to a unique name per datacenter region
   vnet_subnet_id               = "${module.network.vnet_subnets[0]}"
