@@ -145,3 +145,9 @@ variable "boot_diagnostics_sa_type" {
   description = "(Optional) Storage account type for boot diagnostics"
   default     = "Standard_LRS"
 }
+
+variable "enable_accelerated_networking" {
+  type        = "string"
+  description = "(Optional) Enable accelerated networking on Network interface"
+  default     = "false"
+}
