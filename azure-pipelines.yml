@@ -11,6 +11,7 @@ pool:
 
 variables:
   imageName: 'terraform-module-compute:$(build.buildId)'
+  TERRAFORM_VERSION: '0.11.11'
 
 steps:
 - script: docker build -f Dockerfile -t $(imageName) .
