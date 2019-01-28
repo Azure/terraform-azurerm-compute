@@ -251,7 +251,6 @@ resource "azurerm_public_ip" "vm" {
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  domain_name_label            = "${element(var.public_ip_dns, count.index)}"
   tags                         = "${var.tags}"
 }
 
@@ -289,6 +288,7 @@ resource "azurerm_network_interface" "vm" {
     subnet_id                     = "${var.vnet_subnet_id}"
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
+    application_security_group_ids = ["${var.application_security_group_ids}"]
   }
 
   tags = "${var.tags}"
