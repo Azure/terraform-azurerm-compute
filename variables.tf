@@ -26,6 +26,11 @@ variable "ssh_key" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
+variable "ssh_private_key" {
+  description = "Path to the private key to be used for remote-exec ssh access to the VM.  Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub"
+  default     = "~/.ssh/id_rsa"
+}
+
 variable "remote_port" {
   description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
   default     = ""
