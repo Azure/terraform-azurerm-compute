@@ -88,7 +88,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     connection {
       type        = "ssh"
       user        = "${var.admin_username}"
-      private_key = ${file("${var.ssh_private_key}")}
+      private_key = "${file("${var.ssh_private_key}")}"
     }
   }
 
