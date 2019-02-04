@@ -92,6 +92,10 @@ resource "azurerm_virtual_machine" "vm-linux" {
     }
   }
 
+  provisioner "local-exec" {
+    command = "ansible-playbook -u azureuser -i '${self.public_ip},' --private-key ${var.ssh_key_private} provision.yml" 
+  }
+
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
