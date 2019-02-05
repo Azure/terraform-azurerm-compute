@@ -168,6 +168,7 @@ We provide 2 ways to build, run, and test the module on a local development mach
 - [Bundler **(~> 1.15)**](https://bundler.io/)
 - [Terraform **(~> 0.11.7)**](https://www.terraform.io/downloads.html)
 - [Golang **(~> 1.10.3)**](https://golang.org/dl/)
+- [Inspec **(>= 2.2.7)](https://www.inspec.io/downloads/)
 
 #### Quick Run
 
@@ -181,9 +182,10 @@ Then simply run it in local shell:
 
 ```sh
 $ cd $GOPATH/src/{directory_name}/
+$ gem install --no-document --version 3.2.6 inspec
 $ bundle install
 $ rake build
-$ rake e2e
+$ rake kitchen_e2e
 ```
 
 ### Docker
@@ -211,13 +213,13 @@ $ docker run --rm azure-compute /bin/bash -c "bundle install && rake build"
 This runs the end to end tests:
 
 ```sh
-$ docker run --rm azure-compute /bin/bash -c "bundle install && rake e2e"
+$ docker run --rm azure-compute /bin/bash -c "bundle install && rake kitchen_e2e"
 ```
 
 This runs the full tests:
 
 ```sh
-$ docker run --rm azure-compute /bin/bash -c "bundle install && rake full"
+$ docker run --rm azure-compute /bin/bash -c "bundle install && rake fullkitchen"
 ```
 
 ## Authors

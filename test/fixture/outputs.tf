@@ -13,3 +13,11 @@ output "ubuntu_ip_address" {
 output "debian_ip_address" {
   value = "${module.debianservers.public_ip_address}"
 }
+
+output "resource_group_name" {
+  value = "${var.resource_group_name}-${random_id.ip_dns.hex}"
+}
+
+output "ip_address_hosts" {
+  value = ["${module.ubuntuservers.public_ip_dns_name}", "${module.debianservers.public_ip_address}"]
+}

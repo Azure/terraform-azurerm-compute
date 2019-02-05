@@ -6,6 +6,7 @@ terraform.tfvars
 # Compiled files
 *.tfstate
 *.tfstate.backup
+**/terraform.tfstate.d
 
 # Go vendor directory
 vendor/
@@ -35,3 +36,5 @@ Gemfile.lock
 
 # Test Kitchen files.
 .kitchen
+
+.envrc

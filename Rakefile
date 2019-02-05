@@ -33,6 +33,15 @@ namespace :integration do
   end
 end
 
+namespace :kitchenintegration do
+  task :test do
+    success = system ("kitchen test")
+    if not success 
+      raise "ERROR: Kitchen test failed!\n".red
+    end
+  end
+end
+
 task :prereqs => []
 
 task :validate => [ 'static:style', 'static:lint' ]
@@ -44,7 +53,10 @@ task :build => [ 'prereqs', 'validate' ]
 task :unit => []
 
 task :e2e => [ 'integration:ensure', 'integration:test' ]
+task :kitchen_e2e => ['kitchenintegration:test' ]
 
 task :default => [ 'build' ]
 
 task :full => [ 'build', 'unit', 'e2e' ]
+
+task :fullkitchen => [ 'build', 'unit', 'kitchen_e2e' ]

@@ -1,5 +1,5 @@
 location            = "westus2"
-ssh_key             = "~/.ssh/id_rsa.pub"
+ssh_key             = "~/.ssh/id_rsa_azure.pub"
 resource_group_name = "terraform-compute"
 vm_os_simple_1      = "UbuntuServer"
 vm_os_simple_2      = "Debian"

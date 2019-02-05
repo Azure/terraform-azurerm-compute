@@ -1,0 +1,37 @@
+---
+driver:
+  name: "terraform"
+  root_module_directory: "test/fixture"
+  variable_files:
+    - "test/fixture/terraform.tfvars"
+  command_timeout: 1000
+
+provisioner:
+  name: "terraform"
+
+platforms:
+  - name: "azure"
+
+
+verifier:
+  name: "terraform"
+  systems:
+    - name: azure
+      backend: azure
+      reporter:
+        - cli
+      controls:
+        - compute
+    - name: remote
+      backend: ssh
+      hosts_output: ip_address_hosts
+      user: azureuser
+      key_files:
+        -  ~/.ssh/id_rsa_azure
+      reporter:
+        - cli
+      controls:
+        - reachable_host
+
+suites:
+  - name: "kt_suite"

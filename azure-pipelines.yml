@@ -14,5 +14,9 @@ variables:
   TERRAFORM_VERSION: '0.11.11'
 
 steps:
-- script: docker build -f Dockerfile -t $(imageName) .
+- script: docker build --build-arg BUILD_TERRAFORM_VERSION=$(TERRAFORM_VERSION) -f Dockerfile -t $(imageName) .
   displayName: 'docker build'
+- script: docker run rake build
+  displayName: 'docker run $(imageName) rake build'
+- script: docker run rake fullkitchen
+  displayName: 'docker run $(imageName) rake fullkitchen'
