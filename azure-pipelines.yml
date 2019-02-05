@@ -11,7 +11,7 @@ pool:
 
 variables:
   imageName: 'terraform-module-compute:$(build.buildId)'
-  TERRAFORM_VERSION: '0.11.11'
+  TERRAFORM_VERSION: '0.11.7'
 
 name: 1.0$(Rev:.r)
 
