@@ -83,19 +83,6 @@ resource "azurerm_virtual_machine" "vm-linux" {
     storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
   }
 
-  provisioner "remote-exec" {
-    inline = [ "touch $HOME/provisioned" ]
-    connection {
-      type        = "ssh"
-      user        = "${var.admin_username}"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
-  }
-
-  provisioner "local-exec" {
-    command = "ansible-playbook -u azureuser -i '${self.public_ip},' --private-key ${var.ssh_key_private} provision.yml" 
-  }
-
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
