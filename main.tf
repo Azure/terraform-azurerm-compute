@@ -274,6 +274,32 @@ resource "azurerm_network_security_group" "vm" {
     destination_address_prefix = "*"
   }
 
+  security_rule {
+    name                       = "allow_remote_80_in_all"
+    description                = "Allow remote protocol in from all locations"
+    priority                   = 200
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow_remote_8080_in_all"
+    description                = "Allow remote protocol in from all locations"
+    priority                   = 300
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8080"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
   tags = "${var.tags}"
 }
 
