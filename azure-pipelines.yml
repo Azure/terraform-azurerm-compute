@@ -19,6 +19,6 @@ steps:
 - script: docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID) --build-arg BUILD_ARM_CLIENT_ID=$(ARM_CLIENT_ID) --build-arg BUILD_ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET) --build-arg BUILD_ARM_TENANT_ID=$(ARM_TENANT_ID) --build-arg BUILD_TERRAFORM_VERSION=$(TERRAFORM_VERSION) -f Dockerfile -t $(imageName) .
   displayName: 'docker build'
 - script: docker run --rm $(imageName) /bin/bash -c "rake build"
-  displayName: 'docker run $(imageName) rake build'
+  displayName: 'docker run rake build'
 - script: docker run --rm $(imageName) /bin/bash -c "rake fullkitchen"
-  displayName: 'docker run $(imageName) rake fullkitchen'
+  displayName: 'docker run rake fullkitchen'
