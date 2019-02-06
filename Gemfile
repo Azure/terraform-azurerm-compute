@@ -1,10 +1,8 @@
 #ruby "~> 2.5.1"
 
 source "https://rubygems.org/" do
-  gem(
-    "kitchen-terraform",
-    "~> 4.0"
-  )
+  gem "kitchen-terraform", "~> 4.3"
+  gem "inspec", "~> 3.5"
 end
 
 group :test do

@@ -42,8 +42,4 @@ ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 RUN /bin/bash -c "curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh"
 
 
-#Install Inspec
-RUN gem install --no-document --version 3.2.6 inspec
-
-
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]
