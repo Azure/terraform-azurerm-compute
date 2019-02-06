@@ -1,6 +1,7 @@
 provider "azurerm" {
   version = "= 1.21.0"
 }
+
 # Fix the version of the provider azurerm for prevent breacking changes https://github.com/terraform-providers/terraform-provider-azurerm/issues/2807
 
 provider "random" {

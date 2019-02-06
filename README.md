@@ -156,7 +156,7 @@ More specifically this provisions:
 ### Configurations
 
 - [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
-- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) Save the key in ~/.ssh/id_rsa.  This is not required for Windows deployments.
+- [Generate and add SSH Key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) Save the key in ~/.ssh/id_rsa_azure.  This is not required for Windows deployments.
 
 We provide 2 ways to build, run, and test the module on a local development machine.  [Native (Mac/Linux)](#native-maclinux) or [Docker](#docker).
 
@@ -168,7 +168,6 @@ We provide 2 ways to build, run, and test the module on a local development mach
 - [Bundler **(~> 1.15)**](https://bundler.io/)
 - [Terraform **(~> 0.11.7)**](https://www.terraform.io/downloads.html)
 - [Golang **(~> 1.10.3)**](https://golang.org/dl/)
-- [Inspec **(>= 2.2.7)](https://www.inspec.io/downloads/)
 
 #### Quick Run
 
