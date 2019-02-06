@@ -19,7 +19,7 @@ control 'compute' do
       its('type')                       { should eq 'Microsoft.Compute/virtualMachines' }
       its('location')                   { should eq 'westus2' }
 
-      its('properties.hardwareProfile.vmSize') { should eq 'Standard_DS1_V2'}
+      its('properties.hardwareProfile.vmSize') { should eq 'Standard_DS2_V2'}
 
       # Ensure that the machine has been created from the correct image
       its('properties.storageProfile.imageReference.publisher') { should  eq 'credativ' }
