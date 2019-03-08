@@ -3,6 +3,11 @@ variable "resource_group_name" {
   default     = "terraform-compute"
 }
 
+variable "resource_group_create" {
+  description = "Set to true if a new resource group for the virtual machines should be created"
+  default     = true
+}
+
 variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
