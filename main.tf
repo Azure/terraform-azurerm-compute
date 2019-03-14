@@ -251,14 +251,7 @@ resource "azurerm_public_ip" "vm" {
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  domain_name_label            = "${element(var.public_ip_dns, count.index)}"
   tags                         = "${var.tags}"
-}
-
-data "azurerm_public_ip" "vm" {
-  count               = "${var.nb_public_ip}"
-  name                = "${var.vm_hostname}-${count.index}-publicIP"
-  resource_group_name = "${azurerm_resource_group.vm.name}"
 }
 
 resource "azurerm_network_interface" "vm" {
@@ -277,4 +270,13 @@ resource "azurerm_network_interface" "vm" {
   }
 
   tags = "${var.tags}"
+}
+
+data "azurerm_public_ip" "vm" {
+  count               = "${var.nb_public_ip}"
+  name                = "${element(azurerm_public_ip.vm.*.name, count.index)}"
+  resource_group_name = "${azurerm_resource_group.vm.name}"
+
+  # needed for dynamic ip association
+  depends_on = ["azurerm_network_interface.vm"]
 }
