@@ -255,6 +255,13 @@ resource "azurerm_public_ip" "vm" {
   tags                         = "${var.tags}"
 }
 
+data "azurerm_public_ip" "vm" {
+  count               = "${var.nb_public_ip}"
+  name                = "${var.vm_hostname}-${count.index}-publicIP"
+  location            = "${var.location}"
+  resource_group_name = "${azurerm_resource_group.vm.name}"
+}
+
 resource "azurerm_network_interface" "vm" {
   count                         = "${var.nb_instances}"
   name                          = "nic-${var.vm_hostname}-${count.index}"
