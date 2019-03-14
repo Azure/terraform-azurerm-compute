@@ -255,33 +255,12 @@ resource "azurerm_public_ip" "vm" {
   tags                         = "${var.tags}"
 }
 
-resource "azurerm_network_security_group" "vm" {
-  name                = "${var.vm_hostname}-${coalesce(var.remote_port,module.os.calculated_remote_port)}-nsg"
-  location            = "${azurerm_resource_group.vm.location}"
-  resource_group_name = "${azurerm_resource_group.vm.name}"
-
-  security_rule {
-    name                       = "allow_remote_${coalesce(var.remote_port,module.os.calculated_remote_port)}_in_all"
-    description                = "Allow remote protocol in from all locations"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "${coalesce(var.remote_port,module.os.calculated_remote_port)}"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  tags = "${var.tags}"
-}
-
 resource "azurerm_network_interface" "vm" {
   count                         = "${var.nb_instances}"
   name                          = "nic-${var.vm_hostname}-${count.index}"
   location                      = "${azurerm_resource_group.vm.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
-  network_security_group_id     = "${azurerm_network_security_group.vm.id}"
+  network_security_group_id     = "${var.security_group_id}"
   enable_accelerated_networking = "${var.enable_accelerated_networking}"
 
   ip_configuration {
