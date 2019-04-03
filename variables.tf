@@ -72,7 +72,7 @@ variable "vm_os_id" {
 }
 
 variable "is_windows_image" {
-  description = "Boolean flag to notify when the custom image is windows based. Only used in conjunction with vm_os_id"
+  description = "Boolean flag to notify when the custom image is windows based."
   default     = "false"
 }
 
