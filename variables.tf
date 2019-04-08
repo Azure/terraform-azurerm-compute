@@ -140,6 +140,18 @@ variable "data_disk" {
   default     = "false"
 }
 
+variable "data_disk_caching" {
+  type        = "string"
+  description = "Specifies the caching requirements for this Data Disk. Possible values include None, ReadOnly and ReadWrite"
+  default     = "ReadWrite"
+}
+
+variable "data_disk_acceleration" {
+  type        = "string"
+  description = "can only be enabled on Premium_LRS managed disks with no caching and M-Series VMs. Defaults to false"
+  default     = "false"
+}
+
 variable "boot_diagnostics" {
   description = "(Optional) Enable or Disable boot diagnostics"
   default     = "false"

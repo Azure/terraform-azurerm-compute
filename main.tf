@@ -151,19 +151,21 @@ resource "azurerm_managed_disk" "vm-disk" {
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "vm-linux" {
-  count              = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")  && var.is_windows_image != "true"  && var.data_disk == "true" ? var.nb_instances : 0}"
-  managed_disk_id    = "${element(azurerm_managed_disk.vm-disk.*.id, count.index)}"
-  virtual_machine_id = "${element(azurerm_virtual_machine.vm-linux.*.id, count.index)}"
-  lun                = 0
-  caching            = "ReadWrite"
+  count                     = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")  && var.is_windows_image != "true"  && var.data_disk == "true" ? var.nb_instances : 0}"
+  managed_disk_id           = "${element(azurerm_managed_disk.vm-disk.*.id, count.index)}"
+  virtual_machine_id        = "${element(azurerm_virtual_machine.vm-linux.*.id, count.index)}"
+  lun                       = 0
+  caching                   = "${var.data_disk_caching}"
+  write_accelerator_enabled = "${var.data_disk_acceleration}"
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "vm-windows" {
-  count              = "${(var.is_windows_image == "true" || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")) && var.data_disk == "true" ? var.nb_instances : 0}"
-  managed_disk_id    = "${element(azurerm_managed_disk.vm-disk.*.id, count.index)}"
-  virtual_machine_id = "${element(azurerm_virtual_machine.vm-windows.*.id, count.index)}"
-  lun                = 0
-  caching            = "ReadWrite"
+  count                     = "${(var.is_windows_image == "true" || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")) && var.data_disk == "true" ? var.nb_instances : 0}"
+  managed_disk_id           = "${element(azurerm_managed_disk.vm-disk.*.id, count.index)}"
+  virtual_machine_id        = "${element(azurerm_virtual_machine.vm-windows.*.id, count.index)}"
+  lun                       = 0
+  caching                   = "${var.data_disk_caching}"
+  write_accelerator_enabled = "${var.data_disk_acceleration}"
 }
 
 resource "azurerm_availability_set" "vm" {
