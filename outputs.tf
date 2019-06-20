@@ -8,7 +8,7 @@ output "network_security_group_id" {
   value       = "${azurerm_network_security_group.vm.id}"
 }
 
-output "network_seucrity_group_name" {
+output "network_security_group_name" {
   description = "name of the security group provisioned"
   value       = "${azurerm_network_security_group.vm.name}"
 }
