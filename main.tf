@@ -264,18 +264,18 @@ resource "azurerm_network_security_group" "vm" {
 }
 
 resource "azurerm_network_security_rule" "vm" {
-  name                       = "allow_remote_${coalesce(var.remote_port,module.os.calculated_remote_port)}_in_all"
-  description                = "Allow remote protocol in from all locations"
-  priority                   = 100
-  direction                  = "Inbound"
-  access                     = "Allow"
-  protocol                   = "Tcp"
-  source_port_range          = "*"
-  destination_port_range     = "${coalesce(var.remote_port,module.os.calculated_remote_port)}"
-  source_address_prefix      = "*"
-  destination_address_prefix = "*"
-  resource_group_name        = "${azurerm_resource_group.vm.name}"
-  network_security_group_name= "${azurerm_network_security_group.vm.name}"
+  name                        = "allow_remote_${coalesce(var.remote_port,module.os.calculated_remote_port)}_in_all"
+  description                 = "Allow remote protocol in from all locations"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "${coalesce(var.remote_port,module.os.calculated_remote_port)}"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = "${azurerm_resource_group.vm.name}"
+  network_security_group_name = "${azurerm_network_security_group.vm.name}"
 }
 
 resource "azurerm_network_interface" "vm" {
