@@ -11,10 +11,8 @@ module "os" {
   vm_os_simple = "${var.vm_os_simple}"
 }
 
-resource "azurerm_resource_group" "vm" {
-  name     = "${var.resource_group_name}"
-  location = "${var.location}"
-  tags     = "${var.tags}"
+data "azurerm_resource_group" "vm" {
+  name = "${var.resource_group_name}"
 }
 
 resource "random_id" "vm-sa" {
@@ -28,18 +26,18 @@ resource "random_id" "vm-sa" {
 resource "azurerm_storage_account" "vm-sa" {
   count                    = "${var.boot_diagnostics == "true" ? 1 : 0}"
   name                     = "bootdiag${lower(random_id.vm-sa.hex)}"
-  resource_group_name      = "${azurerm_resource_group.vm.name}"
+  resource_group_name      = "${data.azurerm_resource_group.vm.name}"
   location                 = "${var.location}"
-  account_tier             = "${element(split("_", var.boot_diagnostics_sa_type),0)}"
-  account_replication_type = "${element(split("_", var.boot_diagnostics_sa_type),1)}"
+  account_tier             = "${element(split("_", var.boot_diagnostics_sa_type), 0)}"
+  account_replication_type = "${element(split("_", var.boot_diagnostics_sa_type), 1)}"
   tags                     = "${var.tags}"
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count                         = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows") && var.is_windows_image != "true" && var.data_disk == "false" ? var.nb_instances : 0}"
+  count                         = "${! contains(list("${var.vm_os_simple}", "${var.vm_os_offer}"), "Windows") && var.is_windows_image != "true" && var.data_disk == "false" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
-  resource_group_name           = "${azurerm_resource_group.vm.name}"
+  resource_group_name           = "${data.azurerm_resource_group.vm.name}"
   availability_set_id           = "${azurerm_availability_set.vm.id}"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
@@ -80,15 +78,15 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
-    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""}"
   }
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
-  count                         = "${!contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")  && var.is_windows_image != "true"  && var.data_disk == "true" ? var.nb_instances : 0}"
+  count                         = "${! contains(list("${var.vm_os_simple}", "${var.vm_os_offer}"), "Windows") && var.is_windows_image != "true" && var.data_disk == "true" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
-  resource_group_name           = "${azurerm_resource_group.vm.name}"
+  resource_group_name           = "${data.azurerm_resource_group.vm.name}"
   availability_set_id           = "${azurerm_availability_set.vm.id}"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
@@ -137,15 +135,15 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
-    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""}"
   }
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
-  count                         = "${((var.is_windows_image == "true" || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")) && var.data_disk == "false") ? var.nb_instances : 0}"
+  count                         = "${((var.is_windows_image == "true" || contains(list("${var.vm_os_simple}", "${var.vm_os_offer}"), "Windows")) && var.data_disk == "false") ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
-  resource_group_name           = "${azurerm_resource_group.vm.name}"
+  resource_group_name           = "${data.azurerm_resource_group.vm.name}"
   availability_set_id           = "${azurerm_availability_set.vm.id}"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
@@ -180,15 +178,15 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
-    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""}"
   }
 }
 
 resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
-  count                         = "${(var.is_windows_image == "true" || contains(list("${var.vm_os_simple}","${var.vm_os_offer}"), "Windows")) && var.data_disk == "true" ? var.nb_instances : 0}"
+  count                         = "${(var.is_windows_image == "true" || contains(list("${var.vm_os_simple}", "${var.vm_os_offer}"), "Windows")) && var.data_disk == "true" ? var.nb_instances : 0}"
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
-  resource_group_name           = "${azurerm_resource_group.vm.name}"
+  resource_group_name           = "${data.azurerm_resource_group.vm.name}"
   availability_set_id           = "${azurerm_availability_set.vm.id}"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
@@ -231,14 +229,14 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 
   boot_diagnostics {
     enabled     = "${var.boot_diagnostics}"
-    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : "" }"
+    storage_uri = "${var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""}"
   }
 }
 
 resource "azurerm_availability_set" "vm" {
   name                         = "${var.vm_hostname}-avset"
-  location                     = "${azurerm_resource_group.vm.location}"
-  resource_group_name          = "${azurerm_resource_group.vm.name}"
+  location                     = "${data.azurerm_resource_group.vm.location}"
+  resource_group_name          = "${data.azurerm_resource_group.vm.name}"
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
   managed                      = true
@@ -249,26 +247,26 @@ resource "azurerm_public_ip" "vm" {
   count                        = "${var.nb_public_ip}"
   name                         = "${var.vm_hostname}-${count.index}-publicIP"
   location                     = "${var.location}"
-  resource_group_name          = "${azurerm_resource_group.vm.name}"
+  resource_group_name          = "${data.azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
   domain_name_label            = "${element(var.public_ip_dns, count.index)}"
   tags                         = "${var.tags}"
 }
 
 resource "azurerm_network_security_group" "vm" {
-  name                = "${var.vm_hostname}-${coalesce(var.remote_port,module.os.calculated_remote_port)}-nsg"
-  location            = "${azurerm_resource_group.vm.location}"
-  resource_group_name = "${azurerm_resource_group.vm.name}"
+  name                = "${var.vm_hostname}-${coalesce(var.remote_port, module.os.calculated_remote_port)}-nsg"
+  location            = "${data.azurerm_resource_group.vm.location}"
+  resource_group_name = "${data.azurerm_resource_group.vm.name}"
 
   security_rule {
-    name                       = "allow_remote_${coalesce(var.remote_port,module.os.calculated_remote_port)}_in_all"
+    name                       = "allow_remote_${coalesce(var.remote_port, module.os.calculated_remote_port)}_in_all"
     description                = "Allow remote protocol in from all locations"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "${coalesce(var.remote_port,module.os.calculated_remote_port)}"
+    destination_port_range     = "${coalesce(var.remote_port, module.os.calculated_remote_port)}"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -279,8 +277,8 @@ resource "azurerm_network_security_group" "vm" {
 resource "azurerm_network_interface" "vm" {
   count                         = "${var.nb_instances}"
   name                          = "nic-${var.vm_hostname}-${count.index}"
-  location                      = "${azurerm_resource_group.vm.location}"
-  resource_group_name           = "${azurerm_resource_group.vm.name}"
+  location                      = "${data.azurerm_resource_group.vm.location}"
+  resource_group_name           = "${data.azurerm_resource_group.vm.name}"
   network_security_group_id     = "${azurerm_network_security_group.vm.id}"
   enable_accelerated_networking = "${var.enable_accelerated_networking}"
 
