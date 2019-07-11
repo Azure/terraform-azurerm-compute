@@ -105,7 +105,7 @@ variable "tags" {
   }
 }
 
-variable "public_ip_address_allocation" {
+variable "allocation_method" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default     = "dynamic"
 }
