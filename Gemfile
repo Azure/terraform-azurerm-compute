@@ -4,6 +4,6 @@ source 'https://rubygems.org/'
 
 group :test do
   git 'https://github.com/Azure/terramodtest.git' do
-    gem 'terramodtest', :tag => 'v0.2.0'
+    gem 'terramodtest', :tag => 'v0.3.0'
   end
 end
