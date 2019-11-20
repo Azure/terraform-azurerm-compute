@@ -46,6 +46,11 @@ variable "storage_account_type" {
   default     = "Premium_LRS"
 }
 
+variable "storage_os_disk_size" {
+  description = "Defines the size of the OS disk"
+  default     = "64"
+}
+
 variable "vm_size" {
   description = "Specifies the size of the virtual machine."
   default     = "Standard_DS1_V2"
@@ -150,4 +155,9 @@ variable "enable_accelerated_networking" {
   type        = "string"
   description = "(Optional) Enable accelerated networking on Network interface"
   default     = "false"
+}
+
+variable "availability_set_id" {
+  default = ""
+  type    = "string"
 }

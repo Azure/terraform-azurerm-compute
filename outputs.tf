@@ -35,5 +35,5 @@ output "public_ip_dns_name" {
 
 output "availability_set_id" {
   description = "id of the availability set where the vms are provisioned."
-  value       = "${azurerm_availability_set.vm.id}"
+  value       = "${var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id }"
 }

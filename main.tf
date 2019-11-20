@@ -1,7 +1,3 @@
-provider "azurerm" {
-  version = ">= 1.1.0"
-}
-
 provider "random" {
   version = "~> 2.1"
 }
@@ -40,7 +36,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
-  availability_set_id           = "${azurerm_availability_set.vm.id}"
+  availability_set_id           = "${var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id }"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
   delete_os_disk_on_termination = "${var.delete_os_disk_on_termination}"
@@ -58,6 +54,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
+    disk_size_gb      = "${var.storage_os_disk_size}"
   }
 
   os_profile {
@@ -89,7 +86,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
-  availability_set_id           = "${azurerm_availability_set.vm.id}"
+  availability_set_id           = "${var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id }"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
   delete_os_disk_on_termination = "${var.delete_os_disk_on_termination}"
@@ -107,6 +104,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
+    disk_size_gb      = "${var.storage_os_disk_size}"
   }
 
   storage_data_disk {
@@ -146,7 +144,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
-  availability_set_id           = "${azurerm_availability_set.vm.id}"
+  availability_set_id           = "${var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id }"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
   delete_os_disk_on_termination = "${var.delete_os_disk_on_termination}"
@@ -164,6 +162,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
+    disk_size_gb      = "${var.storage_os_disk_size}"
   }
 
   os_profile {
@@ -189,7 +188,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
   name                          = "${var.vm_hostname}${count.index}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.vm.name}"
-  availability_set_id           = "${azurerm_availability_set.vm.id}"
+  availability_set_id           = "${var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id }"
   vm_size                       = "${var.vm_size}"
   network_interface_ids         = ["${element(azurerm_network_interface.vm.*.id, count.index)}"]
   delete_os_disk_on_termination = "${var.delete_os_disk_on_termination}"
@@ -207,6 +206,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = "${var.storage_account_type}"
+    disk_size_gb      = "${var.storage_os_disk_size}"
   }
 
   storage_data_disk {
