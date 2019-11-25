@@ -34,7 +34,7 @@ resource "azurerm_storage_account" "vm-sa" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count                         = "${! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && var.is_windows_image != "true" && var.data_disk == "false" ? var.nb_instances : 0}"
+  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && var.is_windows_image != "true" && var.data_disk == "false" ? var.nb_instances : 0
   name                          = "${var.vm_hostname}${count.index}"
   location                      = var.location
   resource_group_name           = data.azurerm_resource_group.vm.name
@@ -83,13 +83,13 @@ resource "azurerm_virtual_machine" "vm-linux" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
-  count                         = "${! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && var.is_windows_image != "true" && var.data_disk == "true" ? var.nb_instances : 0}"
+  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && var.is_windows_image != "true" && var.data_disk == "true" ? var.nb_instances : 0
   name                          = "${var.vm_hostname}${count.index}"
   location                      = var.location
   resource_group_name           = data.azurerm_resource_group.vm.name
   availability_set_id           = azurerm_availability_set.vm.id
   vm_size                       = var.vm_size
-  network_interface_ids         = element(azurerm_network_interface.vm.*.id, count.index)]
+  network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
 
   storage_image_reference {
@@ -246,7 +246,7 @@ resource "azurerm_availability_set" "vm" {
 resource "azurerm_public_ip" "vm" {
   count               = var.nb_public_ip
   name                = "${var.vm_hostname}-${count.index}-publicIP"
-  location            = var.location}
+  location            = var.location
   resource_group_name = data.azurerm_resource_group.vm.name
   allocation_method   = var.allocation_method
   domain_name_label   = element(var.public_ip_dns, count.index)
