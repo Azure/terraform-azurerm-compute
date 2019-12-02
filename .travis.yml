@@ -13,7 +13,7 @@ services:
   - docker
 
 env:
-  - TERRAFORM_VERSION=0.11.7 IMAGE_NAME=azure-compute-module
+  - TERRAFORM_VERSION=0.12.16 IMAGE_NAME=azure-compute-module
 
 jobs:
   include:
