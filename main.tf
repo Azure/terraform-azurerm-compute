@@ -47,10 +47,10 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
   storage_image_reference {
     id        = var.vm_os_id
-    publisher =  (var.vm_os_id == "") ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""
-    offer     =  (var.vm_os_id == "") ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""
-    sku       =  (var.vm_os_id == "") ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""
-    version   =  (var.vm_os_id == "") ? var.vm_os_version : ""
+    publisher = (var.vm_os_id == "") ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""
+    offer     = (var.vm_os_id == "") ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""
+    sku       = (var.vm_os_id == "") ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""
+    version   = (var.vm_os_id == "") ? var.vm_os_version : ""
   }
 
   storage_os_disk {
@@ -246,13 +246,13 @@ resource "azurerm_availability_set" "vm" {
 }
 
 resource "azurerm_public_ip" "vm" {
-  count                        = var.nb_public_ip
-  name                         = "${var.vm_hostname}-${count.index}-publicIP"
-  location                     = var.location
-  resource_group_name          = azurerm_resource_group.vm.name
-  allocation_method            = var.allocation_method
-  domain_name_label            = element(var.public_ip_dns, count.index)
-  tags                         = var.tags
+  count               = var.nb_public_ip
+  name                = "${var.vm_hostname}-${count.index}-publicIP"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.vm.name
+  allocation_method   = var.allocation_method
+  domain_name_label   = element(var.public_ip_dns, count.index)
+  tags                = var.tags
 }
 
 resource "azurerm_network_security_group" "vm" {
