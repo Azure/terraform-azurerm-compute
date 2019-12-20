@@ -250,7 +250,7 @@ resource "azurerm_public_ip" "vm" {
   name                = "${var.vm_hostname}-${count.index}-publicIP"
   location            = var.location
   resource_group_name = azurerm_resource_group.vm.name
-  allocation_method   = var.allocation_method
+  allocation_method   = coalesce(var.allocation_method,var.public_ip_address_allocation,"Dynamic")
   domain_name_label   = element(var.public_ip_dns, count.index)
   tags                = var.tags
 }
