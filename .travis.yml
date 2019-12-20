@@ -22,7 +22,7 @@ jobs:
       install: true
       script:
       - docker build --build-arg BUILD_TERRAFORM_VERSION=${TERRAFORM_VERSION} -t ${IMAGE_NAME} .
-      - docker run ${IMAGE_NAME} rake build
+      - docker run ${IMAGE_NAME} rake full
     - stage: full
       if: type = push AND branch = master
       install: true
