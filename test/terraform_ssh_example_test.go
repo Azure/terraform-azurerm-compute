@@ -40,8 +40,8 @@ func TestTerraformSshExample(t *testing.T) {
   test_structure.RunTestStage(t, "validate", func() {
     terraformOptions := test_structure.LoadTerraformOptions(t, exampleFolder)
 
-    testSSHToPublicHost(t, terraformOptions, "ubuntu_ip_address")
-    testSSHToPublicHost(t, terraformOptions, "debian_ip_address")
+    testSSHToPublicHost(t, terraformOptions, "ubuntu_vm_public_name")
+    testSSHToPublicHost(t, terraformOptions, "debian_vm_public_name")
   })
 
 }
@@ -74,7 +74,7 @@ func testSSHToPublicHost(t *testing.T, terraformOptions *terraform.Options, addr
   publicHost := ssh.Host{
     Hostname:    publicIP,
     SshKeyPair:  &keyPair,
-    SshUserName: os.Args[len(os.Args)-2],
+    SshUserName: "azureuser",
   }
 
   // It can take a minute or so for the virtual machine to boot up, so retry a few times
