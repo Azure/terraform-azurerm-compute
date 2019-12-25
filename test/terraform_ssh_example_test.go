@@ -36,6 +36,8 @@ func TestTerraformSshExample(t *testing.T) {
     terraform.InitAndApply(t, terraformOptions)
   })
 
+  // Comment this test for the followins reason:
+  //   This is an internel VM which can't be accessed by public IP.
   // Make sure we can SSH to virtual machines directly from the public Internet
   //test_structure.RunTestStage(t, "validate", func() {
   //  terraformOptions := test_structure.LoadTerraformOptions(t, exampleFolder)
