@@ -97,7 +97,7 @@ variable "vm_os_version" {
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map(string)
   description = "A map of the tags to use on the resources that are deployed with this module."
 
   default = {
@@ -106,8 +106,13 @@ variable "tags" {
 }
 
 variable "public_ip_address_allocation" {
+  description = "This attribute is deprecated, and to be replaced by 'allocation_method'"
+  default     = ""
+}
+
+variable "allocation_method" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
-  default     = "dynamic"
+  default     = ""
 }
 
 variable "nb_public_ip" {
@@ -131,7 +136,7 @@ variable "data_disk_size_gb" {
 }
 
 variable "data_disk" {
-  type        = "string"
+  type        = string
   description = "Set to true to add a datadisk."
   default     = "false"
 }
@@ -147,7 +152,7 @@ variable "boot_diagnostics_sa_type" {
 }
 
 variable "enable_accelerated_networking" {
-  type        = "string"
+  type        = string
   description = "(Optional) Enable accelerated networking on Network interface"
   default     = "false"
 }

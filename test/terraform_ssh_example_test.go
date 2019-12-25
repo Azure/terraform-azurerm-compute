@@ -37,12 +37,12 @@ func TestTerraformSshExample(t *testing.T) {
   })
 
   // Make sure we can SSH to virtual machines directly from the public Internet
-  test_structure.RunTestStage(t, "validate", func() {
-    terraformOptions := test_structure.LoadTerraformOptions(t, exampleFolder)
-
-    testSSHToPublicHost(t, terraformOptions, "ubuntu_ip_address")
-    testSSHToPublicHost(t, terraformOptions, "debian_ip_address")
-  })
+  //test_structure.RunTestStage(t, "validate", func() {
+  //  terraformOptions := test_structure.LoadTerraformOptions(t, exampleFolder)
+  //
+  //  testSSHToPublicHost(t, terraformOptions, "ubuntu_ip_address")
+  //  testSSHToPublicHost(t, terraformOptions, "debian_ip_address")
+  //})
 
 }
 
