@@ -36,17 +36,9 @@ func TestTerraformSshExample(t *testing.T) {
     terraform.InitAndApply(t, terraformOptions)
   })
 
-  // (removed)Make sure we can SSH to virtual machines directly from the public Internet
   // It has ever been planned to test the VM could be accessed from the public through SSH,
   // however currently this connection is constrained because the testing VM in CI is within the Microsoft internal environment and the public cannot access it.
   // So skip this test.
-  //test_structure.RunTestStage(t, "validate", func() {
-  //  terraformOptions := test_structure.LoadTerraformOptions(t, exampleFolder)
-  //
-  //  testSSHToPublicHost(t, terraformOptions, "ubuntu_ip_address")
-  //  testSSHToPublicHost(t, terraformOptions, "debian_ip_address")
-  //})
-
 }
 
 func configureTerraformOptions(t *testing.T, exampleFolder string) *terraform.Options {
@@ -62,47 +54,3 @@ func configureTerraformOptions(t *testing.T, exampleFolder string) *terraform.Op
   return terraformOptions
 }
 
-func testSSHToPublicHost(t *testing.T, terraformOptions *terraform.Options, address string) {
-  // Run `terraform output` to get the value of an output variable
-  publicIP := terraform.Output(t, terraformOptions, address)
-
-  // Read private key from given file
-  buffer, err := ioutil.ReadFile(os.Args[len(os.Args)-1])
-  if err != nil {
-    t.Fatal(err)
-  }
-  keyPair := ssh.KeyPair{PrivateKey: string(buffer)}
-
-  // We're going to try to SSH to the virtual machine, using our local key pair and specific username
-  publicHost := ssh.Host{
-    Hostname:    publicIP,
-    SshKeyPair:  &keyPair,
-    SshUserName: os.Args[len(os.Args)-2],
-  }
-
-  // It can take a minute or so for the virtual machine to boot up, so retry a few times
-  maxRetries := 15
-  timeBetweenRetries := 5 * time.Second
-  description := fmt.Sprintf("SSH to public host %s", publicIP)
-
-  // Run a simple echo command on the server
-  expectedText := "Hello, World"
-  command := fmt.Sprintf("echo -n '%s'", expectedText)
-
-  // Verify that we can SSH to the virtual machine and run commands
-  retry.DoWithRetry(t, description, maxRetries, timeBetweenRetries, func() (string, error) {
-    // Run the command and get the output
-    actualText, err := ssh.CheckSshCommandE(t, publicHost, command)
-    if err != nil {
-      return "", err
-    }
-
-    // Check whether the output is correct
-    if strings.TrimSpace(actualText) != expectedText {
-      return "", fmt.Errorf("Expected SSH command to return '%s' but got '%s'", expectedText, actualText)
-    }
-    fmt.Println(actualText)
-
-    return "", nil
-  })
-}
