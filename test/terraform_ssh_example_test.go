@@ -1,15 +1,7 @@
 package test
 
 import (
-  "fmt"
-  "io/ioutil"
-  "os"
-  "strings"
   "testing"
-  "time"
-
-  "github.com/gruntwork-io/terratest/modules/retry"
-  "github.com/gruntwork-io/terratest/modules/ssh"
   "github.com/gruntwork-io/terratest/modules/terraform"
   "github.com/gruntwork-io/terratest/modules/test-structure"
 )
