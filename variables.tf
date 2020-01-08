@@ -73,7 +73,7 @@ variable "vm_os_id" {
 
 variable "is_windows_image" {
   description = "Boolean flag to notify when the custom image is windows based."
-  default     = "false"
+  default     = false
 }
 
 variable "vm_os_publisher" {
@@ -121,8 +121,9 @@ variable "nb_public_ip" {
 }
 
 variable "delete_os_disk_on_termination" {
+  type        = bool
   description = "Delete datadisk when machine is terminated"
-  default     = "false"
+  default     = false
 }
 
 variable "data_sa_type" {
@@ -136,14 +137,15 @@ variable "data_disk_size_gb" {
 }
 
 variable "data_disk" {
-  type        = string
+  type        = bool
   description = "Set to true to add a datadisk."
-  default     = "false"
+  default     = false
 }
 
 variable "boot_diagnostics" {
+  type        = bool
   description = "(Optional) Enable or Disable boot diagnostics"
-  default     = "false"
+  default     = false
 }
 
 variable "boot_diagnostics_sa_type" {
@@ -152,7 +154,7 @@ variable "boot_diagnostics_sa_type" {
 }
 
 variable "enable_accelerated_networking" {
-  type        = string
+  type        = bool
   description = "(Optional) Enable accelerated networking on Network interface"
-  default     = "false"
+  default     = false
 }

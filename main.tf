@@ -26,7 +26,7 @@ resource "random_id" "vm-sa" {
 }
 
 resource "azurerm_storage_account" "vm-sa" {
-  count                    = var.boot_diagnostics == "true" ? 1 : 0
+  count                    = var.boot_diagnostics ? 1 : 0
   name                     = "bootdiag${lower(random_id.vm-sa.hex)}"
   resource_group_name      = azurerm_resource_group.vm.name
   location                 = var.location
@@ -36,7 +36,7 @@ resource "azurerm_storage_account" "vm-sa" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && var.is_windows_image != "true" && var.data_disk == "false" ? var.nb_instances : 0
+  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && ! var.data_disk ? var.nb_instances : 0
   name                          = "${var.vm_hostname}${count.index}"
   location                      = var.location
   resource_group_name           = azurerm_resource_group.vm.name
@@ -80,12 +80,12 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
   }
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
-  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && var.is_windows_image != "true" && var.data_disk == "true" ? var.nb_instances : 0
+  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && var.data_disk ? var.nb_instances : 0
   name                          = "${var.vm_hostname}${count.index}"
   location                      = var.location
   resource_group_name           = azurerm_resource_group.vm.name
@@ -137,12 +137,12 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
   }
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
-  count                         = ((var.is_windows_image == "true" || contains(list(var.vm_os_simple, var.vm_os_offer), "Windows")) && var.data_disk == "false") ? var.nb_instances : 0
+  count                         = ((var.is_windows_image || contains(list(var.vm_os_simple, var.vm_os_offer), "Windows")) && ! var.data_disk) ? var.nb_instances : 0
   name                          = "${var.vm_hostname}${count.index}"
   location                      = var.location
   resource_group_name           = azurerm_resource_group.vm.name
@@ -180,12 +180,12 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
   }
 }
 
 resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
-  count                         = (var.is_windows_image == "true" || contains(list(var.vm_os_simple, var.vm_os_offer), "Windows")) && var.data_disk == "true" ? var.nb_instances : 0
+  count                         = (var.is_windows_image || contains(list(var.vm_os_simple, var.vm_os_offer), "Windows")) && var.data_disk ? var.nb_instances : 0
   name                          = "${var.vm_hostname}${count.index}"
   location                      = var.location
   resource_group_name           = azurerm_resource_group.vm.name
@@ -231,7 +231,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics == "true" ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
   }
 }
 
