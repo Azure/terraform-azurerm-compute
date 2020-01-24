@@ -166,5 +166,4 @@ variable "enable_accelerated_networking" {
 
 variable "availability_set_id" {
   default = ""
-  type    = "string"
 }
