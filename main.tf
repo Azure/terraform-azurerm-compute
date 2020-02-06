@@ -7,10 +7,6 @@ module "os" {
   vm_os_simple = var.vm_os_simple
 }
 
-data "azurerm_resource_group" "vm" {
-  name = var.resource_group_name
-}
-
 resource "random_id" "vm-sa" {
   keepers = {
     vm_hostname = var.vm_hostname
@@ -235,7 +231,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 
 resource "azurerm_availability_set" "vm" {
   name                         = "${var.vm_hostname}-avset"
-  location                     = data.azurerm_resource_group.vm.location
+  location                     = var.location
   resource_group_name          = var.resource_group_name
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
@@ -255,7 +251,7 @@ resource "azurerm_public_ip" "vm" {
 
 resource "azurerm_network_security_group" "vm" {
   name                = "${var.vm_hostname}-${coalesce(var.remote_port, module.os.calculated_remote_port)}-nsg"
-  location            = data.azurerm_resource_group.vm.location
+  location            = var.location
   resource_group_name = var.resource_group_name
 
   tags = var.tags
@@ -279,7 +275,7 @@ resource "azurerm_network_security_rule" "vm" {
 resource "azurerm_network_interface" "vm" {
   count                         = var.nb_instances
   name                          = "nic-${var.vm_hostname}-${count.index}"
-  location                      = data.azurerm_resource_group.vm.location
+  location                      = var.location
   resource_group_name           = var.resource_group_name
   network_security_group_id     = azurerm_network_security_group.vm.id
   enable_accelerated_networking = var.enable_accelerated_networking
