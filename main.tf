@@ -74,7 +74,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     }
   }
 
-  tags = var.tags
+  tags = merge(var.tags, var.vm_tags)
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
@@ -131,7 +131,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
     }
   }
 
-  tags = var.tags
+  tags = merge(var.tags, var.vm_tags)
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
@@ -170,7 +170,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
     admin_password = var.admin_password
   }
 
-  tags = var.tags
+  tags = merge(var.tags, var.vm_tags)
 
   os_profile_windows_config {
     provision_vm_agent = true
@@ -221,7 +221,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
     admin_password = var.admin_password
   }
 
-  tags = var.tags
+  tags = merge(var.tags, var.vm_tags)
 
   os_profile_windows_config {
     provision_vm_agent = true

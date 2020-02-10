@@ -105,6 +105,12 @@ variable "tags" {
   }
 }
 
+variable "vm_tags" {
+  type        = map(string)
+  description = "A map of custom tags to be applied on VMs."
+  default     = {}
+}
+
 variable "allocation_method" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   default     = "Dynamic"
