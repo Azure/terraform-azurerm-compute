@@ -26,7 +26,7 @@ resource "azurerm_storage_account" "vm-sa" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && ! var.data_disk && !var.enable_ssh_key ? var.nb_instances : 0
+  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && ! var.data_disk ? var.nb_instances : 0
   name                          = "${var.vm_hostname}-vmLinux-${count.index}"
   resource_group_name           = data.azurerm_resource_group.vm.name
   location                      = data.azurerm_resource_group.vm.location
@@ -70,7 +70,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
-  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && var.data_disk && !var.enable_ssh_key ? var.nb_instances : 0
+  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && var.data_disk ? var.nb_instances : 0
   name                          = "${var.vm_hostname}-vmLinux-${count.index}"
   resource_group_name           = data.azurerm_resource_group.vm.name
   location                      = data.azurerm_resource_group.vm.location
@@ -120,113 +120,6 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
     storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
   }
 }
-
-resource "azurerm_virtual_machine" "vm-linux-ssh" {
-  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && ! var.data_disk && var.enable_ssh_key ? var.nb_instances : 0
-  name                          = "${var.vm_hostname}-vmLinux-${count.index}"
-  resource_group_name           = data.azurerm_resource_group.vm.name
-  location                      = data.azurerm_resource_group.vm.location
-  availability_set_id           = azurerm_availability_set.vm.id
-  vm_size                       = var.vm_size
-  network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
-  delete_os_disk_on_termination = var.delete_os_disk_on_termination
-
-  storage_image_reference {
-    id        = var.vm_os_id
-    publisher = var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""
-    offer     = var.vm_os_id == "" ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""
-    sku       = var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""
-    version   = var.vm_os_id == "" ? var.vm_os_version : ""
-  }
-
-  storage_os_disk {
-    name              = "osdisk-${var.vm_hostname}-${count.index}"
-    create_option     = "FromImage"
-    caching           = "ReadWrite"
-    managed_disk_type = var.storage_account_type
-  }
-
-  os_profile {
-    computer_name  = "${var.vm_hostname}${count.index}"
-    admin_username = var.admin_username
-    admin_password = var.admin_password
-    custom_data    = var.custom_data
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = true
-
-    ssh_keys {
-      path     = "/home/${var.admin_username}/.ssh/authorized_keys"
-      key_data = file(var.ssh_key)
-    }
-  }
-
-  tags = var.tags
-
-  boot_diagnostics {
-    enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
-  }
-}
-
-resource "azurerm_virtual_machine" "vm-linux-with-datadisk-ssh" {
-  count                         = ! contains(list(var.vm_os_simple, var.vm_os_offer), "Windows") && ! var.is_windows_image && var.data_disk && var.enable_ssh_key ? var.nb_instances : 0
-  name                          = "${var.vm_hostname}-vmLinux-${count.index}"
-  resource_group_name           = data.azurerm_resource_group.vm.name
-  location                      = data.azurerm_resource_group.vm.location
-  availability_set_id           = azurerm_availability_set.vm.id
-  vm_size                       = var.vm_size
-  network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
-  delete_os_disk_on_termination = var.delete_os_disk_on_termination
-
-  storage_image_reference {
-    id        = var.vm_os_id
-    publisher = var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""
-    offer     = var.vm_os_id == "" ? coalesce(var.vm_os_offer, module.os.calculated_value_os_offer) : ""
-    sku       = var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""
-    version   = var.vm_os_id == "" ? var.vm_os_version : ""
-  }
-
-  storage_os_disk {
-    name              = "${var.vm_hostname}-osdisk--${count.index}"
-    create_option     = "FromImage"
-    caching           = "ReadWrite"
-    managed_disk_type = var.storage_account_type
-  }
-
-  storage_data_disk {
-    name              = "${var.vm_hostname}-datadisk--${count.index}"
-    create_option     = "Empty"
-    lun               = 0
-    disk_size_gb      = var.data_disk_size_gb
-    managed_disk_type = var.data_sa_type
-  }
-
-  os_profile {
-    computer_name  = "${var.vm_hostname}-${count.index}"
-    admin_username = var.admin_username
-    admin_password = var.admin_password
-    custom_data    = var.custom_data
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = true
-
-    ssh_keys {
-      path     = "/home/${var.admin_username}/.ssh/authorized_keys"
-      key_data = file(var.ssh_key)
-    }
-  }
-
-  tags = var.tags
-
-  boot_diagnostics {
-    enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
-  }
-}
-
 
 resource "azurerm_virtual_machine" "vm-windows" {
   count                         = ((var.is_windows_image || contains(list(var.vm_os_simple, var.vm_os_offer), "Windows")) && ! var.data_disk) ? var.nb_instances : 0
