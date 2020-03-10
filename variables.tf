@@ -1,10 +1,5 @@
 variable "resource_group_name" {
   description = "The name of the resource group in which the resources will be created"
-  default     = "terraform-compute"
-}
-
-variable "location" {
-  description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
 
 variable "vnet_subnet_id" {
@@ -19,6 +14,12 @@ variable "public_ip_dns" {
 variable "admin_password" {
   description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure"
   default     = ""
+}
+
+variable "enable_ssh_key" {
+  description = "Enable ssh key authentication method"
+  type        = bool
+  default     = true
 }
 
 variable "ssh_key" {
@@ -48,7 +49,7 @@ variable "storage_account_type" {
 
 variable "vm_size" {
   description = "Specifies the size of the virtual machine."
-  default     = "Standard_DS1_V2"
+  default     = "Standard_D2s_v3"
 }
 
 variable "nb_instances" {
@@ -63,6 +64,7 @@ variable "vm_hostname" {
 
 variable "vm_os_simple" {
   description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
+  type        = string
   default     = ""
 }
 
@@ -105,14 +107,9 @@ variable "tags" {
   }
 }
 
-variable "public_ip_address_allocation" {
-  description = "This attribute is deprecated, and to be replaced by 'allocation_method'"
-  default     = ""
-}
-
 variable "allocation_method" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
-  default     = ""
+  default     = "Dynamic"
 }
 
 variable "nb_public_ip" {
