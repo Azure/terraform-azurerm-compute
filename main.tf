@@ -196,12 +196,10 @@ resource "azurerm_network_interface" "vm" {
     name                          = "${var.vm_hostname}-ip-${count.index}"
     subnet_id                     = var.vnet_subnet_id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.vm[count.index].id
+    public_ip_address_id          = length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""
   }
 
   tags = var.tags
-
-  depends_on = ["azurerm_public_ip.vm"]
 }
 
 resource "azurerm_network_interface_security_group_association" "test" {

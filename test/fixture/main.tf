@@ -50,9 +50,8 @@ module "ubuntuservers" {
   vnet_subnet_id                = azurerm_subnet.subnet2.id
   allocation_method             = "Static"
   enable_accelerated_networking = true
-//  enable_ssh_key                = false
   vm_size                       = "Standard_DS2_V2"
-//  ssh_key                       = var.ssh_key
+  nb_data_disk                  = 2
 }
 
 module "debianservers" {
@@ -66,8 +65,7 @@ module "debianservers" {
   public_ip_dns       = ["debiansimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   allocation_method   = "Static"
-//  enable_ssh_key      = false
-//  ssh_key                       = var.ssh_key
+  enable_ssh_key      = true
 }
 
 module "windowsservers" {
@@ -80,8 +78,3 @@ module "windowsservers" {
   public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
 }
-
-
-
-
-
