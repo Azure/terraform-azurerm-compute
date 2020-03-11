@@ -52,6 +52,7 @@ module "ubuntuservers" {
   enable_accelerated_networking = true
 //  enable_ssh_key                = false
   vm_size                       = "Standard_DS2_V2"
+  nb_public_ip =0
 }
 
 module "debianservers" {
@@ -72,6 +73,7 @@ module "windowsservers" {
   source              = "../../"
   vm_hostname         = "host${random_id.ip_dns.hex}-windows" // line can be removed if only one VM module per resource group
   resource_group_name = azurerm_resource_group.test.name
+  is_windows_image    = true
   admin_password      = "ComplxP@ssw0rd!"
   vm_os_simple        = "WindowsServer"
   public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region

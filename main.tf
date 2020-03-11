@@ -254,7 +254,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   }
 
   os_profile {
-    computer_name  = "${var.vm_hostname}-vmWindows-${count.index}"
+    computer_name  = "myWindows"
     admin_username = var.admin_username
     admin_password = var.admin_password
   }
