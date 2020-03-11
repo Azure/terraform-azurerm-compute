@@ -124,13 +124,7 @@ variable "data_sa_type" {
 
 variable "data_disk_size_gb" {
   description = "Storage data disk size size"
-  default     = ""
-}
-
-variable "data_disk" {
-  type        = bool
-  description = "Set to true to add a datadisk."
-  default     = false
+  default     = 30
 }
 
 variable "boot_diagnostics" {
@@ -148,4 +142,15 @@ variable "enable_accelerated_networking" {
   type        = bool
   description = "(Optional) Enable accelerated networking on Network interface"
   default     = false
+}
+
+variable "enable_ssh_key" {
+  type        = bool
+  description = "(Optional) Enable ssh key authentication in Linux virtual Machine"
+  default     = false
+}
+
+variable "nb_data_disk" {
+  description = "(Optional) Number of the data disks attached to each virtual machine"
+  default     = 0
 }

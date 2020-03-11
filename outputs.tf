@@ -1,6 +1,6 @@
 output "vm_ids" {
   description = "Virtual machine ids created."
-  value       = "${concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-windows-with-datadisk.*.id, azurerm_virtual_machine.vm-linux.*.id, azurerm_virtual_machine.vm-linux-with-datadisk.*.id)}"
+  value       = "${concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id)}"
 }
 
 output "network_security_group_id" {

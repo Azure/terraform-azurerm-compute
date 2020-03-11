@@ -1,5 +1,5 @@
 location            = "eastus"
-ssh_key             = "~/.ssh/id_rsa.pub"
+//ssh_key             = "~/.ssh/id_rsa.pub"
 vm_os_simple_1      = "UbuntuServer"
 vm_os_simple_2      = "Debian"
 admin_username      = "azureuser"

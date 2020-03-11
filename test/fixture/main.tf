@@ -52,7 +52,7 @@ module "ubuntuservers" {
   enable_accelerated_networking = true
 //  enable_ssh_key                = false
   vm_size                       = "Standard_DS2_V2"
-  ssh_key                       = var.ssh_key
+//  ssh_key                       = var.ssh_key
 }
 
 module "debianservers" {
@@ -67,7 +67,7 @@ module "debianservers" {
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   allocation_method   = "Static"
 //  enable_ssh_key      = false
-  ssh_key                       = var.ssh_key
+//  ssh_key                       = var.ssh_key
 }
 
 module "windowsservers" {
