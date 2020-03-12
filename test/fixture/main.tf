@@ -47,7 +47,7 @@ module "ubuntuservers" {
   admin_password                = var.admin_password
   vm_os_simple                  = var.vm_os_simple_1
   public_ip_dns                 = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
-  vnet_subnet_id                = azurerm_subnet.subnet2.id
+  vnet_subnet_id                = azurerm_subnet.subnet1.id
   allocation_method             = "Static"
   enable_accelerated_networking = true
   vm_size                       = "Standard_DS2_V2"
@@ -73,7 +73,8 @@ module "windowsservers" {
   vm_hostname         = "host${random_id.ip_dns.hex}-windows" // line can be removed if only one VM module per resource group
   resource_group_name = azurerm_resource_group.test.name
   is_windows_image    = true
-  admin_password      = "ComplxP@ssw0rd!"
+  admin_username      = var.admin_username
+  admin_password      = var.admin_password
   vm_os_simple        = "WindowsServer"
   public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
