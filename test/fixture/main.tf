@@ -52,6 +52,7 @@ module "ubuntuservers" {
   enable_accelerated_networking = true
   vm_size                       = "Standard_DS2_V2"
   nb_data_disk                  = 2
+  enable_ssh_key                = false
 }
 
 module "debianservers" {
