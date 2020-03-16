@@ -1,10 +1,5 @@
 variable "resource_group_name" {
   description = "The name of the resource group in which the resources will be created"
-  default     = "terraform-compute"
-}
-
-variable "location" {
-  description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
 
 variable "vnet_subnet_id" {
@@ -48,7 +43,7 @@ variable "storage_account_type" {
 
 variable "vm_size" {
   description = "Specifies the size of the virtual machine."
-  default     = "Standard_DS1_V2"
+  default     = "Standard_D2s_v3"
 }
 
 variable "nb_instances" {
@@ -63,6 +58,7 @@ variable "vm_hostname" {
 
 variable "vm_os_simple" {
   description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
+  type        = string
   default     = ""
 }
 
@@ -105,14 +101,9 @@ variable "tags" {
   }
 }
 
-variable "public_ip_address_allocation" {
-  description = "This attribute is deprecated, and to be replaced by 'allocation_method'"
-  default     = ""
-}
-
 variable "allocation_method" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
-  default     = ""
+  default     = "Dynamic"
 }
 
 variable "nb_public_ip" {
@@ -133,13 +124,7 @@ variable "data_sa_type" {
 
 variable "data_disk_size_gb" {
   description = "Storage data disk size size"
-  default     = ""
-}
-
-variable "data_disk" {
-  type        = bool
-  description = "Set to true to add a datadisk."
-  default     = false
+  default     = 30
 }
 
 variable "boot_diagnostics" {
@@ -157,4 +142,15 @@ variable "enable_accelerated_networking" {
   type        = bool
   description = "(Optional) Enable accelerated networking on Network interface"
   default     = false
+}
+
+variable "enable_ssh_key" {
+  type        = bool
+  description = "(Optional) Enable ssh key authentication in Linux virtual Machine"
+  default     = true
+}
+
+variable "nb_data_disk" {
+  description = "(Optional) Number of the data disks attached to each virtual machine"
+  default     = 0
 }
