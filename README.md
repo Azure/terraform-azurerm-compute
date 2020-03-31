@@ -93,6 +93,10 @@ More specifically this provisions:
 - "enable_ssh_key" Enable ssh key authentication in Linux virtual Machine
 
 ```hcl
+provider "azurerm" {
+  features {}
+}
+
 resource "azurerm_resource_group" "example" {
   name     = "example-resources"
   location = "West Europe"
@@ -107,7 +111,7 @@ module "linuxservers" {
   nb_instances                  = 2
   vm_os_publisher               = "Canonical"
   vm_os_offer                   = "UbuntuServer"
-  vm_os_sku                     = "14.04.2-LTS"
+  vm_os_sku                     = "18.04-LTS"
   vnet_subnet_id                = module.network.vnet_subnets[0]
   boot_diagnostics              = true
   delete_os_disk_on_termination = true
@@ -115,6 +119,7 @@ module "linuxservers" {
   data_disk_size_gb             = 64
   data_sa_type                  = "Premium_LRS"
   enable_ssh_key                = true
+  vm_size                       = "Standard_D4s_v3"
 
   tags = {
     environment = "dev"
@@ -128,6 +133,7 @@ module "windowsservers" {
   source                        = "Azure/compute/azurerm"
   resource_group_name           = azurerm_resource_group.example.name
   vm_hostname                   = "mywinvm"
+  is_windows_image              = true
   admin_password                = "ComplxP@ssw0rd!"
   public_ip_dns                 = ["winterravmip", "winterravmip1"]
   nb_public_ip                  = 2
@@ -137,15 +143,15 @@ module "windowsservers" {
   vm_os_offer                   = "WindowsServer"
   vm_os_sku                     = "2012-R2-Datacenter"
   vm_size                       = "Standard_DS2_V2"
-  vnet_subnet_id                = module.network.vnet_subnets[1]
+  vnet_subnet_id                = module.network.vnet_subnets[0]
   enable_accelerated_networking = true
 }
 
 module "network" {
   source              = "Azure/network/azurerm"
-  version             = "3.0.0"
+  version             = "3.0.1"
   resource_group_name = azurerm_resource_group.example.name
-  subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24"]
+  subnet_prefixes     = ["10.0.1.0/24"]
 
 }
 
