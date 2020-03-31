@@ -1,5 +1,5 @@
 # Pull the base image with given version.
-ARG BUILD_TERRAFORM_VERSION="0.12.10"
+ARG BUILD_TERRAFORM_VERSION="0.12.20"
 FROM mcr.microsoft.com/terraform-test:${BUILD_TERRAFORM_VERSION}
 
 ARG MODULE_NAME="terraform-azurerm-compute"
@@ -33,6 +33,5 @@ RUN ssh-keygen -q -t rsa -b 4096 -f $HOME/.ssh/id_rsa
 ENV GOPATH /go
 ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 RUN /bin/bash -c "curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh"
-RUN terraform init
 
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]
