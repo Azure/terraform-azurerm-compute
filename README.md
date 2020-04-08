@@ -21,6 +21,10 @@ This contains the bare minimum options to be configured for the VM to be provisi
 Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM using `vm_os_simple` to a new VNet and opens up ports 22 for SSH and 3389 for RDP access via the attached public IP to each VM.  All resources are provisioned into the default resource group called `terraform-compute`.  The Ubuntu Server will use the ssh key found in the default location `~/.ssh/id_rsa.pub`.
 
 ```hcl
+provider "azurerm" {
+  features {}
+}
+
 resource "azurerm_resource_group" "example" {
   name     = "example-resources"
   location = "West Europe"
@@ -42,7 +46,7 @@ module "windowsservers" {
   admin_password      = "ComplxP@ssw0rd!"
   vm_os_simple        = "WindowsServer"
   public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
-  vnet_subnet_id      = module.network.vnet_subnets[1]
+  vnet_subnet_id      = module.network.vnet_subnets[0]
 }
 
 module "network" {
@@ -51,7 +55,7 @@ module "network" {
   resource_group_name = azurerm_resource_group.example.name
   allow_rdp_traffic   = "true"
   allow_ssh_traffic   = "true"
-  subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24"]
+  subnet_prefixes     = ["10.0.1.0/24"]
 
 }
 

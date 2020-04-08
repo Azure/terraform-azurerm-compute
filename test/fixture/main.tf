@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "random_id" "ip_dns" {
-  byte_length = 8
+  byte_length = 4
 }
 
 resource "azurerm_resource_group" "test" {
@@ -41,7 +41,7 @@ resource "azurerm_subnet" "subnet3" {
 
 module "ubuntuservers" {
   source                        = "../../"
-  vm_hostname                   = "host${random_id.ip_dns.hex}-ubuntu"
+  vm_hostname                   = "${random_id.ip_dns.hex}-u"
   resource_group_name           = azurerm_resource_group.test.name
   admin_username                = var.admin_username
   admin_password                = var.admin_password
@@ -57,7 +57,7 @@ module "ubuntuservers" {
 
 module "debianservers" {
   source              = "../../"
-  vm_hostname         = "host${random_id.ip_dns.hex}-debian"
+  vm_hostname         = "${random_id.ip_dns.hex}-d"
   resource_group_name = azurerm_resource_group.test.name
   admin_username      = var.admin_username
   admin_password      = var.admin_password
@@ -71,7 +71,7 @@ module "debianservers" {
 
 module "windowsservers" {
   source              = "../../"
-  vm_hostname         = "host${random_id.ip_dns.hex}-windows" // line can be removed if only one VM module per resource group
+  vm_hostname         = "${random_id.ip_dns.hex}-w" // line can be removed if only one VM module per resource group
   resource_group_name = azurerm_resource_group.test.name
   is_windows_image    = true
   admin_username      = var.admin_username
