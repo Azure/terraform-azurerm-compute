@@ -73,6 +73,10 @@ resource "azurerm_virtual_machine" "vm-linux" {
     enabled     = var.boot_diagnostics
     storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
 
 resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {

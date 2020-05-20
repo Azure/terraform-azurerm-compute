@@ -3,6 +3,11 @@ output "vm_ids" {
   value       = "${concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-windows-with-datadisk.*.id, azurerm_virtual_machine.vm-linux.*.id, azurerm_virtual_machine.vm-linux-with-datadisk.*.id)}"
 }
 
+output "vm_identities" {
+  description = "identities of virtual machines created."
+  value       = "${concat(azurerm_virtual_machine.vm-windows.*.identity, azurerm_virtual_machine.vm-windows-with-datadisk.*.identity, azurerm_virtual_machine.vm-linux.*.identity, azurerm_virtual_machine.vm-linux-with-datadisk.*.identity)}"
+}
+
 output "network_security_group_id" {
   description = "id of the security group provisioned"
   value       = "${azurerm_network_security_group.vm.id}"
