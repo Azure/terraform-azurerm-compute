@@ -80,6 +80,6 @@ module "windowsservers" {
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   vm_os_simple        = "WindowsServer"
-  public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
+  public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
 }
