@@ -30,7 +30,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   name                          = "${var.vm_hostname}-${count.index + 1}"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id
+  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm[0].id
   vm_size                       = var.vm_size
   network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
@@ -84,7 +84,7 @@ resource "azurerm_virtual_machine" "vm-linux-with-datadisk" {
   name                          = "${var.vm_hostname}-${count.index + 1}"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id
+  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm[0].id
   vm_size                       = var.vm_size
   network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
@@ -142,7 +142,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   name                          = "${var.vm_hostname}-${count.index + 1}"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id
+  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm[0].id
   vm_size                       = var.vm_size
   network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
@@ -186,7 +186,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
   name                          = "${var.vm_hostname}-${count.index + 1}"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm.id
+  availability_set_id           = var.availability_set_id != "" ? var.availability_set_id : azurerm_availability_set.vm[0].id
   vm_size                       = var.vm_size
   network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
@@ -234,6 +234,7 @@ resource "azurerm_virtual_machine" "vm-windows-with-datadisk" {
 }
 
 resource "azurerm_availability_set" "vm" {
+  count                        = var.nb_instances > 0 ? 1 : 0
   name                         = "${var.vm_hostname}-avset"
   location                     = var.location
   resource_group_name          = var.resource_group_name
@@ -254,6 +255,7 @@ resource "azurerm_public_ip" "vm" {
 }
 
 resource "azurerm_network_security_group" "vm" {
+  count               = var.nb_instances > 0 ? 1 : 0
   name                = "${var.vm_hostname}-${coalesce(var.remote_port, module.os.calculated_remote_port)}-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -262,6 +264,7 @@ resource "azurerm_network_security_group" "vm" {
 }
 
 resource "azurerm_network_security_rule" "vm" {
+  count                       = var.nb_instances > 0 ? 1 : 0
   name                        = "allow_remote_${coalesce(var.remote_port, module.os.calculated_remote_port)}_in_all"
   description                 = "Allow remote protocol in from all locations"
   priority                    = 100
@@ -273,7 +276,7 @@ resource "azurerm_network_security_rule" "vm" {
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
-  network_security_group_name = azurerm_network_security_group.vm.name
+  network_security_group_name = azurerm_network_security_group.vm[0].name
 }
 
 resource "azurerm_network_interface" "vm" {
@@ -281,7 +284,7 @@ resource "azurerm_network_interface" "vm" {
   name                          = "nic-${var.vm_hostname}-${count.index + 1}"
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  network_security_group_id     = azurerm_network_security_group.vm.id
+  network_security_group_id     = azurerm_network_security_group.vm[0].id
   enable_accelerated_networking = var.enable_accelerated_networking
 
   ip_configuration {
