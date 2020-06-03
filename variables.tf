@@ -154,3 +154,8 @@ variable "nb_data_disk" {
   description = "(Optional) Number of the data disks attached to each virtual machine"
   default     = 0
 }
+
+variable "source_address_prefixes" {
+  description = "(Optional) List of source address prefixes allowed to access var.remote_port"
+  default     = ["0.0.0.0/0"]
+}
