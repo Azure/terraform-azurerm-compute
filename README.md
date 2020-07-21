@@ -21,41 +21,48 @@ This contains the bare minimum options to be configured for the VM to be provisi
 Provisions an Ubuntu Server 16.04-LTS VM and a Windows 2016 Datacenter Server VM using `vm_os_simple` to a new VNet and opens up ports 22 for SSH and 3389 for RDP access via the attached public IP to each VM.  All resources are provisioned into the default resource group called `terraform-compute`.  The Ubuntu Server will use the ssh key found in the default location `~/.ssh/id_rsa.pub`.
 
 ```hcl
-  module "linuxservers" {
-    source              = "Azure/compute/azurerm"
-    location            = "West US 2"
-    vm_os_simple        = "UbuntuServer"
-    public_ip_dns       = ["linsimplevmips"] // change to a unique name per datacenter region
-    vnet_subnet_id      = "${module.network.vnet_subnets[0]}"
-  }
+provider "azurerm" {
+  features {}
+}
 
-  module "windowsservers" {
-    source              = "Azure/compute/azurerm"
-    location            = "West US 2"
-    vm_hostname         = "mywinvm" // line can be removed if only one VM module per resource group
-    admin_password      = "ComplxP@ssw0rd!"
-    vm_os_simple        = "WindowsServer"
-    is_windows_image    = "true"
-    public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
-    vnet_subnet_id      = "${module.network.vnet_subnets[0]}"
-  }
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = "West Europe"
+}
 
-  module "network" {
-    source              = "Azure/network/azurerm"
-    version             = "~> 1.1.1"
-    location            = "West US 2"
-    allow_rdp_traffic   = "true"
-    allow_ssh_traffic   = "true"
-    resource_group_name = "terraform-compute"
-  }
+module "linuxservers" {
+  source              = "Azure/compute/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  vm_os_simple        = "UbuntuServer"
+  public_ip_dns       = ["linsimplevmips"] // change to a unique name per datacenter region
+  vnet_subnet_id      = module.network.vnet_subnets[0]
+}
 
-  output "linux_vm_public_name"{
-    value = "${module.linuxservers.public_ip_dns_name}"
-  }
+module "windowsservers" {
+  source              = "Azure/compute/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  is_windows_image    = true
+  vm_hostname         = "mywinvm" // line can be removed if only one VM module per resource group
+  admin_password      = "ComplxP@ssw0rd!"
+  vm_os_simple        = "WindowsServer"
+  public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
+  vnet_subnet_id      = module.network.vnet_subnets[0]
+}
 
-  output "windows_vm_public_name"{
-    value = "${module.windowsservers.public_ip_dns_name}"
-  }
+module "network" {
+  source              = "Azure/network/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  subnet_prefixes     = ["10.0.1.0/24"]
+  subnet_names        = ["subnet1"]
+}
+
+output "linux_vm_public_name" {
+  value = module.linuxservers.public_ip_dns_name
+}
+
+output "windows_vm_public_name" {
+  value = module.windowsservers.public_ip_dns_name
+}
 ```
 
 ## Advanced Usage
@@ -80,75 +87,89 @@ More specifically this provisions:
 - Two Public IP addresses (one for each VM)
 - Opens up port 3389 for RDP access using the password as shown
 
+3 - New features are supported in v3.0.0:
+
+- "nb_data_disk" Number of the data disks attached to each virtual machine
+
+- "enable_ssh_key" Enable ssh key authentication in Linux virtual Machine
+
 ```hcl
-  module "linuxservers" {
-    source                        = "Azure/compute/azurerm"
-    resource_group_name           = "terraform-advancedvms"
-    location                      = "westus2"
-    vm_hostname                   = "mylinuxvm"
-    nb_public_ip                  = "0"
-    remote_port                   = "22"
-    nb_instances                  = "2"
-    vm_os_publisher               = "Canonical"
-    vm_os_offer                   = "UbuntuServer"
-    vm_os_sku                     = "14.04.2-LTS"
-    vnet_subnet_id                = "${module.network.vnet_subnets[0]}"
-    boot_diagnostics              = "true"
-    delete_os_disk_on_termination = "true"
-    data_disk                     = "true"
-    data_disk_size_gb             = "64"
-    data_sa_type                  = "Premium_LRS"
+provider "azurerm" {
+  features {}
+}
 
-    tags = {
-      environment = "dev"
-      costcenter  = "it"
-    }
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = "West Europe"
+}
 
-    enable_accelerated_networking = "true"
+module "linuxservers" {
+  source                        = "Azure/compute/azurerm"
+  resource_group_name           = azurerm_resource_group.example.name
+  vm_hostname                   = "mylinuxvm"
+  nb_public_ip                  = 0
+  remote_port                   = "22"
+  nb_instances                  = 2
+  vm_os_publisher               = "Canonical"
+  vm_os_offer                   = "UbuntuServer"
+  vm_os_sku                     = "18.04-LTS"
+  vnet_subnet_id                = module.network.vnet_subnets[0]
+  boot_diagnostics              = true
+  delete_os_disk_on_termination = true
+  nb_data_disk                  = 2
+  data_disk_size_gb             = 64
+  data_sa_type                  = "Premium_LRS"
+  enable_ssh_key                = true
+  vm_size                       = "Standard_D4s_v3"
+
+  tags = {
+    environment = "dev"
+    costcenter  = "it"
   }
 
-  module "windowsservers" {
-    source                        = "Azure/compute/azurerm"
-    resource_group_name           = "terraform-advancedvms"
-    location                      = "westus2"
-    vm_hostname                   = "mywinvm"
-    admin_password                = "ComplxP@ssw0rd!"
-    public_ip_dns                 = ["winterravmip", "winterravmip1"]
-    nb_public_ip                  = "2"
-    remote_port                   = "3389"
-    nb_instances                  = "2"
-    vm_os_publisher               = "MicrosoftWindowsServer"
-    vm_os_offer                   = "WindowsServer"
-    vm_os_sku                     = "2012-R2-Datacenter"
-    vm_size                       = "Standard_DS2_V2"
-    vnet_subnet_id                = "${module.network.vnet_subnets[0]}"
-    enable_accelerated_networking = "true"
-  }
+  enable_accelerated_networking = true
+}
 
-  module "network" {
-    source              = "Azure/network/azurerm"
-    version             = "~> 1.1.1"
-    location            = "westus2"
-    allow_rdp_traffic   = "true"
-    allow_ssh_traffic   = "true"
-    resource_group_name = "terraform-advancedvms"
-  }
+module "windowsservers" {
+  source                        = "Azure/compute/azurerm"
+  resource_group_name           = azurerm_resource_group.example.name
+  vm_hostname                   = "mywinvm"
+  is_windows_image              = true
+  admin_password                = "ComplxP@ssw0rd!"
+  public_ip_dns                 = ["winterravmip", "winterravmip1"]
+  nb_public_ip                  = 2
+  remote_port                   = "3389"
+  nb_instances                  = 2
+  vm_os_publisher               = "MicrosoftWindowsServer"
+  vm_os_offer                   = "WindowsServer"
+  vm_os_sku                     = "2012-R2-Datacenter"
+  vm_size                       = "Standard_DS2_V2"
+  vnet_subnet_id                = module.network.vnet_subnets[0]
+  enable_accelerated_networking = true
+}
 
-  output "linux_vm_private_ips" {
-    value = "${module.linuxservers.network_interface_private_ip}"
-  }
+module "network" {
+  source              = "Azure/network/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  subnet_prefixes     = ["10.0.1.0/24"]
+  subnet_names        = ["subnet1"]
+}
 
-  output "windows_vm_public_name"{
-    value = "${module.windowsservers.public_ip_dns_name}"
-  }
+output "linux_vm_private_ips" {
+  value = module.linuxservers.network_interface_private_ip
+}
 
-  output "windows_vm_public_ip" {
-    value = "${module.windowsservers.public_ip_address}"
-  }
+output "windows_vm_public_name" {
+  value = module.windowsservers.public_ip_dns_name
+}
 
-  output "windows_vm_private_ips" {
-    value = "${module.windowsservers.network_interface_private_ip}"
-  }
+output "windows_vm_public_ip" {
+  value = module.windowsservers.public_ip_address
+}
+
+output "windows_vm_private_ips" {
+  value = module.windowsservers.network_interface_private_ip
+}
 
 ```
 

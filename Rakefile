@@ -26,7 +26,7 @@ namespace :integration do
     end
   end
   task :test do
-    success = system ("go test -v ./test/ -timeout 20m -args azureuser ~/.ssh/id_rsa")
+    success = system ("go test -v ./test/ -timeout 30m -args azureuser ~/.ssh/id_rsa")
     if not success 
       raise "ERROR: Go test failed!\n".red
     end

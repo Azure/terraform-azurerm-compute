@@ -1,10 +1,10 @@
 variable "resource_group_name" {
   description = "The name of the resource group in which the resources will be created."
-  default     = "terraform-compute"
 }
 
 variable "location" {
-  description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
+  description = "(Optional) The location in which the resources will be created."
+  default     = ""
 }
 
 variable "vnet_subnet_id" {
@@ -13,7 +13,7 @@ variable "vnet_subnet_id" {
 
 variable "public_ip_dns" {
   description = "Optional globally unique per datacenter region domain name label to apply to each public ip address. e.g. thisvar.varlocation.cloudapp.azure.com where you specify only thisvar here. This is an array of names which will pair up sequentially to the number of public ips defined in var.nb_public_ip. One name or empty string is required for every public ip. If no public ip is desired, then set this to an array with a single empty string."
-  default     = [""]
+  default     = [null]
 }
 
 variable "admin_password" {
@@ -48,7 +48,7 @@ variable "storage_account_type" {
 
 variable "vm_size" {
   description = "Specifies the size of the virtual machine."
-  default     = "Standard_DS1_V2"
+  default     = "Standard_D2s_v3"
 }
 
 variable "nb_instances" {
@@ -63,6 +63,7 @@ variable "vm_hostname" {
 
 variable "vm_os_simple" {
   description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
+  type        = string
   default     = ""
 }
 
@@ -73,7 +74,7 @@ variable "vm_os_id" {
 
 variable "is_windows_image" {
   description = "Boolean flag to notify when the custom image is windows based."
-  default     = "false"
+  default     = false
 }
 
 variable "vm_os_publisher" {
@@ -97,7 +98,7 @@ variable "vm_os_version" {
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map(string)
   description = "A map of the tags to use on the resources that are deployed with this module."
 
   default = {
@@ -105,9 +106,9 @@ variable "tags" {
   }
 }
 
-variable "public_ip_address_allocation" {
+variable "allocation_method" {
   description = "Defines how an IP address is assigned. Options are Static or Dynamic."
-  default     = "dynamic"
+  default     = "Dynamic"
 }
 
 variable "nb_public_ip" {
@@ -116,8 +117,9 @@ variable "nb_public_ip" {
 }
 
 variable "delete_os_disk_on_termination" {
+  type        = bool
   description = "Delete datadisk when machine is terminated."
-  default     = "false"
+  default     = false
 }
 
 variable "data_sa_type" {
@@ -126,19 +128,14 @@ variable "data_sa_type" {
 }
 
 variable "data_disk_size_gb" {
-  description = "Storage data-disk-size size."
-  default     = ""
-}
-
-variable "data_disk" {
-  type        = "string"
-  description = "Set to true to add a datadisk."
-  default     = "false"
+  description = "Storage data disk size size."
+  default     = 30
 }
 
 variable "boot_diagnostics" {
+  type        = bool
   description = "(Optional) Enable or Disable boot diagnostics."
-  default     = "false"
+  default     = false
 }
 
 variable "boot_diagnostics_sa_type" {
@@ -147,7 +144,18 @@ variable "boot_diagnostics_sa_type" {
 }
 
 variable "enable_accelerated_networking" {
-  type        = "string"
+  type        = bool
   description = "(Optional) Enable accelerated networking on Network interface."
-  default     = "false"
+  default     = false
+}
+
+variable "enable_ssh_key" {
+  type        = bool
+  description = "(Optional) Enable ssh key authentication in Linux virtual Machine."
+  default     = true
+}
+
+variable "nb_data_disk" {
+  description = "(Optional) Number of the data disks attached to each virtual machine."
+  default     = 0
 }
