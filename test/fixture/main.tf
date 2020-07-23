@@ -13,7 +13,7 @@ resource "azurerm_resource_group" "test" {
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "host${random_id.ip_dns.hex}-vn"
-  location            = var.location
+  location            = var.location_alt
   address_space       = ["10.0.0.0/16"]
   resource_group_name = azurerm_resource_group.test.name
 }
@@ -43,6 +43,7 @@ module "ubuntuservers" {
   source                        = "../../"
   vm_hostname                   = "${random_id.ip_dns.hex}-u"
   resource_group_name           = azurerm_resource_group.test.name
+  location                      = var.location_alt
   admin_username                = var.admin_username
   admin_password                = var.admin_password
   vm_os_simple                  = var.vm_os_simple_1
@@ -59,6 +60,7 @@ module "debianservers" {
   source              = "../../"
   vm_hostname         = "${random_id.ip_dns.hex}-d"
   resource_group_name = azurerm_resource_group.test.name
+  location            = var.location_alt
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   custom_data         = var.custom_data
@@ -73,10 +75,11 @@ module "windowsservers" {
   source              = "../../"
   vm_hostname         = "${random_id.ip_dns.hex}-w" // line can be removed if only one VM module per resource group
   resource_group_name = azurerm_resource_group.test.name
+  location            = var.location_alt
   is_windows_image    = true
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   vm_os_simple        = "WindowsServer"
-  public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
+  public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
 }

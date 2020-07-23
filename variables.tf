@@ -1,5 +1,10 @@
 variable "resource_group_name" {
-  description = "The name of the resource group in which the resources will be created"
+  description = "The name of the resource group in which the resources will be created."
+}
+
+variable "location" {
+  description = "(Optional) The location in which the resources will be created."
+  default     = ""
 }
 
 variable "vnet_subnet_id" {
@@ -12,12 +17,12 @@ variable "public_ip_dns" {
 }
 
 variable "admin_password" {
-  description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure"
+  description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure."
   default     = ""
 }
 
 variable "ssh_key" {
-  description = "Path to the public key to be used for ssh access to the VM.  Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub"
+  description = "Path to the public key to be used for ssh access to the VM.  Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub."
   default     = "~/.ssh/id_rsa.pub"
 }
 
@@ -27,7 +32,7 @@ variable "remote_port" {
 }
 
 variable "admin_username" {
-  description = "The admin username of the VM that will be deployed"
+  description = "The admin username of the VM that will be deployed."
   default     = "azureuser"
 }
 
@@ -47,12 +52,12 @@ variable "vm_size" {
 }
 
 variable "nb_instances" {
-  description = "Specify the number of vm instances"
+  description = "Specify the number of vm instances."
   default     = "1"
 }
 
 variable "vm_hostname" {
-  description = "local name of the VM"
+  description = "local name of the Virtual Machine."
   default     = "myvm"
 }
 
@@ -113,45 +118,45 @@ variable "nb_public_ip" {
 
 variable "delete_os_disk_on_termination" {
   type        = bool
-  description = "Delete datadisk when machine is terminated"
+  description = "Delete datadisk when machine is terminated."
   default     = false
 }
 
 variable "data_sa_type" {
-  description = "Data Disk Storage Account type"
+  description = "Data Disk Storage Account type."
   default     = "Standard_LRS"
 }
 
 variable "data_disk_size_gb" {
-  description = "Storage data disk size size"
+  description = "Storage data disk size size."
   default     = 30
 }
 
 variable "boot_diagnostics" {
   type        = bool
-  description = "(Optional) Enable or Disable boot diagnostics"
+  description = "(Optional) Enable or Disable boot diagnostics."
   default     = false
 }
 
 variable "boot_diagnostics_sa_type" {
-  description = "(Optional) Storage account type for boot diagnostics"
+  description = "(Optional) Storage account type for boot diagnostics."
   default     = "Standard_LRS"
 }
 
 variable "enable_accelerated_networking" {
   type        = bool
-  description = "(Optional) Enable accelerated networking on Network interface"
+  description = "(Optional) Enable accelerated networking on Network interface."
   default     = false
 }
 
 variable "enable_ssh_key" {
   type        = bool
-  description = "(Optional) Enable ssh key authentication in Linux virtual Machine"
+  description = "(Optional) Enable ssh key authentication in Linux virtual Machine."
   default     = true
 }
 
 variable "nb_data_disk" {
-  description = "(Optional) Number of the data disks attached to each virtual machine"
+  description = "(Optional) Number of the data disks attached to each virtual machine."
   default     = 0
 }
 

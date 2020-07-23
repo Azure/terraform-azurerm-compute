@@ -1,4 +1,5 @@
 location       = "eastus"
+location_alt   = "eastus2"
 vm_os_simple_1 = "UbuntuServer"
 vm_os_simple_2 = "Debian"
 admin_username = "azureuser"
