@@ -161,6 +161,6 @@ variable "nb_data_disk" {
 }
 
 variable "source_address_prefixes" {
-  description = "(Optional) List of source address prefixes allowed to access var.remote_port"
-  default     = ["0.0.0.0/0"]
+  description = "(Optional) List of source address prefixes allowed to access var.remote_port."
+  default     = ["*"]
 }
