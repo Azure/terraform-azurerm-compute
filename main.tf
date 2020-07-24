@@ -175,7 +175,7 @@ resource "azurerm_network_security_rule" "vm" {
   name                        = "allow_remote_${coalesce(var.remote_port, module.os.calculated_remote_port)}_in_all"
   resource_group_name         = data.azurerm_resource_group.vm.name
   description                 = "Allow remote protocol in from all locations"
-  priority                    = 100
+  priority                    = 101
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
