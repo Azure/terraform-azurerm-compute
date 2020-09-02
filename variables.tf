@@ -164,3 +164,14 @@ variable "source_address_prefixes" {
   description = "(Optional) List of source address prefixes allowed to access var.remote_port."
   default     = ["0.0.0.0/0"]
 }
+
+variable "identity_type" {
+  description = "The Managed Service Identity Type of this Virtual Machine."
+  default     = ""
+}
+
+variable "identity_ids" {
+  type        = list(string)
+  description = "Specifies a list of user managed identity ids to be assigned to the VM."
+  default     = []
+}
