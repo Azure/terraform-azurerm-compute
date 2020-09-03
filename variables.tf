@@ -167,11 +167,12 @@ variable "source_address_prefixes" {
 
 variable "identity_type" {
   description = "The Managed Service Identity Type of this Virtual Machine."
+  type        = string
   default     = ""
 }
 
 variable "identity_ids" {
-  type        = list(string)
   description = "Specifies a list of user managed identity ids to be assigned to the VM."
+  type        = list(string)
   default     = []
 }
