@@ -45,7 +45,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   dynamic identity {
     for_each = length(var.identity_ids) > 0 || var.identity_type == "UserAssigned" ? [var.identity_type] : []
     content {
-      type = var.identity_type
+      type         = var.identity_type
       identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : []
     }
   }
