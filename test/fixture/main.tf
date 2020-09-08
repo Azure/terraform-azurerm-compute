@@ -22,21 +22,21 @@ resource "azurerm_subnet" "subnet1" {
   name                 = "host${random_id.ip_dns.hex}-sn-1"
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.test.name
-  address_prefix       = "10.0.1.0/24"
+  address_prefixes     = ["10.0.1.0/24"]
 }
 
 resource "azurerm_subnet" "subnet2" {
   name                 = "host${random_id.ip_dns.hex}-sn-2"
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.test.name
-  address_prefix       = "10.0.2.0/24"
+  address_prefixes     = ["10.0.2.0/24"]
 }
 
 resource "azurerm_subnet" "subnet3" {
   name                 = "host${random_id.ip_dns.hex}-sn-3"
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.test.name
-  address_prefix       = "10.0.3.0/24"
+  address_prefixes     = ["10.0.3.0/24"]
 }
 
 module "ubuntuservers" {
@@ -55,6 +55,7 @@ module "ubuntuservers" {
   nb_data_disk                  = 2
   enable_ssh_key                = false
   identity_type                 = var.identity_type
+  depends_on = [azurerm_resource_group.test]
 }
 
 module "debianservers" {
@@ -71,6 +72,7 @@ module "debianservers" {
   allocation_method   = "Static"
   enable_ssh_key      = true
   identity_type       = var.identity_type
+  depends_on = [azurerm_resource_group.test]
 }
 
 module "windowsservers" {
@@ -85,4 +87,5 @@ module "windowsservers" {
   public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
   identity_type       = var.identity_type
+  depends_on = [azurerm_resource_group.test]
 }
