@@ -54,6 +54,7 @@ module "ubuntuservers" {
   vm_size                       = "Standard_DS2_V2"
   nb_data_disk                  = 2
   enable_ssh_key                = false
+  identity_type                 = var.identity_type
 }
 
 module "debianservers" {
@@ -69,6 +70,7 @@ module "debianservers" {
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   allocation_method   = "Static"
   enable_ssh_key      = true
+  identity_type       = var.identity_type
 }
 
 module "windowsservers" {
@@ -82,4 +84,5 @@ module "windowsservers" {
   vm_os_simple        = "WindowsServer"
   public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
+  identity_type       = var.identity_type
 }

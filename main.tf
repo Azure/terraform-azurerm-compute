@@ -113,6 +113,21 @@ resource "azurerm_virtual_machine" "vm-windows" {
   network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
 
+  dynamic identity {
+    for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
+    content {
+      type = var.identity_type
+    }
+  }
+
+  dynamic identity {
+    for_each = length(var.identity_ids) > 0 || var.identity_type == "UserAssigned" ? [var.identity_type] : []
+    content {
+      type         = var.identity_type
+      identity_ids = length(var.identity_ids) > 0 ? var.identity_ids : []
+    }
+  }
+
   storage_image_reference {
     id        = var.vm_os_id
     publisher = var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""

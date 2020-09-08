@@ -146,6 +146,8 @@ module "windowsservers" {
   vm_size                       = "Standard_DS2_V2"
   vnet_subnet_id                = module.network.vnet_subnets[0]
   enable_accelerated_networking = true
+  identity_type                 = "SystemAssigned" // can be empty, SystemAssigned or UserAssigned
+  #identity_ids                 = ["1234-1234-12345678-1234"] // list of ids to use when UserAssigned identity_type is used
 }
 
 module "network" {
