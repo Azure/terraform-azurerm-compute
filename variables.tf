@@ -190,3 +190,14 @@ variable "source_address_prefixes" {
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
+
+variable "license_type" {
+  description = "Specifies the BYOL Type for this Virtual Machine. This is only applicable to Windows Virtual Machines. Possible values are Windows_Client and Windows_Server"
+  type        = string
+  default     = ""
+
+  validation {
+    condition = var.is_windows_image == true
+    error_message = "The license_type value can only be supplied when var.is_windows_image is true"
+  }
+}
