@@ -8,11 +8,6 @@ output "vm_principal_ids" {
   value       = concat(azurerm_virtual_machine.vm-windows.*.identity.0.principal_id, azurerm_virtual_machine.vm-linux.*.identity.0.principal_id)
 }
 
-output "vm_principal_ids" {
- description = "Virtual machine service principals created."
- value = concat(azurerm_virtual_machine.vm-windows.*.identity.0.principal_id, azurerm_virtual_machine.vm-linux.*.identity.0.principal_id)
-}
-
 output "network_security_group_id" {
   description = "id of the security group provisioned"
   value       = azurerm_network_security_group.vm.id
