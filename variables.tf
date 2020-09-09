@@ -197,7 +197,7 @@ variable "license_type" {
   default     = ""
 
   validation {
-    condition = var.is_windows_image == true
-    error_message = "The license_type value can only be supplied when var.is_windows_image is true"
+    condition = var.is_windows_image == true && (var.license_type == "Windows_Client" || var.license_type == "Windows_Server")
+    error_message = "Valid values for license_type are Windows_Client and Windows_Server"
   }
 }
