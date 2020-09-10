@@ -23,13 +23,9 @@ output "windows_ip_address" {
 }
 
 output "ubuntu_identity_type" {
-  value = module.ubuntuservers.identity_type
-}
-
-output "debian_identity_type" {
-  value = module.debianservers.identity_type
+  value = module.ubuntuservers.vm_identity
 }
 
 output "windows_identity_type" {
-  value = module.windowsservers.identity_type
+  value = module.windowsservers.vm_identity
 }
