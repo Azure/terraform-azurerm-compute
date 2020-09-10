@@ -39,6 +39,13 @@ resource "azurerm_subnet" "subnet3" {
   address_prefixes     = ["10.0.3.0/24"]
 }
 
+resource "azurerm_user_assigned_identity" "test" {
+  resource_group_name = azurerm_resource_group.test.name
+  location            = azurerm_resource_group.test.location
+
+  name = "host${random_id.ip_dns.hex}-id"
+}
+
 module "ubuntuservers" {
   source                        = "../../"
   vm_hostname                   = "${random_id.ip_dns.hex}-u"
@@ -54,7 +61,8 @@ module "ubuntuservers" {
   vm_size                       = "Standard_DS2_V2"
   nb_data_disk                  = 2
   enable_ssh_key                = false
-  identity_type                 = var.identity_type
+  identity_type                 = "UserAssigned"
+  identity_ids                  = [azurerm_user_assigned_identity.test.id]
   depends_on = [azurerm_resource_group.test]
 }
 
@@ -71,7 +79,6 @@ module "debianservers" {
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   allocation_method   = "Static"
   enable_ssh_key      = true
-  identity_type       = var.identity_type
   depends_on = [azurerm_resource_group.test]
 }
 
