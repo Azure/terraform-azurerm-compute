@@ -21,3 +21,11 @@ output "debian_ip_address" {
 output "windows_ip_address" {
   value = module.windowsservers.public_ip_address
 }
+
+output "ubuntu_identity_type" {
+  value = module.ubuntuservers.vm_identity
+}
+
+output "windows_identity_type" {
+  value = module.windowsservers.vm_identity
+}
