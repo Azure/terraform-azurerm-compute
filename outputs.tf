@@ -3,11 +3,6 @@ output "vm_ids" {
   value       = concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id)
 }
 
-output "vm_principal_ids" {
-  description = "Virtual machine service principals created."
-  value       = concat(azurerm_virtual_machine.vm-windows.*.identity.0.principal_id, azurerm_virtual_machine.vm-linux.*.identity.0.principal_id)
-}
-
 output "network_security_group_id" {
   description = "id of the security group provisioned"
   value       = azurerm_network_security_group.vm.id
@@ -53,7 +48,8 @@ output "vm_zones" {
   value       = zipmap(concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id), concat(azurerm_virtual_machine.vm-windows.*.zones, azurerm_virtual_machine.vm-linux.*.zones))
 }
 
-output "identity_types" {
-  description = "managed service identity types"
-  value       = zipmap(concat(azurerm_virtual_machine.vm-windows.*.identity.type, azurerm_virtual_machine.vm-linux.*.identity.type))
+
+output "vm_identity" {
+  description = "map with key `Virtual Machine Id`, value `list of identity` created for the Virtual Machine."
+  value       = zipmap(concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id), concat(azurerm_virtual_machine.vm-windows.*.identity, azurerm_virtual_machine.vm-linux.*.identity))
 }
