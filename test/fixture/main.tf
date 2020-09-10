@@ -63,6 +63,7 @@ module "ubuntuservers" {
   enable_ssh_key                = false
   identity_type                 = "UserAssigned"
   identity_ids                  = [azurerm_user_assigned_identity.test.id]
+  
   depends_on = [azurerm_resource_group.test]
 }
 
@@ -79,6 +80,7 @@ module "debianservers" {
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   allocation_method   = "Static"
   enable_ssh_key      = true
+  
   depends_on = [azurerm_resource_group.test]
 }
 
@@ -94,5 +96,6 @@ module "windowsservers" {
   public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
   identity_type       = var.identity_type
+  
   depends_on = [azurerm_resource_group.test]
 }
