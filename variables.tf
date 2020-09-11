@@ -201,3 +201,15 @@ variable "license_type" {
     error_message = "Valid values for license_type are Windows_Client and Windows_Server"
   }
 }
+
+variable "identity_type" {
+  description = "The Managed Service Identity Type of this Virtual Machine."
+  type        = string
+  default     = ""
+}
+
+variable "identity_ids" {
+  description = "Specifies a list of user managed identity ids to be assigned to the VM."
+  type        = list(string)
+  default     = []
+}

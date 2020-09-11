@@ -6,3 +6,4 @@ variable "admin_username" {}
 variable "admin_password" {}
 variable "custom_data" {}
 variable "license_type" {}
+variable "identity_type" {}
