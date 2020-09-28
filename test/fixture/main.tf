@@ -97,5 +97,6 @@ module "windowsservers" {
   vnet_subnet_id      = azurerm_subnet.subnet3.id
   license_type        = var.license_type
   identity_type       = var.identity_type
+  
   depends_on = [azurerm_resource_group.test]
 }

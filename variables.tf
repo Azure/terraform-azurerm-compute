@@ -194,12 +194,7 @@ variable "source_address_prefixes" {
 variable "license_type" {
   description = "Specifies the BYOL Type for this Virtual Machine. This is only applicable to Windows Virtual Machines. Possible values are Windows_Client and Windows_Server"
   type        = string
-  default     = ""
-
-  validation {
-    condition     = var.is_windows_image == true && (var.license_type == "Windows_Client" || var.license_type == "Windows_Server")
-    error_message = "Valid values for license_type are Windows_Client and Windows_Server"
-  }
+  default     = null
 }
 
 variable "identity_type" {
