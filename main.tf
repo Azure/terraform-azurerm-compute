@@ -112,6 +112,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   vm_size                       = var.vm_size
   network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
+  license_type                  = var.license_type
 
   dynamic identity {
     for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []

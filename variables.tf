@@ -191,6 +191,12 @@ variable "source_address_prefixes" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "license_type" {
+  description = "Specifies the BYOL Type for this Virtual Machine. This is only applicable to Windows Virtual Machines. Possible values are Windows_Client and Windows_Server"
+  type        = string
+  default     = null
+}
+
 variable "identity_type" {
   description = "The Managed Service Identity Type of this Virtual Machine."
   type        = string
