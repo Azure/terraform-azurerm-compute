@@ -87,10 +87,10 @@ resource "azurerm_virtual_machine" "vm-linux" {
     disable_password_authentication = var.enable_ssh_key
 
     dynamic ssh_keys {
-      for_each = var.enable_ssh_key ? [var.ssh_key] : []
+      for_each = var.enable_ssh_key ? var.ssh_keys : []
       content {
         path     = "/home/${var.admin_username}/.ssh/authorized_keys"
-        key_data = file(var.ssh_key)
+        key_data = file(ssh_keys.value)
       }
     }
   }
