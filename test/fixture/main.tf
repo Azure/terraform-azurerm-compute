@@ -80,7 +80,8 @@ module "debianservers" {
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   allocation_method   = "Static"
   enable_ssh_key      = true
-  
+  extra_ssh_keys      = ["monica_id_rsa.pub"]
+
   depends_on = [azurerm_resource_group.test]
 }
 
