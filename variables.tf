@@ -131,6 +131,12 @@ variable "allocation_method" {
   default     = "Dynamic"
 }
 
+variable "public_ip_sku" {
+  description = "Defines the SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Basic."
+  type        = string
+  default     = "Basic"
+}
+
 variable "nb_public_ip" {
   description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
   type        = number

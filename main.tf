@@ -189,6 +189,7 @@ resource "azurerm_public_ip" "vm" {
   resource_group_name = data.azurerm_resource_group.vm.name
   location            = coalesce(var.location, data.azurerm_resource_group.vm.location)
   allocation_method   = var.allocation_method
+  sku                 = var.public_ip_sku
   domain_name_label   = element(var.public_ip_dns, count.index)
   tags                = var.tags
 }
