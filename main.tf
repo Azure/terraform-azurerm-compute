@@ -76,6 +76,17 @@ resource "azurerm_virtual_machine" "vm-linux" {
     }
   }
 
+  dynamic storage_data_disk {
+    for_each = var.extra_disks
+    content {
+      name              = "${var.vm_hostname}-extradisk-${count.index}-${storage_data_disk.value.name}"
+      create_option     = "Empty"
+      lun               = storage_data_disk.key + var.nb_data_disk
+      disk_size_gb      = storage_data_disk.value.size
+      managed_disk_type = var.data_sa_type
+    }
+  }
+
   os_profile {
     computer_name  = "${var.vm_hostname}-${count.index}"
     admin_username = var.admin_username
@@ -151,6 +162,17 @@ resource "azurerm_virtual_machine" "vm-windows" {
       create_option     = "Empty"
       lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
+      managed_disk_type = var.data_sa_type
+    }
+  }
+
+  dynamic storage_data_disk {
+    for_each = var.extra_disks
+    content {
+      name              = "${var.vm_hostname}-extradisk-${count.index}-${storage_data_disk.value.name}"
+      create_option     = "Empty"
+      lun               = storage_data_disk.key + var.nb_data_disk
+      disk_size_gb      = storage_data_disk.value.size
       managed_disk_type = var.data_sa_type
     }
   }

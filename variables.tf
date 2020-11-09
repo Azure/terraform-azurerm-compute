@@ -208,3 +208,12 @@ variable "identity_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "extra_disks" {
+  description = "(Optional) List of extra data disks attached to each virtual machine."
+  type = list(object({
+    name  = string
+    size  = number
+  }))
+  default = []
+}
