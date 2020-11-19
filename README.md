@@ -197,6 +197,8 @@ module "windowsservers" {
   vm_size                       = "Standard_DS2_V2"
   vnet_subnet_id                = module.network.vnet_subnets[0]
   enable_accelerated_networking = true
+  license_type                  = "Windows_Client"
+  identity_type                 = "SystemAssigned" // can be empty, SystemAssigned or UserAssigned
 }
 
 module "network" {

@@ -190,3 +190,21 @@ variable "source_address_prefixes" {
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
+
+variable "license_type" {
+  description = "Specifies the BYOL Type for this Virtual Machine. This is only applicable to Windows Virtual Machines. Possible values are Windows_Client and Windows_Server"
+  type        = string
+  default     = null
+}
+
+variable "identity_type" {
+  description = "The Managed Service Identity Type of this Virtual Machine."
+  type        = string
+  default     = ""
+}
+
+variable "identity_ids" {
+  description = "Specifies a list of user managed identity ids to be assigned to the VM."
+  type        = list(string)
+  default     = []
+}
