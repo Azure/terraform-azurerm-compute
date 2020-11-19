@@ -124,7 +124,7 @@ More specifically this provisions:
 
 1 - New vnet for all vms
 
-2 - Ubuntu 14.04 Server VMs using `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` which is configured with:
+2 - Ubuntu 18.04 Server VMs using `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` which is configured with:
 
 - No public IP assigned, so access can only happen through another machine on the vnet.
 - Opens up port 22 for SSH access with the default ~/.ssh/id_rsa.pub key
@@ -142,7 +142,11 @@ More specifically this provisions:
 
 - "nb_data_disk" Number of the data disks attached to each virtual machine
 
-- "enable_ssh_key" Enable ssh key authentication in Linux virtual Machine
+- "enable_ssh_key" Enable ssh key authentication in Linux virtual Machine.
+  When ssh keys are enabled you can either
+  - use the default "~/.ssh/id_rsa.pub"
+  - set one key by setting a path in ssh_key variable. e.g "joey_id_rsa.pub"
+  - set shh_key and add zero or more files paths in extra_ssh_keys variable e.g. ["ross_id_rsa.pub", "rachel_id_rsa.pub"] (since v3.8.0)
 
 ```hcl
 provider "azurerm" {
