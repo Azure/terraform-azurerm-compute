@@ -57,6 +57,7 @@ module "ubuntuservers" {
   public_ip_dns                 = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
   vnet_subnet_id                = azurerm_subnet.subnet1.id
   allocation_method             = "Static"
+  public_ip_sku                 = "Standard"
   enable_accelerated_networking = true
   vm_size                       = "Standard_DS2_V2"
   nb_data_disk                  = 2
@@ -80,7 +81,8 @@ module "debianservers" {
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   allocation_method   = "Static"
   enable_ssh_key      = true
-  
+  extra_ssh_keys      = ["monica_id_rsa.pub"]
+
   depends_on = [azurerm_resource_group.test]
 }
 

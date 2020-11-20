@@ -7,6 +7,10 @@ data "azurerm_resource_group" "vm" {
   name = var.resource_group_name
 }
 
+locals {
+  ssh_keys = concat([var.ssh_key], var.extra_ssh_keys)
+}
+
 resource "random_id" "vm-sa" {
   keepers = {
     vm_hostname = var.vm_hostname
@@ -98,10 +102,10 @@ resource "azurerm_virtual_machine" "vm-linux" {
     disable_password_authentication = var.enable_ssh_key
 
     dynamic ssh_keys {
-      for_each = var.enable_ssh_key ? [var.ssh_key] : []
+      for_each = var.enable_ssh_key ? local.ssh_keys : []
       content {
         path     = "/home/${var.admin_username}/.ssh/authorized_keys"
-        key_data = file(var.ssh_key)
+        key_data = file(ssh_keys.value)
       }
     }
   }
@@ -211,6 +215,7 @@ resource "azurerm_public_ip" "vm" {
   resource_group_name = data.azurerm_resource_group.vm.name
   location            = coalesce(var.location, data.azurerm_resource_group.vm.location)
   allocation_method   = var.allocation_method
+  sku                 = var.public_ip_sku
   domain_name_label   = element(var.public_ip_dns, count.index)
   tags                = var.tags
 }

@@ -11,6 +11,7 @@ This Terraform module deploys Virtual Machines in Azure with the following chara
 - Network Security Group (NSG) created with a single remote access rule which opens `var.remote_port` port or auto calculated port number if using `var.vm_os_simple` to all nics
 - VM nics attached to a single virtual network subnet of your choice (new or existing) via `var.vnet_subnet_id`.
 - Control the number of Public IP addresses assigned to VMs via `var.nb_public_ip`. Create and attach one Public IP per VM up to the number of VMs or create NO public IPs via setting `var.nb_public_ip` to `0`.
+- Control SKU and Allocation Method of the public IPs via `var.allocation_method` and `var.public_ip_sku`.
 
 > Note: Terraform module registry is incorrect in the number of required parameters since it only deems required based on variables with non-existent values.  The actual minimum required variables depends on the configuration and is specified below in the usage.
 
@@ -124,7 +125,7 @@ More specifically this provisions:
 
 1 - New vnet for all vms
 
-2 - Ubuntu 14.04 Server VMs using `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` which is configured with:
+2 - Ubuntu 18.04 Server VMs using `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` which is configured with:
 
 - No public IP assigned, so access can only happen through another machine on the vnet.
 - Opens up port 22 for SSH access with the default ~/.ssh/id_rsa.pub key
@@ -136,13 +137,18 @@ More specifically this provisions:
 2 - Windows Server 2012 R2 VMs using `vm_os_publisher`, `vm_os_offer` and `vm_os_sku` which is configured with:
 
 - Two Public IP addresses (one for each VM)
+- Public IP Addresses allocation method is Static and SKU is Standard
 - Opens up port 3389 for RDP access using the password as shown
 
 3 - New features are supported in v3.0.0:
 
 - "nb_data_disk" Number of the data disks attached to each virtual machine
 
-- "enable_ssh_key" Enable ssh key authentication in Linux virtual Machine
+- "enable_ssh_key" Enable ssh key authentication in Linux virtual Machine.
+  When ssh keys are enabled you can either
+  - use the default "~/.ssh/id_rsa.pub"
+  - set one key by setting a path in ssh_key variable. e.g "joey_id_rsa.pub"
+  - set shh_key and add zero or more files paths in extra_ssh_keys variable e.g. ["ross_id_rsa.pub", "rachel_id_rsa.pub"] (since v3.8.0)
 
 ```hcl
 provider "azurerm" {
@@ -187,6 +193,8 @@ module "windowsservers" {
   vm_hostname                   = "mywinvm"
   is_windows_image              = true
   admin_password                = "ComplxP@ssw0rd!"
+  allocation_method             = "Static"
+  public_ip_sku                 = "Standard"
   public_ip_dns                 = ["winterravmip", "winterravmip1"]
   nb_public_ip                  = 2
   remote_port                   = "3389"
