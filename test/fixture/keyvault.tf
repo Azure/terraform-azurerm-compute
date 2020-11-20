@@ -1,18 +1,35 @@
 data "azurerm_client_config" "current" {}
 
-resource "azurerm_key_vault" "example" {
-  name                        = "testvault"
-  location                    = azurerm_resource_group.example.location
-  resource_group_name         = azurerm_resource_group.example.name
+resource "azurerm_key_vault" "test" {
+  name                        = "test${random_id.ip_dns.hex}kv"
+  location                    = azurerm_resource_group.test.location
+  resource_group_name         = azurerm_resource_group.test.name
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_enabled         = false
 
   sku_name = "standard"
 
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
+  network_acls {
+    default_action = "Allow"
+  }
+
+  contact {
+    email = "example@example.com"
+    name  = "example"
+    phone = "0123456789"
+  }
+
+  tags = {
+    environment = "Testing"
+  }
+}
+
+resource "azurerm_key_vault_access_policy" "test" {
+  key_vault_id = azurerm_key_vault.test.id
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azurerm_client_config.current.object_id
 
     certificate_permissions = [
       "create",
@@ -58,27 +75,31 @@ resource "azurerm_key_vault" "example" {
       "restore",
       "set",
     ]
-
-  }
-
-  network_acls {
-    default_action = "Allow"
-  }
-
-  contact {
-    email = "example@example.com"
-    name  = "example"
-    phone = "0123456789"
-  }
-
-  tags = {
-    environment = "Testing"
-  }
 }
 
-resource "azurerm_key_vault_certificate" "example" {
-  name         = "generated-cert"
-  key_vault_id = azurerm_key_vault.example.id
+resource "azurerm_key_vault_access_policy" "test-vm" {
+  key_vault_id = azurerm_key_vault.test.id
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = azurerm_user_assigned_identity.test.id
+
+  certificate_permissions = [
+    "get",
+  ]
+
+  key_permissions = [
+    "get",
+  ]
+
+  secret_permissions = [
+    "get",
+  ]
+}
+
+
+resource "azurerm_key_vault_certificate" "test" {
+  name         = "test${random_id.ip_dns.hex}kvcert"
+  key_vault_id = azurerm_key_vault.test.id
 
   certificate_policy {
     issuer_parameters {

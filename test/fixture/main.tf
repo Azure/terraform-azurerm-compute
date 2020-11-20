@@ -98,10 +98,11 @@ module "windowsservers" {
   public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet3.id
   license_type        = var.license_type
-  identity_type       = var.identity_type
+  identity_type       = "UserAssigned"
+  identity_ids        = [azurerm_user_assigned_identity.test.id]
   os_profile_secrets = [{
-    source_vault_id   = azurerm_key_vault.example.id
-    certificate_url   = azurerm_key_vault_certificate.example.secret_id
+    source_vault_id   = azurerm_key_vault.test.id
+    certificate_url   = azurerm_key_vault_certificate.test.secret_id
     certificate_store = "My"
   }]
 
