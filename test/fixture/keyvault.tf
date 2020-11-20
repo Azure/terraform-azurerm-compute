@@ -2,7 +2,7 @@ data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "test" {
   name                        = "test${random_id.ip_dns.hex}kv"
-  location                    = azurerm_resource_group.test.location
+  location                    = var.location_alt
   resource_group_name         = azurerm_resource_group.test.name
   enabled_for_disk_encryption = true
   enabled_for_deployment      = true
