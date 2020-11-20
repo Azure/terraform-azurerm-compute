@@ -5,6 +5,7 @@ resource "azurerm_key_vault" "test" {
   location                    = azurerm_resource_group.test.location
   resource_group_name         = azurerm_resource_group.test.name
   enabled_for_disk_encryption = true
+  enabled_for_deployment      = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_enabled         = false
 
@@ -15,15 +16,6 @@ resource "azurerm_key_vault" "test" {
     bypass = "AzureServices"
   }
 
-  contact {
-    email = "example@example.com"
-    name  = "example"
-    phone = "0123456789"
-  }
-
-  tags = {
-    environment = "Testing"
-  }
 }
 
 resource "azurerm_key_vault_access_policy" "test" {
@@ -82,7 +74,7 @@ resource "azurerm_key_vault_access_policy" "test-vm" {
   key_vault_id = azurerm_key_vault.test.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = azurerm_user_assigned_identity.test.id
+  object_id = azurerm_user_assigned_identity.test.principal_id
 
   certificate_permissions = [
     "get",
@@ -150,4 +142,6 @@ resource "azurerm_key_vault_certificate" "test" {
       validity_in_months = 12
     }
   }
+
+  depends_on = [azurerm_key_vault_access_policy.test, azurerm_key_vault_access_policy.test-vm]
 }

@@ -90,7 +90,7 @@ module "windowsservers" {
   source              = "../../"
   vm_hostname         = "${random_id.ip_dns.hex}-w" // line can be removed if only one VM module per resource group
   resource_group_name = azurerm_resource_group.test.name
-  location            = var.location_alt
+  location            = azurerm_resource_group.test.location
   is_windows_image    = true
   admin_username      = var.admin_username
   admin_password      = var.admin_password
