@@ -64,7 +64,7 @@ module "ubuntuservers" {
   enable_ssh_key                = false
   identity_type                 = "UserAssigned"
   identity_ids                  = [azurerm_user_assigned_identity.test.id]
-  
+
   depends_on = [azurerm_resource_group.test]
 }
 
@@ -99,11 +99,11 @@ module "windowsservers" {
   vnet_subnet_id      = azurerm_subnet.subnet3.id
   license_type        = var.license_type
   identity_type       = var.identity_type
-  os_profile_secrets  = [{
-                        source_vault_id     = azurerm_key_vault.example.id
-                        certificate_url     = azurerm_key_vault_certificate.example.secret_id
-                        certificate_store   = "My"
-                        }]
-  
+  os_profile_secrets = [{
+    source_vault_id   = azurerm_key_vault.example.id
+    certificate_url   = azurerm_key_vault_certificate.example.secret_id
+    certificate_store = "My"
+  }]
+
   depends_on = [azurerm_resource_group.test]
 }

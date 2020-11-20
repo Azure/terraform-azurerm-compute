@@ -223,6 +223,6 @@ variable "identity_ids" {
 
 variable "os_profile_secrets" {
   description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url, certificate_store (Windows Only)"
-  type = list(map(string))
-  default = []
+  type        = list(map(string))
+  default     = []
 }

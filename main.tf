@@ -105,7 +105,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
       source_vault_id = os_profile_secrets.value["source_vault_id"]
 
       vault_certificates {
-        certificate_url   = os_profile_secrets.value["certificate_url"]
+        certificate_url = os_profile_secrets.value["certificate_url"]
       }
     }
   }
