@@ -234,6 +234,36 @@ output "windows_vm_private_ips" {
 
 ```
 
+### Virtual Machine OS Certificates / Secrets
+
+You can install custom certificates / secrets on the virtual machine from Key Vault by using the variable `os_profile_secrets`.
+
+The variable accepts a list of maps with the following keys:
+
+* source_vault_id : The ID of the Key Vault Secret which contains the encrypted Certificate.
+* certificate_url : The certificate  URL in Key Vault
+* certificate_store : The certificate store on the Virtual Machine where the certificate should be added to (Windows Only).
+
+You can assign the values of the keys directly, eg.
+
+```hcl
+os_profile_secrets = [{
+  source_vault_id    = "/subscriptions/XXX/resourcegroups/XXX/providers/Microsoft.KeyVault/vaults/XXX"
+  certificate_url    = "https://XXX.vault.azure.net/secrets/XXX/XXX"
+  certificate_store  = "My"
+}]
+```
+
+Or via referencing them from `azurerm_key_vault` and `azurerm_key_vault_certificate` resources, eg.
+
+```hcl
+  os_profile_secrets = [{
+    source_vault_id   = azurerm_key_vault.test.id
+    certificate_url   = azurerm_key_vault_certificate.test.secret_id
+    certificate_store = "My"
+  }]
+```
+
 ## Test
 
 ### Configurations
