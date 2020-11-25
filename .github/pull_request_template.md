@@ -1,7 +1,3 @@
-Fixes # . 
-
-Changes proposed in the pull request:
-
 <!---
 Please add this into the test of test/fixture, format the changes by "terraform fmt", and test it by run the following:
 ```sh
@@ -11,4 +7,10 @@ $ docker run --rm azure-compute /bin/bash -c "bundle install && rake full"
 
 Please add this into the example usage of README.md and format the changes by "terrafmt fmt README.md". Please intall "terrafmt" by [install terrafmt](https://github.com/katbyte/terrafmt#install).
 --->
+
+Fixes # . 
+
+Changes proposed in the pull request:
+
+
 
