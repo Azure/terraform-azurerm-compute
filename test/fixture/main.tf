@@ -82,6 +82,16 @@ module "debianservers" {
   allocation_method   = "Static"
   enable_ssh_key      = true
   extra_ssh_keys      = ["monica_id_rsa.pub"]
+  extra_disks = [
+    {
+      size = 5
+      name = "extra1"
+    },
+    {
+      size = 5
+      name = "extra2"
+    }
+  ]
 
   depends_on = [azurerm_resource_group.test]
 }

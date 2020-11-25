@@ -199,16 +199,6 @@ module "windowsservers" {
   nb_public_ip                  = 2
   remote_port                   = "3389"
   nb_instances                  = 2
-  extra_disks                   = [
-                                  {
-                                    size = 50
-                                    name = "logs"
-                                  },
-                                  {
-                                    size = 200
-                                    name = "backup"
-                                  }
-                                ]
   vm_os_publisher               = "MicrosoftWindowsServer"
   vm_os_offer                   = "WindowsServer"
   vm_os_sku                     = "2012-R2-Datacenter"
@@ -217,6 +207,17 @@ module "windowsservers" {
   enable_accelerated_networking = true
   license_type                  = "Windows_Client"
   identity_type                 = "SystemAssigned" // can be empty, SystemAssigned or UserAssigned
+
+  extra_disks = [
+    {
+      size = 50
+      name = "logs"
+    },
+    {
+      size = 200
+      name = "backup"
+    }
+  ]
 }
 
 module "network" {
