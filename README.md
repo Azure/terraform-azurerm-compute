@@ -150,6 +150,16 @@ More specifically this provisions:
   - set one key by setting a path in ssh_key variable. e.g "joey_id_rsa.pub"
   - set shh_key and add zero or more files paths in extra_ssh_keys variable e.g. ["ross_id_rsa.pub", "rachel_id_rsa.pub"] (since v3.8.0)
 
+4 - You can install custom certificates / secrets on the virtual machine from Key Vault by using the variable `os_profile_secrets`.
+
+The variable accepts a list of maps with the following keys:
+
+* source_vault_id : The ID of the Key Vault Secret which contains the encrypted Certificate.
+* certificate_url : The certificate  URL in Key Vault
+* certificate_store : The certificate store on the Virtual Machine where the certificate should be added to (Windows Only).
+
+In the below example we use the data sources `azurerm_key_vault` and `azurerm_key_vault_certificate` to fetch the certificate information from Key Vault and add it to `windowsservers` via `os_profile_secrets` parameter.
+
 ```hcl
 provider "azurerm" {
   features {}
@@ -158,6 +168,16 @@ provider "azurerm" {
 resource "azurerm_resource_group" "example" {
   name     = "example-resources"
   location = "West Europe"
+}
+
+data "azurerm_key_vault" "example" {
+  name                = "examplekeyvault"
+  resource_group_name = azurerm_resource_group.example.name
+}
+
+data "azurerm_key_vault_certificate" "example" {
+  name         = "example-kv-cert"
+  key_vault_id = data.azurerm_key_vault.example.id
 }
 
 module "linuxservers" {
@@ -207,6 +227,11 @@ module "windowsservers" {
   enable_accelerated_networking = true
   license_type                  = "Windows_Client"
   identity_type                 = "SystemAssigned" // can be empty, SystemAssigned or UserAssigned
+  os_profile_secrets            = [{
+    source_vault_id   = data.azurerm_key_vault.example.id
+    certificate_url   = data.azurerm_key_vault_certificate.example.secret_id
+    certificate_store = "My"
+  }]
 }
 
 module "network" {
