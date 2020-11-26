@@ -110,6 +110,17 @@ resource "azurerm_virtual_machine" "vm-linux" {
     }
   }
 
+  dynamic "os_profile_secrets" {
+    for_each = var.os_profile_secrets
+    content {
+      source_vault_id = os_profile_secrets.value["source_vault_id"]
+
+      vault_certificates {
+        certificate_url = os_profile_secrets.value["certificate_url"]
+      }
+    }
+  }
+
   tags = var.tags
 
   boot_diagnostics {
@@ -191,6 +202,18 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
   os_profile_windows_config {
     provision_vm_agent = true
+  }
+
+  dynamic "os_profile_secrets" {
+    for_each = var.os_profile_secrets
+    content {
+      source_vault_id = os_profile_secrets.value["source_vault_id"]
+
+      vault_certificates {
+        certificate_url   = os_profile_secrets.value["certificate_url"]
+        certificate_store = os_profile_secrets.value["certificate_store"]
+      }
+    }
   }
 
   boot_diagnostics {
