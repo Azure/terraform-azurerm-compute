@@ -84,6 +84,17 @@ resource "azurerm_virtual_machine" "vm-linux" {
     }
   }
 
+  dynamic "os_profile_secrets" {
+    for_each = var.os_profile_secrets
+    content {
+      source_vault_id = os_profile_secrets.value["source_vault_id"]
+
+      vault_certificates {
+        certificate_url = os_profile_secrets.value["certificate_url"]
+      }
+    }
+  }
+
   tags = var.tags
 
   boot_diagnostics {
@@ -141,6 +152,18 @@ resource "azurerm_virtual_machine" "vm-windows" {
     provision_vm_agent = true
   }
 
+  dynamic "os_profile_secrets" {
+    for_each = var.os_profile_secrets
+    content {
+      source_vault_id = os_profile_secrets.value["source_vault_id"]
+
+      vault_certificates {
+        certificate_url   = os_profile_secrets.value["certificate_url"]
+        certificate_store = os_profile_secrets.value["certificate_store"]
+      }
+    }
+  }
+
   boot_diagnostics {
     enabled     = var.boot_diagnostics
     storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
@@ -166,6 +189,14 @@ resource "azurerm_public_ip" "vm" {
   sku                 = var.public_ip_sku
   domain_name_label   = element(var.public_ip_dns, count.index)
   tags                = var.tags
+}
+
+// Dynamic public ip address will be got after it's assigned to a vm
+data "azurerm_public_ip" "vm" {
+  count               = var.nb_public_ip
+  name                = azurerm_public_ip.vm[count.index].name
+  resource_group_name = data.azurerm_resource_group.vm.name
+  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
 }
 
 resource "azurerm_network_security_group" "vm" {
