@@ -1,6 +1,6 @@
 # Official gems.
-#require 'colorize'
-#require 'rspec/core/rake_task'
+require 'colorize'
+require 'rspec/core/rake_task'
 
 # Git repo gems.
 require 'bundler/setup'

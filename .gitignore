@@ -35,3 +35,5 @@ Gemfile.lock
 
 # Test Kitchen files.
 .kitchen
+
+.lock
