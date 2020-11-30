@@ -1,6 +1,6 @@
 # Official gems.
-require 'colorize'
-require 'rspec/core/rake_task'
+#require 'colorize'
+#require 'rspec/core/rake_task'
 
 # Git repo gems.
 require 'bundler/setup'
@@ -15,6 +15,12 @@ namespace :static do
   end
   task :format do
     format_tf
+  end
+  task :readme_style do
+    readme_style_tf
+  end
+  task :fixture_style do
+    fixture_style_tf
   end
 end
 
@@ -35,7 +41,7 @@ end
 
 task :prereqs => []
 
-task :validate => [ 'static:style', 'static:lint' ]
+task :validate => [ 'static:style', 'static:lint', 'static:readme_style','static:fixture_style' ]
 
 task :format => [ 'static:format' ]
 

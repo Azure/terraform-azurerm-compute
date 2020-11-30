@@ -1,6 +1,6 @@
 # Pull the base image with given version.
-ARG BUILD_TERRAFORM_VERSION="0.13.0"
-FROM mcr.microsoft.com/terraform-test:${BUILD_TERRAFORM_VERSION}
+ARG BUILD_TERRAFORM_VERSION="0.13.5"
+FROM terraform-test:${BUILD_TERRAFORM_VERSION}
 
 ARG MODULE_NAME="terraform-azurerm-compute"
 
@@ -21,16 +21,16 @@ ENV ARM_TEST_LOCATION=${BUILD_ARM_TEST_LOCATION}
 ENV ARM_TEST_LOCATION_ALT=${BUILD_ARM_TEST_LOCATION_ALT}
 
 # Set work directory and generate ssh key
-RUN mkdir /go
-RUN mkdir /go/bin
-RUN mkdir /go/src
-RUN mkdir /go/src/${MODULE_NAME}
-COPY . /go/src/${MODULE_NAME}
-WORKDIR /go/src/${MODULE_NAME}
+RUN mkdir $HOME/go
+RUN mkdir $HOME/go/bin
+RUN mkdir $HOME/go/src
+RUN mkdir $HOME/go/src/${MODULE_NAME}
+COPY . $HOME/go/src/${MODULE_NAME}
+WORKDIR $HOME/go/src/${MODULE_NAME}
 RUN ssh-keygen -q -t rsa -b 4096 -f $HOME/.ssh/id_rsa
 
 # Install required go packages using dep ensure
-ENV GOPATH /go
+ENV GOPATH $HOME/go
 ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
 RUN /bin/bash -c "curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh"
 

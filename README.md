@@ -227,7 +227,7 @@ module "windowsservers" {
   enable_accelerated_networking = true
   license_type                  = "Windows_Client"
   identity_type                 = "SystemAssigned" // can be empty, SystemAssigned or UserAssigned
-  os_profile_secrets            = [{
+  os_profile_secrets = [{
     source_vault_id   = data.azurerm_key_vault.example.id
     certificate_url   = data.azurerm_key_vault_certificate.example.secret_id
     certificate_store = "My"
