@@ -1,5 +1,5 @@
 # Pull the base image with given version.
-ARG BUILD_TERRAFORM_VERSION="0.13.0"
+ARG BUILD_TERRAFORM_VERSION="0.13.5"
 FROM mcr.microsoft.com/terraform-test:${BUILD_TERRAFORM_VERSION}
 
 ARG MODULE_NAME="terraform-azurerm-compute"
@@ -32,6 +32,7 @@ RUN ssh-keygen -q -t rsa -b 4096 -f $HOME/.ssh/id_rsa
 # Install required go packages using dep ensure
 ENV GOPATH /go
 ENV PATH /usr/local/go/bin:$GOPATH/bin:$PATH
+RUN go get github.com/katbyte/terrafmt
 RUN /bin/bash -c "curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh"
 
 RUN ["bundle", "install", "--gemfile", "./Gemfile"]
