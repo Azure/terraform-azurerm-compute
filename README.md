@@ -228,7 +228,7 @@ module "windowsservers" {
   license_type                  = "Windows_Client"
   identity_type                 = "SystemAssigned" // can be empty, SystemAssigned or UserAssigned
 
-  extra_disks                   = [
+  extra_disks = [
     {
       size = 50
       name = "logs"
