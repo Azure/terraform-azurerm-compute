@@ -68,7 +68,7 @@ module "ubuntuservers" {
     source_vault_id = azurerm_key_vault.test.id
     certificate_url = azurerm_key_vault_certificate.test.secret_id
   }]
-  
+
   depends_on = [azurerm_resource_group.test]
 }
 

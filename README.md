@@ -239,7 +239,7 @@ module "windowsservers" {
     }
   ]
 
-  os_profile_secrets            = [{
+  os_profile_secrets = [{
     source_vault_id   = data.azurerm_key_vault.example.id
     certificate_url   = data.azurerm_key_vault_certificate.example.secret_id
     certificate_store = "My"
