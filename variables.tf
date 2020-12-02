@@ -221,6 +221,15 @@ variable "identity_ids" {
   default     = []
 }
 
+variable "extra_disks" {
+  description = "(Optional) List of extra data disks attached to each virtual machine."
+  type = list(object({
+    name = string
+    size = number
+  }))
+  default = []
+}
+
 variable "os_profile_secrets" {
   description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url and certificate_store."
   type        = list(map(string))
