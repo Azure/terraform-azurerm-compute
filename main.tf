@@ -8,7 +8,7 @@ data "azurerm_resource_group" "vm" {
 }
 
 locals {
-  ssh_keys = concat([var.ssh_key], var.extra_ssh_keys)
+  ssh_keys = [ for key in concat([var.ssh_key], var.extra_ssh_keys) : lower(substr(key,-4,4)) == ".pub" ? file(key) : key ]
 }
 
 resource "random_id" "vm-sa" {
@@ -105,7 +105,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
       for_each = var.enable_ssh_key ? local.ssh_keys : []
       content {
         path     = "/home/${var.admin_username}/.ssh/authorized_keys"
-        key_data = file(ssh_keys.value)
+        key_data = ssh_keys.value
       }
     }
   }

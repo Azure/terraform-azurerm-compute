@@ -148,7 +148,8 @@ More specifically this provisions:
   When ssh keys are enabled you can either
   - use the default "~/.ssh/id_rsa.pub"
   - set one key by setting a path in ssh_key variable. e.g "joey_id_rsa.pub"
-  - set shh_key and add zero or more files paths in extra_ssh_keys variable e.g. ["ross_id_rsa.pub", "rachel_id_rsa.pub"] (since v3.8.0)
+  - set ssh_key and add zero or more files paths in extra_ssh_keys variable e.g. ["ross_id_rsa.pub", "rachel_id_rsa.pub"] (since v3.8.0)
+  - set ssh_key and/or extra_ssh_keys as raw public ssh key value or refer it to a data source with the public key value, e.g. `ssh_key="ssh-rsa AAAAB3NzaC1yc..."`
 
 4 - You can install custom certificates / secrets on the virtual machine from Key Vault by using the variable `os_profile_secrets`.
 
