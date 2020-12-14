@@ -21,9 +21,9 @@ ENV ARM_TEST_LOCATION=${BUILD_ARM_TEST_LOCATION}
 ENV ARM_TEST_LOCATION_ALT=${BUILD_ARM_TEST_LOCATION_ALT}
 
 # Set work directory and generate ssh key
-RUN mkdir /go
-RUN mkdir /go/bin
-RUN mkdir /go/src
+RUN test -d /go     || mkdir /go
+RUN test -d /go/bin || mkdir /go/bin
+RUN test -d /go/src || mkdir /go/src
 RUN mkdir /go/src/${MODULE_NAME}
 COPY . /go/src/${MODULE_NAME}
 WORKDIR /go/src/${MODULE_NAME}
