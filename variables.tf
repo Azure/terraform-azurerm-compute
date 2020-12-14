@@ -33,11 +33,16 @@ variable "extra_ssh_keys" {
 }
 
 variable "ssh_key" {
-  description = "Public SSH Key value or path to the public key file (.pub) to be used for ssh access to the VM. Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub."
+  description = "Path to the public key to be used for ssh access to the VM. Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub."
   type        = string
   default     = "~/.ssh/id_rsa.pub"
 }
 
+variable "ssh_keys_values" {
+  description = "List of Public SSH Keys values to be used for ssh access to the VMs."
+  type        = list(string)
+  default     = []
+}
 variable "remote_port" {
   description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
   type        = string
