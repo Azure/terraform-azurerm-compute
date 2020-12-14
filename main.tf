@@ -108,7 +108,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
         key_data = file(ssh_keys.value)
       }
     }
-  
+
     dynamic ssh_keys {
       for_each = var.enable_ssh_key ? var.ssh_keys_values : []
       content {
