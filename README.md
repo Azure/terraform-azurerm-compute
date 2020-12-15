@@ -198,7 +198,7 @@ module "linuxservers" {
   data_disk_size_gb             = 64
   data_sa_type                  = "Premium_LRS"
   enable_ssh_key                = true
-  ssh_key_values               = ["ssh-rsa AAAAB3NzaC1yc2EAAAAD..."]  
+  ssh_key_values                = ["ssh-rsa AAAAB3NzaC1yc2EAAAAD..."]  
   vm_size                       = "Standard_D4s_v3"
 
   tags = {
