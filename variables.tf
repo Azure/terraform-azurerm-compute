@@ -38,6 +38,11 @@ variable "ssh_key" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
+variable "ssh_key_values" {
+  description = "List of Public SSH Keys values to be used for ssh access to the VMs."
+  type        = list(string)
+  default     = []
+}
 variable "remote_port" {
   description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
   type        = string
