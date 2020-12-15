@@ -149,7 +149,7 @@ More specifically this provisions:
   - use the default "~/.ssh/id_rsa.pub"
   - set one key by setting a path in ssh_key variable. e.g "joey_id_rsa.pub"
   - set ssh_key and add zero or more files paths in extra_ssh_keys variable e.g. ["ross_id_rsa.pub", "rachel_id_rsa.pub"] (since v3.8.0)
-  - set ssh_keys_values as a list of raw public ssh keys values or refer it to a data source with the public key value, e.g. `["ssh-rsa AAAAB3NzaC1yc..."]`
+  - set ssh_key_values as a list of raw public ssh keys values or refer it to a data source with the public key value, e.g. `["ssh-rsa AAAAB3NzaC1yc..."]`
 
 4 - You can install custom certificates / secrets on the virtual machine from Key Vault by using the variable `os_profile_secrets`.
 
@@ -198,7 +198,7 @@ module "linuxservers" {
   data_disk_size_gb             = 64
   data_sa_type                  = "Premium_LRS"
   enable_ssh_key                = true
-  ssh_keys_values               = ["ssh-rsa AAAAB3NzaC1yc2EAAAAD..."]  
+  ssh_key_values               = ["ssh-rsa AAAAB3NzaC1yc2EAAAAD..."]  
   vm_size                       = "Standard_D4s_v3"
 
   tags = {
