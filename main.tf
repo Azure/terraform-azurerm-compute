@@ -110,7 +110,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     }
 
     dynamic ssh_keys {
-      for_each = var.enable_ssh_key ? var.ssh_keys_values : []
+      for_each = var.enable_ssh_key ? var.ssh_key_values : []
       content {
         path     = "/home/${var.admin_username}/.ssh/authorized_keys"
         key_data = ssh_keys.value
