@@ -1,4 +1,5 @@
 # Variable files
+*.info
 *auto.tfvars
 terraform.tfvars
 provider.tf
