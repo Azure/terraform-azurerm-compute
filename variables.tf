@@ -265,3 +265,18 @@ variable "vm_os_id" {
   type        = string
   default     = ""
 }
+variable "active_directory_username" {
+  description = "(Optional) Active Directory username used to join the server to the domain."
+  type        = string
+  default     = "terraform"
+}
+variable "active_directory_domain_name" {
+  description = "(Optional) Active Directory domain name to join the server to."
+  type        = string
+  default     = "agri-marche.local"
+}
+variable "active_directory_password" {
+  description = "(Optional) Actuve Directory password used to join the server to the domain."
+  type        = string
+  sensitive   = true
+}
