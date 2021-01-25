@@ -21,23 +21,6 @@ variable "admin_password" {
   default     = ""
 }
 
-variable "extra_ssh_keys" {
-  description = "Same as ssh_key, but allows for setting multiple public keys. Set your first key in ssh_key, and the extras here."
-  type        = list(string)
-  default     = []
-}
-
-variable "ssh_key" {
-  description = "Path to the public key to be used for ssh access to the VM. Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash. e.g. c:/home/id_rsa.pub."
-  type        = string
-  default     = "~/.ssh/id_rsa.pub"
-}
-
-variable "ssh_key_values" {
-  description = "List of Public SSH Keys values to be used for ssh access to the VMs."
-  type        = list(string)
-  default     = []
-}
 variable "remote_port" {
   description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
   type        = string
@@ -162,46 +145,16 @@ variable "nb_public_ip" {
   default     = 0
 }
 
-variable "delete_os_disk_on_termination" {
-  type        = bool
-  description = "Delete datadisk when machine is terminated."
-  default     = false
-}
-
-variable "data_sa_type" {
-  description = "Data Disk Storage Account type."
-  type        = string
-  default     = "Standard_LRS"
-}
-
 variable "data_disk_size_gb" {
   description = "Storage data disk size size."
   type        = number
   default     = 30
 }
 
-variable "boot_diagnostics" {
-  type        = bool
-  description = "(Optional) Enable or Disable boot diagnostics."
-  default     = false
-}
-
-variable "boot_diagnostics_sa_type" {
-  description = "(Optional) Storage account type for boot diagnostics."
-  type        = string
-  default     = "Standard_LRS"
-}
-
 variable "enable_accelerated_networking" {
   type        = bool
   description = "(Optional) Enable accelerated networking on Network interface."
   default     = false
-}
-
-variable "enable_ssh_key" {
-  type        = bool
-  description = "(Optional) Enable ssh key authentication in Linux virtual Machine."
-  default     = true
 }
 
 variable "data_disk" {
@@ -222,24 +175,6 @@ variable "license_type" {
   default     = null
 }
 
-variable "identity_type" {
-  description = "The Managed Service Identity Type of this Virtual Machine."
-  type        = string
-  default     = ""
-}
-
-variable "identity_ids" {
-  description = "Specifies a list of user managed identity ids to be assigned to the VM."
-  type        = list(string)
-  default     = []
-}
-
-
-variable "os_profile_secrets" {
-  description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url and certificate_store."
-  type        = list(map(string))
-  default     = []
-}
 variable "subnet_name" {
   description = "(Optional) The name of the subnet to use for this VM"
   type        = string
