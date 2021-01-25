@@ -6,12 +6,7 @@ variable "resource_group_name" {
 variable "location" {
   description = "(Optional) The location in which the resources will be created."
   type        = string
-  default     = ""
-}
-
-variable "vnet_subnet_id" {
-  description = "The subnet id of the virtual network where the virtual machines will reside."
-  type        = string
+  default     = "Canada Central"
 }
 
 variable "public_ip_dns" {
@@ -52,7 +47,7 @@ variable "remote_port" {
 variable "admin_username" {
   description = "The admin username of the VM that will be deployed."
   type        = string
-  default     = "azureuser"
+  default     = "azureadmin"
 }
 
 variable "custom_data" {
@@ -70,7 +65,7 @@ variable "storage_account_type" {
 variable "vm_size" {
   description = "Specifies the size of the virtual machine."
   type        = string
-  default     = "Standard_D2s_v3"
+  default     = "Standard_B2s"
 }
 
 variable "nb_instances" {
@@ -80,27 +75,18 @@ variable "nb_instances" {
 }
 
 variable "vm_hostname" {
-  description = "local name of the Virtual Machine."
+  description = "Name of the Virtual Machine."
   type        = string
-  default     = "myvm"
+  validation {
+    condition     = length(var.vm_hostname) <= 13
+    error_message = "The VM name can be at most 13 characters. Adjust the \"vm_name\" variable."
+  }
 }
 
 variable "vm_os_simple" {
-  description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
+  description = "Specify WindowsServer to get the latest image version of the specified os."
   type        = string
-  default     = ""
-}
-
-variable "vm_os_id" {
-  description = "The resource ID of the image that you want to deploy if you are using a custom image.Note, need to provide is_windows_image = true for windows custom images."
-  type        = string
-  default     = ""
-}
-
-variable "is_windows_image" {
-  description = "Boolean flag to notify when the custom image is windows based."
-  type        = bool
-  default     = false
+  default     = "WindowsServer"
 }
 
 variable "vm_os_publisher" {
@@ -128,12 +114,34 @@ variable "vm_os_version" {
 }
 
 variable "tags" {
+  description = "A map of the tags to use on the resources that are deployed with this module"
   type        = map(string)
-  description = "A map of the tags to use on the resources that are deployed with this module."
 
-  default = {
-    source = "terraform"
+  validation {
+    condition     = can(var.tags["Environment"])
+    error_message = "The Environment tag is required! Please add one."
   }
+  validation {
+    condition     = can(var.tags["CostCenter"])
+    error_message = "The CostCenter tag is required! Please add one."
+  }
+  validation {
+    condition     = can(var.tags["App"])
+    error_message = "The App tag is required! Please add one."
+  }
+  validation {
+    condition     = can(var.tags["Importance"])
+    error_message = "The Importance tag is required! Please add one. Value can be, high, medium or low."
+  }
+}
+# Create a local variable so that the interpolation can work. Merge the info with the tags variable.
+locals {
+  tags = merge(
+    var.tags,
+    {
+      Source = "terraform"
+    },
+  )
 }
 
 variable "allocation_method" {
@@ -151,7 +159,7 @@ variable "public_ip_sku" {
 variable "nb_public_ip" {
   description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
   type        = number
-  default     = 1
+  default     = 0
 }
 
 variable "delete_os_disk_on_termination" {
@@ -196,10 +204,10 @@ variable "enable_ssh_key" {
   default     = true
 }
 
-variable "nb_data_disk" {
-  description = "(Optional) Number of the data disks attached to each virtual machine."
-  type        = number
-  default     = 0
+variable "data_disk" {
+  description = "(Optional) Add a data disk to the VM if true."
+  type        = bool
+  default     = false
 }
 
 variable "source_address_prefixes" {
@@ -226,17 +234,34 @@ variable "identity_ids" {
   default     = []
 }
 
-variable "extra_disks" {
-  description = "(Optional) List of extra data disks attached to each virtual machine."
-  type = list(object({
-    name = string
-    size = number
-  }))
-  default = []
-}
 
 variable "os_profile_secrets" {
   description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url and certificate_store."
   type        = list(map(string))
   default     = []
+}
+variable "subnet_name" {
+  description = "(Optional) The name of the subnet to use for this VM"
+  type        = string
+  default     = "snet-prod-spoke-workload-default"
+}
+variable "virtual_network_name" {
+  description = "(Optional) Specifies the name of the Virtual Network the subnet is located within"
+  type        = string
+  default     = "vnet-prod-spoke-workload"
+}
+variable "vnet_resource_group" {
+  description = "(Optional) Specifies the name of the resource group the Virtual Network is located in"
+  type        = string
+  default     = "rg-prod-01-canadacentral-mca"
+}
+variable "automatic_updates" {
+  description = "(Optional) Enable or not the automatic OS updates"
+  type        = bool
+  default     = true
+}
+variable "vm_os_id" {
+  description = "The resource ID of the image that you want to deploy if you are using a custom image."
+  type        = string
+  default     = ""
 }

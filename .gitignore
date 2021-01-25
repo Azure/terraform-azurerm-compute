@@ -1,6 +1,8 @@
 # Variable files
+*auto.tfvars
 terraform.tfvars
-
+provider.tf
+planfile
 ### https://raw.github.com/github/gitignore/abad92dac5a4306f72242dae3bca6e277bce3615/Terraform.gitignore
 
 # Compiled files

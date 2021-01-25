@@ -38,8 +38,7 @@ module "linuxservers" {
 
 module "windowsservers" {
   source              = "Azure/compute/azurerm"
-  resource_group_name = azurerm_resource_group.example.name
-  is_windows_image    = true
+  resource_group_name = azurerm_resource_group.example.name  
   vm_hostname         = "mywinvm" // line can be removed if only one VM module per resource group
   admin_password      = "ComplxP@ssw0rd!"
   vm_os_simple        = "WindowsServer"
@@ -92,8 +91,7 @@ module "linuxservers" {
 
 module "windowsservers" {
   source              = "Azure/compute/azurerm"
-  resource_group_name = azurerm_resource_group.example.name
-  is_windows_image    = true
+  resource_group_name = azurerm_resource_group.example.name  
   vm_hostname         = "mywinvm" // line can be removed if only one VM module per resource group
   admin_password      = "ComplxP@ssw0rd!"
   vm_os_simple        = "WindowsServer"
@@ -213,7 +211,6 @@ module "windowsservers" {
   source                        = "Azure/compute/azurerm"
   resource_group_name           = azurerm_resource_group.example.name
   vm_hostname                   = "mywinvm"
-  is_windows_image              = true
   admin_password                = "ComplxP@ssw0rd!"
   allocation_method             = "Static"
   public_ip_sku                 = "Standard"
