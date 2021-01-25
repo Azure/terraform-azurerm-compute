@@ -27,6 +27,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   admin_password           = var.admin_password
   timezone                 = "Eastern Standard Time"
   enable_automatic_updates = var.automatic_updates ? true : false
+  custom_data              = var.custom_data
 
   os_disk {
     name                 = "osdisk-${var.vm_hostname}-${count.index}"
@@ -42,6 +43,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   }
 
   boot_diagnostics {}
+
 
   tags = local.tags
 }
