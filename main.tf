@@ -48,7 +48,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
 
 resource "azurerm_managed_disk" "vm" {
   count                = var.data_disk ? 1 : 0
-  name                 = "${var.vm_hostname}-datadisk-${count.index}"
+  name                 = "datadisk-${var.vm_hostname}-${count.index}"
   resource_group_name  = azurerm_resource_group.vm.name
   location             = azurerm_resource_group.vm.location
   storage_account_type = "Standard_LRS"
