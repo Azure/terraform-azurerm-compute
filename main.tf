@@ -1,4 +1,4 @@
-// See https://github.com/terraform-providers/terraform-provider-azurerm/tree/master/examples/virtual-machines/windows
+# See https://github.com/terraform-providers/terraform-provider-azurerm/tree/master/examples/virtual-machines/windows
 
 module "os" {
   source       = "./os"
@@ -76,7 +76,7 @@ resource "azurerm_public_ip" "vm" {
   tags                = local.tags
 }
 
-// Get the public IP dynamic ip address after creation
+# Get the public IP dynamic ip address after creation
 data "azurerm_public_ip" "vm" {
   count               = var.nb_public_ip
   name                = azurerm_public_ip.vm[count.index].name
@@ -129,4 +129,45 @@ resource "azurerm_network_interface_security_group_association" "vm" {
   count                     = var.nb_instances
   network_interface_id      = azurerm_network_interface.vm[count.index].id
   network_security_group_id = azurerm_network_security_group.vm.id
+}
+
+resource "azurerm_virtual_machine_extension" "join-domain" {
+  count                = var.nb_instances
+  name                 = "JoinDomain"
+  publisher            = "Microsoft.Compute"
+  type                 = "JsonADDomainExtension"
+  type_handler_version = "1.3"
+  virtual_machine_id   = azurerm_windows_virtual_machine.vm[count.index].id
+
+  settings = <<SETTINGS
+    {
+        "Name": "${var.active_directory_domain_name}",
+        "OUPath": "OU=Servers,OU=Azure Canada,DC=agri-marche,DC=local",
+        "User": "${var.active_directory_username}@${var.active_directory_domain_name}",
+        "Restart": "true",
+        "Options": "3"
+    }
+SETTINGS
+
+  protected_settings = <<SETTINGS
+    {
+        "Password": "${var.active_directory_password}"
+    }
+SETTINGS
+  depends_on         = [azurerm_windows_virtual_machine.vm]
+}
+
+# For set the timezone with Powershell since the timezone parameter of the azurerm_windows_virtual_machine resource does not always work
+resource "azurerm_virtual_machine_extension" "set-timezone" {
+  count                = var.nb_instances
+  name                 = "SetTimezone"
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.9"
+  virtual_machine_id   = azurerm_windows_virtual_machine.vm[count.index].id
+  settings             = <<SETTINGS
+  {
+    "commandToExecute": "powershell.exe -Command \"Set-TimeZone -Id 'Eastern Standard Time' \""
+  }
+SETTINGS
 }
