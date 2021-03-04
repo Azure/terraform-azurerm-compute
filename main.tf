@@ -8,7 +8,7 @@ data "azurerm_resource_group" "vm" {
 }
 
 locals {
-  ssh_keys = concat([var.ssh_key], var.extra_ssh_keys)
+  ssh_keys = compact(concat([var.ssh_key], var.extra_ssh_keys))
 }
 
 resource "random_id" "vm-sa" {
@@ -102,7 +102,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     disable_password_authentication = var.enable_ssh_key
 
     dynamic ssh_keys {
-      for_each = [ for k in (var.enable_ssh_key ? local.ssh_keys : []) : k if length(k) > 0 ]
+      for_each = var.enable_ssh_key ? local.ssh_keys : []
       content {
         path     = "/home/${var.admin_username}/.ssh/authorized_keys"
         key_data = file(ssh_keys.value)
