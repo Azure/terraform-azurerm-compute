@@ -8,7 +8,7 @@ data "azurerm_resource_group" "vm" {
 }
 
 locals {
-  ssh_keys = concat([var.ssh_key], var.extra_ssh_keys)
+  ssh_keys = compact(concat([var.ssh_key], var.extra_ssh_keys))
 }
 
 resource "random_id" "vm-sa" {
