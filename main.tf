@@ -235,8 +235,8 @@ resource "azurerm_availability_set" "vm" {
   name                         = "${var.vm_hostname}-avset"
   resource_group_name          = data.azurerm_resource_group.vm.name
   location                     = coalesce(var.location, data.azurerm_resource_group.vm.location)
-  platform_fault_domain_count  = 2
-  platform_update_domain_count = 2
+  platform_fault_domain_count  = var.as_fault_domain
+  platform_update_domain_count = var.as_update_domain
   managed                      = true
   tags                         = var.tags
 }

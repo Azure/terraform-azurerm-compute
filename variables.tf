@@ -240,3 +240,15 @@ variable "os_profile_secrets" {
   type        = list(map(string))
   default     = []
 }
+
+variable "as_fault_domain" {
+  description = "(Optional) Number of fault domain zones in availability set. Default 2"
+  type        = number
+  default     = 2
+}
+
+variable "as_update_domain" {
+  description = "(Optional) Number of update domain zones in availability set. Default 2"
+  type        = number
+  default     = 2
+}
