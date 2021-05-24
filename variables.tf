@@ -160,6 +160,12 @@ variable "delete_os_disk_on_termination" {
   default     = false
 }
 
+variable "delete_data_disks_on_termination" {
+  type        = bool
+  description = "Delete data disks when machine is terminated."
+  default     = false
+}
+
 variable "data_sa_type" {
   description = "Data Disk Storage Account type."
   type        = string
