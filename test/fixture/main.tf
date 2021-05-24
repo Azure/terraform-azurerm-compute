@@ -1,5 +1,9 @@
 provider "azurerm" {
-  features {}
+  features {
+    key_vault {
+      purge_soft_delete_on_destroy = false
+    }
+  }
 }
 
 resource "random_id" "ip_dns" {
@@ -61,7 +65,6 @@ module "ubuntuservers" {
   enable_accelerated_networking = true
   vm_size                       = "Standard_DS2_V2"
   nb_data_disk                  = 2
-  enable_ssh_key                = false
   identity_type                 = "UserAssigned"
   identity_ids                  = [azurerm_user_assigned_identity.test.id]
   os_profile_secrets = [{
@@ -109,6 +112,7 @@ module "debianservers2" {
   vm_os_simple        = var.vm_os_simple_2
   vnet_subnet_id      = azurerm_subnet.subnet2.id
   enable_ssh_key      = true
+  ssh_key             = ""
   ssh_key_values      = ["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC8GIRF1Snlg9NKCmM74RHXqRGMXyui088+ntQqkQkFIL/BrlgP3CzOgHQmJ+3f0Up/+9UY9vX7AmT7WxVTyqBHT/Aes3VmU3wLO5/MMV/HRrT4z2QV/80futhxjk2unNdWGvbFcR6Y3I44EJFmr8GMbyXRtr0ibuv8BlTYx/K6AXSJ3V+kBqXMOF1QRvVoX9fJKPKjMsebe0cB1IYlm9KLqtciMy+aFOEsSNfrw5cNVsQfK3BgOUKAHsLfBiR7imA2ca+hh005GEtcVJvpvFzcM+bZggUpdqQwIzk1Kv/tROiJiGS0NnyzoxIZYeM3z/mQ5qnglp+174XGCG66EAnVdf5kbaI0Iu7FpAmVhJ92N+MNKoP6vT8cMkYYZf3RaiMMnzjswK/VLbb5ks6Qe9qEPXW1IBtkaaF7+0PCWbPr86I0G2bOa2tFyOHm046Z9sRlkaOO95hmer6Y6MUbMpfeprmjR87u6MVOPglnARfV3UI9i6wOUhVVIi6Wb424HWU="]
 
   depends_on = [azurerm_resource_group.test]
