@@ -68,6 +68,11 @@ resource "azurerm_key_vault_access_policy" "test" {
     "restore",
     "set",
   ]
+
+  timeouts {
+    update = "45m"
+    delete = "45m"
+  }
 }
 
 resource "azurerm_key_vault_access_policy" "test-vm" {
@@ -87,6 +92,10 @@ resource "azurerm_key_vault_access_policy" "test-vm" {
   secret_permissions = [
     "get",
   ]
+  timeouts {
+    update = "45m"
+    delete = "45m"
+  }
 }
 
 
