@@ -3,6 +3,21 @@ output "vm_ids" {
   value       = concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id)
 }
 
+output "vm_names" {
+  description = "Virtual machine names created."
+  value       = concat(azurerm_virtual_machine.vm-windows.*.name, azurerm_virtual_machine.vm-linux.*.name)
+}
+
+output "windows_vm_names" {
+  description = "Windows virtual machine names created."
+  value       = azurerm_virtual_machine.vm-windows.*.name
+}
+
+output "linux_vm_names" {
+  description = "Linux virtual machine names created."
+  value       = azurerm_virtual_machine.vm-linux.*.name
+}
+
 output "network_security_group_id" {
   description = "id of the security group provisioned"
   value       = azurerm_network_security_group.vm.id
