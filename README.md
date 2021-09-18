@@ -4,6 +4,8 @@
 
 ## Deploys 1+ Virtual Machines to your provided VNet
 
+### TRestEtet 
+
 This Terraform module deploys Virtual Machines in Azure with the following characteristics:
 
 - Ability to specify a simple string to get the [latest marketplace image](https://docs.microsoft.com/cli/azure/vm/image?view=azure-cli-latest) using `var.vm_os_simple`
