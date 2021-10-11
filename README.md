@@ -159,6 +159,8 @@ The variable accepts a list of maps with the following keys:
 * certificate_url : The certificate  URL in Key Vault
 * certificate_store : The certificate store on the Virtual Machine where the certificate should be added to (Windows Only).
 
+5 - You can override default (2) values of "Update Domain" and "Fault Domain" in "Availability Set" using `as_update_domain` and `as_fault_domain` variables. Changing this forces a new resource to be created.
+
 In the below example we use the data sources `azurerm_key_vault` and `azurerm_key_vault_certificate` to fetch the certificate information from Key Vault and add it to `windowsservers` via `os_profile_secrets` parameter.
 
 ```hcl
@@ -201,6 +203,8 @@ module "linuxservers" {
   ssh_key_values                   = ["ssh-rsa AAAAB3NzaC1yc2EAAAAD..."]
   vm_size                          = "Standard_D4s_v3"
   delete_data_disks_on_termination = true
+  as_update_domain                 = 3
+  as_fault_domain                  = 3
 
   tags = {
     environment = "dev"
@@ -230,6 +234,8 @@ module "windowsservers" {
   enable_accelerated_networking = true
   license_type                  = "Windows_Client"
   identity_type                 = "SystemAssigned" // can be empty, SystemAssigned or UserAssigned
+  as_update_domain              = 3
+  as_fault_domain               = 3
 
   extra_disks = [
     {
