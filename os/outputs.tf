@@ -3,7 +3,7 @@ output "calculated_value_os_publisher" {
 }
 
 output "calculated_value_os_offer" {
-  value =element(split(",", lookup(var.standard_os, var.vm_os_simple, "")), 1)
+  value = element(split(",", lookup(var.standard_os, var.vm_os_simple, "")), 1)
 }
 
 output "calculated_value_os_sku" {

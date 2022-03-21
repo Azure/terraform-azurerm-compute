@@ -30,7 +30,7 @@ resource "azurerm_storage_account" "vm-sa" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count                            = ! contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && ! var.is_windows_image ? var.nb_instances : 0
+  count                            = !contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
   resource_group_name              = data.azurerm_resource_group.vm.name
   location                         = coalesce(var.location, data.azurerm_resource_group.vm.location)
@@ -40,14 +40,14 @@ resource "azurerm_virtual_machine" "vm-linux" {
   delete_os_disk_on_termination    = var.delete_os_disk_on_termination
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
 
-  dynamic identity {
+  dynamic "identity" {
     for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
     content {
       type = var.identity_type
     }
   }
 
-  dynamic identity {
+  dynamic "identity" {
     for_each = length(var.identity_ids) > 0 || var.identity_type == "UserAssigned" ? [var.identity_type] : []
     content {
       type         = var.identity_type
@@ -71,7 +71,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     disk_size_gb      = var.os_disk_size_gb
   }
 
-  dynamic storage_data_disk {
+  dynamic "storage_data_disk" {
     for_each = range(var.nb_data_disk)
     content {
       name              = "${var.vm_hostname}-datadisk-${count.index}-${storage_data_disk.value}"
@@ -82,7 +82,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     }
   }
 
-  dynamic storage_data_disk {
+  dynamic "storage_data_disk" {
     for_each = var.extra_disks
     content {
       name              = "${var.vm_hostname}-extradisk-${count.index}-${storage_data_disk.value.name}"
@@ -103,7 +103,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   os_profile_linux_config {
     disable_password_authentication = var.enable_ssh_key
 
-    dynamic ssh_keys {
+    dynamic "ssh_keys" {
       for_each = var.enable_ssh_key ? local.ssh_keys : []
       content {
         path     = "/home/${var.admin_username}/.ssh/authorized_keys"
@@ -111,7 +111,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
       }
     }
 
-    dynamic ssh_keys {
+    dynamic "ssh_keys" {
       for_each = var.enable_ssh_key ? var.ssh_key_values : []
       content {
         path     = "/home/${var.admin_username}/.ssh/authorized_keys"
@@ -151,14 +151,14 @@ resource "azurerm_virtual_machine" "vm-windows" {
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
   license_type                  = var.license_type
 
-  dynamic identity {
+  dynamic "identity" {
     for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
     content {
       type = var.identity_type
     }
   }
 
-  dynamic identity {
+  dynamic "identity" {
     for_each = length(var.identity_ids) > 0 || var.identity_type == "UserAssigned" ? [var.identity_type] : []
     content {
       type         = var.identity_type
@@ -182,7 +182,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
     disk_size_gb      = var.os_disk_size_gb
   }
 
-  dynamic storage_data_disk {
+  dynamic "storage_data_disk" {
     for_each = range(var.nb_data_disk)
     content {
       name              = "${var.vm_hostname}-datadisk-${count.index}-${storage_data_disk.value}"
@@ -193,7 +193,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
     }
   }
 
-  dynamic storage_data_disk {
+  dynamic "storage_data_disk" {
     for_each = var.extra_disks
     content {
       name              = "${var.vm_hostname}-extradisk-${count.index}-${storage_data_disk.value.name}"
