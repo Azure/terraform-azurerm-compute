@@ -246,3 +246,9 @@ variable "os_profile_secrets" {
   type        = list(map(string))
   default     = []
 }
+
+variable "os_disk_size_gb" {
+  description = "OS Disk size in GB."
+  type        = number
+  default     = 30
+}
