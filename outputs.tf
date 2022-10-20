@@ -31,6 +31,8 @@ output "public_ip_id" {
 output "public_ip_address" {
   description = "The actual ip address allocated for the resource."
   value       = data.azurerm_public_ip.vm.*.ip_address
+
+  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
 }
 
 output "public_ip_dns_name" {

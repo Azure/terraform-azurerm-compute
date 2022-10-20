@@ -3,15 +3,16 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "location" {
-  description = "(Optional) The location in which the resources will be created."
-  type        = string
-  default     = ""
-}
 
 variable "vnet_subnet_id" {
   description = "The subnet id of the virtual network where the virtual machines will reside."
   type        = string
+}
+
+variable "location" {
+  description = "(Optional) The location in which the resources will be created."
+  type        = string
+  default     = ""
 }
 
 variable "public_ip_dns" {

@@ -7,7 +7,7 @@ resource "azurerm_key_vault" "test" {
   enabled_for_disk_encryption = true
   enabled_for_deployment      = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_enabled         = false
+  soft_delete_retention_days  = 7
 
   sku_name = "standard"
 
@@ -24,22 +24,22 @@ resource "azurerm_key_vault_access_policy" "test" {
   tenant_id = data.azurerm_client_config.current.tenant_id
   object_id = data.azurerm_client_config.current.object_id
 
-  certificate_permissions = [
+  certificate_permissions = [for p in [
     "create",
     "delete",
-    "deleteissuers",
+    "deleteIssuers",
     "get",
-    "getissuers",
+    "getIssuers",
     "import",
     "list",
-    "listissuers",
-    "managecontacts",
-    "manageissuers",
-    "setissuers",
+    "listIssuers",
+    "manageContacts",
+    "manageIssuers",
+    "setIssuers",
     "update",
-  ]
+  ] : title(p)]
 
-  key_permissions = [
+  key_permissions = [for p in [
     "backup",
     "create",
     "decrypt",
@@ -56,17 +56,17 @@ resource "azurerm_key_vault_access_policy" "test" {
     "update",
     "verify",
     "wrapKey",
-  ]
+  ] : title(p)]
 
   secret_permissions = [
-    "backup",
-    "delete",
-    "get",
-    "list",
-    "purge",
-    "recover",
-    "restore",
-    "set",
+    "Backup",
+    "Delete",
+    "Get",
+    "List",
+    "Purge",
+    "Recover",
+    "Restore",
+    "Set",
   ]
 
   timeouts {
@@ -82,15 +82,15 @@ resource "azurerm_key_vault_access_policy" "test-vm" {
   object_id = azurerm_user_assigned_identity.test.principal_id
 
   certificate_permissions = [
-    "get",
+    "Get",
   ]
 
   key_permissions = [
-    "get",
+    "Get",
   ]
 
   secret_permissions = [
-    "get",
+    "Get",
   ]
   timeouts {
     update = "45m"

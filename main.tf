@@ -254,12 +254,12 @@ resource "azurerm_public_ip" "vm" {
 }
 
 // Dynamic public ip address will be got after it's assigned to a vm
-data "azurerm_public_ip" "vm" {
-  count               = var.nb_public_ip
-  name                = azurerm_public_ip.vm[count.index].name
-  resource_group_name = data.azurerm_resource_group.vm.name
-  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
-}
+#data "azurerm_public_ip" "vm" {
+#  count               = var.nb_public_ip
+#  name                = azurerm_public_ip.vm[count.index].name
+#  resource_group_name = data.azurerm_resource_group.vm.name
+#  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
+#}
 
 resource "azurerm_network_security_group" "vm" {
   name                = "${var.vm_hostname}-nsg"
