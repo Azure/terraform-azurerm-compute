@@ -140,16 +140,16 @@ resource "azurerm_virtual_machine" "vm-linux" {
 }
 
 resource "azurerm_virtual_machine" "vm-windows" {
-  count                         = (var.is_windows_image || contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer")) ? var.nb_instances : 0
-  name                          = "${var.vm_hostname}${count.index == 0 ? "" : "-${count.index+1}"}"
-  resource_group_name           = data.azurerm_resource_group.vm.name
-  location                      = coalesce(var.location, data.azurerm_resource_group.vm.location)
-  availability_set_id           = azurerm_availability_set.vm.id
-  vm_size                       = var.vm_size
-  network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
-  delete_os_disk_on_termination = var.delete_os_disk_on_termination
+  count                            = (var.is_windows_image || contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer")) ? var.nb_instances : 0
+  name                             = "${var.vm_hostname}${count.index == 0 ? "" : "-${count.index+1}"}"
+  resource_group_name              = data.azurerm_resource_group.vm.name
+  location                         = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  availability_set_id              = azurerm_availability_set.vm.id
+  vm_size                          = var.vm_size
+  network_interface_ids            = [element(azurerm_network_interface.vm.*.id, count.index)]
+  delete_os_disk_on_termination    = var.delete_os_disk_on_termination
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
-  license_type                  = var.license_type
+  license_type                     = var.license_type
 
   dynamic identity {
     for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
