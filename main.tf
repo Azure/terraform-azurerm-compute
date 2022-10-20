@@ -20,7 +20,7 @@ resource "random_id" "vm-sa" {
 }
 
 resource "azurerm_storage_account" "vm-sa" {
-  count                    = var.boot_diagnostics ? 1 : 0
+  count                    = var.boot_diagnostics && ! var.boot_diagnostics_sa_managed ? 1 : 0
   name                     = "bootdiag${lower(random_id.vm-sa.hex)}"
   resource_group_name      = data.azurerm_resource_group.vm.name
   location                 = coalesce(var.location, data.azurerm_resource_group.vm.location)

@@ -184,6 +184,12 @@ variable "boot_diagnostics" {
   default     = false
 }
 
+variable "boot_diagnostics_sa_managed" {
+  type        = bool
+  description = "(Optional) Enable with managed storage account"
+  default     = false
+}
+
 variable "boot_diagnostics_sa_type" {
   description = "(Optional) Storage account type for boot diagnostics."
   type        = string
