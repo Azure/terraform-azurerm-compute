@@ -31,7 +31,7 @@ resource "azurerm_storage_account" "vm-sa" {
 
 resource "azurerm_virtual_machine" "vm-linux" {
   count                            = ! contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && ! var.is_windows_image ? var.nb_instances : 0
-  name                             = "${var.vm_hostname}${count.index == 0 ? "-${count.index+1}" : ""}"
+  name                             = "${var.vm_hostname}${count.index == 0 ? "" : "-${count.index+1}"}"
   resource_group_name              = data.azurerm_resource_group.vm.name
   location                         = coalesce(var.location, data.azurerm_resource_group.vm.location)
   availability_set_id              = azurerm_availability_set.vm.id
@@ -64,7 +64,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
 
   storage_os_disk {
-    name              = "osdisk-${var.vm_hostname}${count.index == 0 ? "-${count.index+1}" : ""}"
+    name              = "osdisk-${var.vm_hostname}${count.index == 0 ? "" : "-${count.index+1}"}"
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = var.storage_account_type
@@ -73,7 +73,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   dynamic storage_data_disk {
     for_each = range(var.nb_data_disk)
     content {
-      name              = "${var.vm_hostname}-datadisk${count.index == 0 ? "-${count.index+1}" : ""}-${storage_data_disk.value}"
+      name              = "${var.vm_hostname}-datadisk${count.index == 0 ? "" : "-${count.index+1}"}-${storage_data_disk.value}"
       create_option     = "Empty"
       lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
@@ -84,7 +84,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   dynamic storage_data_disk {
     for_each = var.extra_disks
     content {
-      name              = "${var.vm_hostname}-extradisk${count.index == 0 ? "-${count.index+1}" : ""}-${storage_data_disk.value.name}"
+      name              = "${var.vm_hostname}-extradisk${count.index == 0 ? "" : "-${count.index+1}"}-${storage_data_disk.value.name}"
       create_option     = "Empty"
       lun               = storage_data_disk.key + var.nb_data_disk
       disk_size_gb      = storage_data_disk.value.size
@@ -93,7 +93,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
   }
 
   os_profile {
-    computer_name  = "${var.vm_hostname}${count.index == 0 ? "-${count.index+1}" : ""}"
+    computer_name  = "${var.vm_hostname}${count.index == 0 ? "" : "-${count.index+1}"}"
     admin_username = var.admin_username
     admin_password = var.admin_password
     custom_data    = var.custom_data
@@ -175,7 +175,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   }
 
   storage_os_disk {
-    name              = "${var.vm_hostname}-osdisk${count.index == 0 ? "-${count.index+1}" : ""}"
+    name              = "${var.vm_hostname}-osdisk${count.index == 0 ? "" : "-${count.index+1}"}"
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = var.storage_account_type
@@ -184,7 +184,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   dynamic storage_data_disk {
     for_each = range(var.nb_data_disk)
     content {
-      name              = "${var.vm_hostname}-datadisk${count.index == 0 ? "-${count.index+1}" : ""}-${storage_data_disk.value}"
+      name              = "${var.vm_hostname}-datadisk${count.index == 0 ? "" : "-${count.index+1}"}-${storage_data_disk.value}"
       create_option     = "Empty"
       lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
@@ -195,7 +195,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   dynamic storage_data_disk {
     for_each = var.extra_disks
     content {
-      name              = "${var.vm_hostname}-extradisk${count.index == 0 ? "-${count.index+1}" : ""}-${storage_data_disk.value.name}"
+      name              = "${var.vm_hostname}-extradisk${count.index == 0 ? "" : "-${count.index+1}"}-${storage_data_disk.value.name}"
       create_option     = "Empty"
       lun               = storage_data_disk.key + var.nb_data_disk
       disk_size_gb      = storage_data_disk.value.size
@@ -204,7 +204,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   }
 
   os_profile {
-    computer_name  = "${var.vm_hostname}${count.index == 0 ? "-${count.index+1}" : ""}"
+    computer_name  = "${var.vm_hostname}${count.index == 0 ? "" : "-${count.index+1}"}"
     admin_username = var.admin_username
     admin_password = var.admin_password
   }
@@ -245,7 +245,7 @@ resource "azurerm_availability_set" "vm" {
 
 resource "azurerm_public_ip" "vm" {
   count               = var.nb_public_ip
-  name                = "${var.vm_hostname}-pip${count.index == 0 ? "-${count.index+1}" : ""}"
+  name                = "${var.vm_hostname}-pip${count.index == 0 ? "" : "-${count.index+1}"}"
   resource_group_name = data.azurerm_resource_group.vm.name
   location            = coalesce(var.location, data.azurerm_resource_group.vm.location)
   allocation_method   = var.allocation_method
@@ -288,13 +288,13 @@ resource "azurerm_network_security_rule" "vm" {
 
 resource "azurerm_network_interface" "vm" {
   count                         = var.nb_instances
-  name                          = "${var.vm_hostname}-nic${count.index == 0 ? "-${count.index+1}" : ""}"
+  name                          = "${var.vm_hostname}-nic${count.index == 0 ? "" : "-${count.index+1}"}"
   resource_group_name           = data.azurerm_resource_group.vm.name
   location                      = coalesce(var.location, data.azurerm_resource_group.vm.location)
   enable_accelerated_networking = var.enable_accelerated_networking
 
   ip_configuration {
-    name                          = "${var.vm_hostname}-ip${count.index == 0 ? "-${count.index+1}" : ""}"
+    name                          = "${var.vm_hostname}-ip${count.index == 0 ? "" : "-${count.index+1}"}"
     subnet_id                     = var.vnet_subnet_id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, tolist([""])), count.index) : ""
