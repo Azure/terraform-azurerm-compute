@@ -74,7 +74,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     for_each = range(var.nb_data_disk)
     content {
       name              = "${var.vm_hostname}-datadisk${count.index == 0 ? "" : "-${count.index+1}"}-${storage_data_disk.value}"
-      create_option     = "Empty"
+      create_option     = var.data_disk_create_option
       lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
       managed_disk_type = var.data_sa_type
@@ -85,7 +85,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     for_each = var.extra_disks
     content {
       name              = "${var.vm_hostname}-extradisk${count.index == 0 ? "" : "-${count.index+1}"}-${storage_data_disk.value.name}"
-      create_option     = "Empty"
+      create_option     = var.data_disk_create_option
       lun               = storage_data_disk.key + var.nb_data_disk
       disk_size_gb      = storage_data_disk.value.size
       managed_disk_type = var.data_sa_type
@@ -212,6 +212,8 @@ resource "azurerm_virtual_machine" "vm-windows" {
   tags = var.tags
 
   os_profile_windows_config {
+    # can we add timezone and auto-updates in here ?
+    # or just manage this post-install ?
     provision_vm_agent = true
   }
 

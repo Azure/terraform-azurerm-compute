@@ -172,6 +172,12 @@ variable "data_sa_type" {
   default     = "Standard_LRS"
 }
 
+variable "data_disk_create_option" {
+  description = "Data Disk Create Option."
+  type        = string
+  default     = "Empty"
+}
+
 variable "data_disk_size_gb" {
   description = "Storage data disk size size."
   type        = number
