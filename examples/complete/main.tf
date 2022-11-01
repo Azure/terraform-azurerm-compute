@@ -20,10 +20,14 @@ resource "azurerm_resource_group" "test" {
   location = var.location
 }
 
+locals {
+  vnet_address_space = "10.0.0.0/16"
+}
+
 resource "azurerm_virtual_network" "vnet" {
   name                = "host${random_id.ip_dns.hex}-vn"
   location            = var.location_alt
-  address_space       = ["10.0.0.0/16"]
+  address_space       = [local.vnet_address_space]
   resource_group_name = azurerm_resource_group.test.name
 }
 
@@ -33,28 +37,18 @@ resource "azurerm_subnet" "subnet" {
   name                 = "host${random_id.ip_dns.hex}-sn-${count.index+1}"
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.test.name
-  address_prefixes     = ["10.0.${count.index+1}.0/24"]
+  address_prefixes     = [cidrsubnet(local.vnet_address_space, 8, count.index)]
 }
-#
-#resource "azurerm_subnet" "subnet2" {
-#  name                 = "host${random_id.ip_dns.hex}-sn-2"
-#  virtual_network_name = azurerm_virtual_network.vnet.name
-#  resource_group_name  = azurerm_resource_group.test.name
-#  address_prefixes     = ["10.0.2.0/24"]
-#}
-#
-#resource "azurerm_subnet" "subnet3" {
-#  name                 = "host${random_id.ip_dns.hex}-sn-3"
-#  virtual_network_name = azurerm_virtual_network.vnet.name
-#  resource_group_name  = azurerm_resource_group.test.name
-#  address_prefixes     = ["10.0.3.0/24"]
-#}
 
 resource "azurerm_user_assigned_identity" "test" {
   resource_group_name = azurerm_resource_group.test.name
   location            = azurerm_resource_group.test.location
 
   name = "host${random_id.ip_dns.hex}-id"
+}
+
+locals {
+  ubuntu_ssh_keys = fileexists("~/.ssh/id_rsa.pub") ? [] : ["monica_id_rsa.pub"]
 }
 
 module "ubuntuservers" {
@@ -72,6 +66,7 @@ module "ubuntuservers" {
   enable_accelerated_networking    = true
   delete_data_disks_on_termination = true
   delete_os_disk_on_termination    = true
+  extra_ssh_keys                   = local.ubuntu_ssh_keys
   vm_size                          = "Standard_DS2_V2"
   nb_data_disk                     = 2
   identity_type                    = "UserAssigned"

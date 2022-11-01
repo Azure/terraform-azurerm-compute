@@ -30,9 +30,9 @@ output "public_ip_id" {
 
 output "public_ip_address" {
   description = "The actual ip address allocated for the resource."
-  value       = data.azurerm_public_ip.vm.*.ip_address
-
-  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
+  # If we use datasource directly here then the output will be `known after apply` every time we generate a plan. For Windows vm `azurerm_public_ip.vm.*.ip_address` will be empty string for the first time, so we combine these two expressions to one to solve this issue.
+  value       = [coalesce(concat(azurerm_public_ip.vm.*.ip_address, data.azurerm_public_ip.vm.*.ip_address)...)]
+  depends_on  = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows, data.azurerm_public_ip.vm]
 }
 
 output "public_ip_dns_name" {

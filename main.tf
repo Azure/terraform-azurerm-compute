@@ -8,7 +8,7 @@ data "azurerm_resource_group" "vm" {
 }
 
 locals {
-  ssh_keys = compact(concat([var.ssh_key], var.extra_ssh_keys))
+  ssh_keys = [for f in compact(concat([var.ssh_key], var.extra_ssh_keys)) : f if fileexists(f)]
 }
 
 resource "random_id" "vm-sa" {
@@ -31,12 +31,13 @@ resource "azurerm_storage_account" "vm-sa" {
 
 resource "azurerm_virtual_machine" "vm-linux" {
   count                            = ! contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && ! var.is_windows_image ? var.nb_instances : 0
+
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
   resource_group_name              = data.azurerm_resource_group.vm.name
   location                         = coalesce(var.location, data.azurerm_resource_group.vm.location)
   availability_set_id              = azurerm_availability_set.vm.id
   vm_size                          = var.vm_size
-  network_interface_ids            = [element(azurerm_network_interface.vm.*.id, count.index)]
+  network_interface_ids            = [azurerm_network_interface.vm[count.index].id]
   delete_os_disk_on_termination    = var.delete_os_disk_on_termination
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
 
@@ -146,7 +147,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
   location                      = coalesce(var.location, data.azurerm_resource_group.vm.location)
   availability_set_id           = azurerm_availability_set.vm.id
   vm_size                       = var.vm_size
-  network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
+  network_interface_ids         = [azurerm_network_interface.vm[count.index].id]
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
   license_type                  = var.license_type
 
@@ -254,12 +255,12 @@ resource "azurerm_public_ip" "vm" {
 }
 
 // Dynamic public ip address will be got after it's assigned to a vm
-#data "azurerm_public_ip" "vm" {
-#  count               = var.nb_public_ip
-#  name                = azurerm_public_ip.vm[count.index].name
-#  resource_group_name = data.azurerm_resource_group.vm.name
-#  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
-#}
+data "azurerm_public_ip" "vm" {
+  count               = var.nb_public_ip
+  name                = azurerm_public_ip.vm[count.index].name
+  resource_group_name = data.azurerm_resource_group.vm.name
+  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
+}
 
 resource "azurerm_network_security_group" "vm" {
   name                = "${var.vm_hostname}-nsg"

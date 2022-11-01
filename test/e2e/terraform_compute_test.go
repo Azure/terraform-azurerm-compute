@@ -23,8 +23,8 @@ func TestExamplesComplete(t *testing.T) {
 func assertVmIpAddresses(t *testing.T, outputName string, output test_helper.TerraformOutput) {
 	o, ok := output[outputName]
 	assert.True(t, ok)
-	addresses, ok := o.([]string)
+	addresses, ok := o.([]interface{})
 	assert.True(t, ok)
-	assert.Equal(t, 0, len(addresses))
-	assert.Regexp(t, ipRegex, addresses[0])
+	assert.Equal(t, 1, len(addresses))
+	assert.Regexp(t, ipRegex, addresses[0].(string))
 }
