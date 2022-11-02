@@ -1,16 +1,6 @@
-output "vm_ids" {
-  description = "Virtual machine ids created."
-  value       = concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id)
-}
-
-output "network_security_group_id" {
-  description = "id of the security group provisioned"
-  value       = azurerm_network_security_group.vm.id
-}
-
-output "network_security_group_name" {
-  description = "name of the security group provisioned"
-  value       = azurerm_network_security_group.vm.name
+output "availability_set_id" {
+  description = "id of the availability set where the vms are provisioned."
+  value       = azurerm_availability_set.vm.id
 }
 
 output "network_interface_ids" {
@@ -23,16 +13,21 @@ output "network_interface_private_ip" {
   value       = azurerm_network_interface.vm.*.private_ip_address
 }
 
-output "public_ip_id" {
-  description = "id of the public ip address provisoned."
-  value       = azurerm_public_ip.vm.*.id
+output "network_security_group_id" {
+  description = "id of the security group provisioned"
+  value       = azurerm_network_security_group.vm.id
+}
+
+output "network_security_group_name" {
+  description = "name of the security group provisioned"
+  value       = azurerm_network_security_group.vm.name
 }
 
 output "public_ip_address" {
   description = "The actual ip address allocated for the resource."
   # If we use datasource directly here then the output will be `known after apply` every time we generate a plan. For Windows vm `azurerm_public_ip.vm.*.ip_address` will be empty string for the first time, so we combine these two expressions to one to solve this issue.
-  value       = [coalesce(concat(azurerm_public_ip.vm.*.ip_address, data.azurerm_public_ip.vm.*.ip_address)...)]
-  depends_on  = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows, data.azurerm_public_ip.vm]
+  value      = [coalesce(concat(azurerm_public_ip.vm.*.ip_address, data.azurerm_public_ip.vm.*.ip_address)...)]
+  depends_on = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows, data.azurerm_public_ip.vm]
 }
 
 output "public_ip_dns_name" {
@@ -40,17 +35,22 @@ output "public_ip_dns_name" {
   value       = azurerm_public_ip.vm.*.fqdn
 }
 
-output "availability_set_id" {
-  description = "id of the availability set where the vms are provisioned."
-  value       = azurerm_availability_set.vm.id
-}
-
-output "vm_zones" {
-  description = "map with key `Virtual Machine Id`, value `list of the Availability Zone` which the Virtual Machine should be allocated in."
-  value       = zipmap(concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id), concat(azurerm_virtual_machine.vm-windows.*.zones, azurerm_virtual_machine.vm-linux.*.zones))
+output "public_ip_id" {
+  description = "id of the public ip address provisoned."
+  value       = azurerm_public_ip.vm.*.id
 }
 
 output "vm_identity" {
   description = "map with key `Virtual Machine Id`, value `list of identity` created for the Virtual Machine."
   value       = zipmap(concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id), concat(azurerm_virtual_machine.vm-windows.*.identity, azurerm_virtual_machine.vm-linux.*.identity))
+}
+
+output "vm_ids" {
+  description = "Virtual machine ids created."
+  value       = concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id)
+}
+
+output "vm_zones" {
+  description = "map with key `Virtual Machine Id`, value `list of the Availability Zone` which the Virtual Machine should be allocated in."
+  value       = zipmap(concat(azurerm_virtual_machine.vm-windows.*.id, azurerm_virtual_machine.vm-linux.*.id), concat(azurerm_virtual_machine.vm-windows.*.zones, azurerm_virtual_machine.vm-linux.*.zones))
 }

@@ -16,8 +16,8 @@ resource "random_id" "ip_dns" {
 }
 
 resource "azurerm_resource_group" "test" {
-  name     = "host${random_id.ip_dns.hex}-rg"
   location = var.location
+  name     = "host${random_id.ip_dns.hex}-rg"
 }
 
 locals {
@@ -25,26 +25,26 @@ locals {
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "host${random_id.ip_dns.hex}-vn"
-  location            = var.location_alt
   address_space       = [local.vnet_address_space]
+  location            = var.location_alt
+  name                = "host${random_id.ip_dns.hex}-vn"
   resource_group_name = azurerm_resource_group.test.name
 }
 
 resource "azurerm_subnet" "subnet" {
   count = 3
 
-  name                 = "host${random_id.ip_dns.hex}-sn-${count.index+1}"
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  resource_group_name  = azurerm_resource_group.test.name
+  # tflint-ignore: terraform_count_index_usage
   address_prefixes     = [cidrsubnet(local.vnet_address_space, 8, count.index)]
+  name                 = "host${random_id.ip_dns.hex}-sn-${count.index + 1}"
+  resource_group_name  = azurerm_resource_group.test.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
 }
 
 resource "azurerm_user_assigned_identity" "test" {
-  resource_group_name = azurerm_resource_group.test.name
   location            = azurerm_resource_group.test.location
-
-  name = "host${random_id.ip_dns.hex}-id"
+  name                = "host${random_id.ip_dns.hex}-id"
+  resource_group_name = azurerm_resource_group.test.name
 }
 
 locals {
@@ -71,7 +71,7 @@ module "ubuntuservers" {
   nb_data_disk                     = 2
   identity_type                    = "UserAssigned"
   identity_ids                     = [azurerm_user_assigned_identity.test.id]
-  os_profile_secrets               = [
+  os_profile_secrets = [
     {
       source_vault_id = azurerm_key_vault.test.id
       certificate_url = azurerm_key_vault_certificate.test.secret_id
@@ -82,23 +82,23 @@ module "ubuntuservers" {
 }
 
 module "debianservers" {
-  source                           = "../.."
-  vm_hostname                      = "${random_id.ip_dns.hex}-d"
-  resource_group_name              = azurerm_resource_group.test.name
-  location                         = var.location_alt
-  admin_username                   = var.admin_username
-  admin_password                   = var.admin_password
-  custom_data                      = var.custom_data
-  vm_os_simple                     = var.vm_os_simple_2
-  public_ip_dns                    = ["debiansimplevmips-${random_id.ip_dns.hex}"]
-  // change to a unique name per datacenter region
+  source              = "../.."
+  vm_hostname         = "${random_id.ip_dns.hex}-d"
+  resource_group_name = azurerm_resource_group.test.name
+  location            = var.location_alt
+  admin_username      = var.admin_username
+  admin_password      = var.admin_password
+  custom_data         = var.custom_data
+  vm_os_simple        = var.vm_os_simple_2
+  public_ip_dns       = ["debiansimplevmips-${random_id.ip_dns.hex}"]
+  # change to a unique name per datacenter region
   vnet_subnet_id                   = azurerm_subnet.subnet[1].id
   allocation_method                = "Static"
   delete_data_disks_on_termination = true
   delete_os_disk_on_termination    = true
   enable_ssh_key                   = true
   extra_ssh_keys                   = ["monica_id_rsa.pub"]
-  extra_disks                      = [
+  extra_disks = [
     {
       size = 5
       name = "extra1"
@@ -131,19 +131,19 @@ module "debianservers2" {
 
 module "windowsservers" {
   source              = "../.."
-  vm_hostname         = "${random_id.ip_dns.hex}-w" // line can be removed if only one VM module per resource group
+  vm_hostname         = "${random_id.ip_dns.hex}-w" # line can be removed if only one VM module per resource group
   resource_group_name = azurerm_resource_group.test.name
   location            = var.location_alt
   is_windows_image    = true
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   vm_os_simple        = "WindowsServer"
-  public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] // change to a unique name per datacenter region
+  public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] # change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet[2].id
   license_type        = var.license_type
   identity_type       = "UserAssigned"
   identity_ids        = [azurerm_user_assigned_identity.test.id]
-  os_profile_secrets  = [
+  os_profile_secrets = [
     {
       source_vault_id   = azurerm_key_vault.test.id
       certificate_url   = azurerm_key_vault_certificate.test.secret_id
