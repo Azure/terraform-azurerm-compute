@@ -1,6 +1,7 @@
 variable "admin_password" {
-  type    = string
-  default = "P@ssw0rd12345!"
+  type      = string
+  sensitive = true
+  default   = null
 }
 
 variable "admin_username" {

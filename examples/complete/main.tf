@@ -1,16 +1,3 @@
-provider "azurerm" {
-  features {
-    key_vault {
-      purge_soft_delete_on_destroy               = false
-      purge_soft_deleted_certificates_on_destroy = false
-      purge_soft_deleted_keys_on_destroy         = false
-    }
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
-}
-
 resource "random_id" "ip_dns" {
   byte_length = 4
 }
@@ -51,13 +38,29 @@ locals {
   ubuntu_ssh_keys = fileexists("~/.ssh/id_rsa.pub") ? [] : ["monica_id_rsa.pub"]
 }
 
+resource "random_password" "admin_password" {
+  length      = 20
+  lower       = true
+  min_lower   = 1
+  min_numeric = 1
+  min_special = 1
+  min_upper   = 1
+  numeric     = true
+  special     = true
+  upper       = true
+}
+
+locals {
+  admin_password = coalesce(var.admin_password, random_password.admin_password.result)
+}
+
 module "ubuntuservers" {
   source                           = "../.."
   vm_hostname                      = "${random_id.ip_dns.hex}-u"
   resource_group_name              = azurerm_resource_group.test.name
   location                         = var.location_alt
   admin_username                   = var.admin_username
-  admin_password                   = var.admin_password
+  admin_password                   = local.admin_password
   vm_os_simple                     = var.vm_os_simple_1
   public_ip_dns                    = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
   vnet_subnet_id                   = azurerm_subnet.subnet[0].id
@@ -88,7 +91,7 @@ module "debianservers" {
   resource_group_name = azurerm_resource_group.test.name
   location            = var.location_alt
   admin_username      = var.admin_username
-  admin_password      = var.admin_password
+  admin_password      = local.admin_password
   custom_data         = var.custom_data
   vm_os_simple        = var.vm_os_simple_2
   public_ip_dns       = ["debiansimplevmips-${random_id.ip_dns.hex}"]
@@ -138,7 +141,7 @@ module "windowsservers" {
   location            = var.location_alt
   is_windows_image    = true
   admin_username      = var.admin_username
-  admin_password      = var.admin_password
+  admin_password      = local.admin_password
   vm_os_simple        = "WindowsServer"
   public_ip_dns       = ["winsimplevmips-${random_id.ip_dns.hex}"] # change to a unique name per datacenter region
   vnet_subnet_id      = azurerm_subnet.subnet[2].id

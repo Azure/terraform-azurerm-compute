@@ -26,6 +26,11 @@ output "windows_ip_address" {
   value = module.windowsservers.public_ip_address
 }
 
+output "windows_vm_admin_password" {
+  sensitive = true
+  value     = local.admin_password
+}
+
 output "windows_vm_public_name" {
   value = module.windowsservers.public_ip_dns_name
 }
