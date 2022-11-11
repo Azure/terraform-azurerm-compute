@@ -1,5 +1,0 @@
-# 4.0.0 (November 4, 2022)
-
-ENHANCEMENTS:
-
-BUG FIXES:
