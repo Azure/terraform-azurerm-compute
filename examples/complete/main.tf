@@ -66,6 +66,7 @@ module "ubuntuservers" {
   enable_accelerated_networking    = true
   delete_data_disks_on_termination = true
   delete_os_disk_on_termination    = true
+  ssh_key                          = fileexists("~/.ssh/id_rsa.pub") ? "~/.ssh/id_rsa.pub" : ""
   extra_ssh_keys                   = local.ubuntu_ssh_keys
   vm_size                          = "Standard_DS2_V2"
   nb_data_disk                     = 2
@@ -97,6 +98,7 @@ module "debianservers" {
   delete_data_disks_on_termination = true
   delete_os_disk_on_termination    = true
   enable_ssh_key                   = true
+  ssh_key                          = fileexists("~/.ssh/id_rsa.pub") ? "~/.ssh/id_rsa.pub" : ""
   extra_ssh_keys                   = ["monica_id_rsa.pub"]
   extra_disks = [
     {
