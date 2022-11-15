@@ -179,7 +179,7 @@ variable "data_disk_size_gb" {
 }
 
 variable "storage_os_disk_size_gb" {
-  description = "Storage os data disk size."
+  description = "(Optional) Specifies the size of the data disk in gigabytes."
   type        = number
   default     = null
 }
