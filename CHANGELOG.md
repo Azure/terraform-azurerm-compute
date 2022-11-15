@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased](https://github.com/Azure/terraform-azurerm-compute/tree/HEAD)
+
+**Merged pull requests:**
+
+- Allow custom OS disk size [\#183](https://github.com/Azure/terraform-azurerm-compute/pull/183) ([yatzek](https://github.com/yatzek))
+
 ## [4.0.0](https://github.com/Azure/terraform-azurerm-compute/tree/4.0.0) (2022-11-15)
 
 **Implemented enhancements:**
