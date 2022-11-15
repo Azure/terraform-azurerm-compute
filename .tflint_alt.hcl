@@ -197,7 +197,7 @@ rule "terraform_locals_order" {
 }
 
 rule "terraform_output_order" {
-  enabled = false
+  enabled = true
 }
 
 rule "terraform_output_separate" {
@@ -205,7 +205,7 @@ rule "terraform_output_separate" {
 }
 
 rule "terraform_variable_order" {
-  enabled = false
+  enabled = true
 }
 
 rule "terraform_variable_separate" {
@@ -213,11 +213,11 @@ rule "terraform_variable_separate" {
 }
 
 rule "terraform_resource_data_arg_layout" {
-  enabled = false
+  enabled = true
 }
 
 rule "azurerm_arg_order" {
-  enabled = false
+  enabled = true
 }
 
 rule "azurerm_resource_tag" {
