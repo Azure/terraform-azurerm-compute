@@ -1,16 +1,13 @@
-<!---
-Please add this into the test of test/fixture, format the changes by "terraform fmt", and test it by run the following:
-```sh
-$ docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
-$ docker run --rm azure-compute /bin/bash -c "bundle install && rake full"
-```
+## Describe your changes
 
-Please add this into the example usage of README.md and format the changes by "terrafmt fmt README.md". Please intall "terrafmt" by [install terrafmt](https://github.com/katbyte/terrafmt#install).
---->
+## Issue number
 
-Fixes #000 
+#000
 
-Changes proposed in the pull request:
+## Checklist before requesting a review
+- [ ] The pr title can be used to describe what this pr did in `CHANGELOG.md` file
+- [ ] I have executed pre-commit on my machine
+- [ ] I have passed pr-check on my machine
 
-
+Thanks for your cooperation!
 

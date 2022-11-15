@@ -1,0 +1,22 @@
+block-list-secret-scan: []
+branch: master
+directory:
+- ./
+download-external-modules: false
+evaluate-variables: true
+external-modules-download-path: .external_modules
+framework:
+- all
+quiet: true
+secrets-scan-file-type: []
+skip-check:
+- CKV_GHA_3
+- CKV_AZURE_119
+# Check following rules after v4.0
+- CKV2_AZURE_18
+- CKV2_AZURE_1
+- CKV2_AZURE_10
+- CKV2_AZURE_12
+skip-framework:
+- dockerfile
+summary-position: top
