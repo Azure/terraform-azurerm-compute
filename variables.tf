@@ -181,7 +181,7 @@ variable "data_disk_size_gb" {
 variable "storage_os_disk_size_gb" {
   description = "Storage os data disk size."
   type        = number
-  default     = 30
+  default     = null
 }
 
 variable "boot_diagnostics" {
