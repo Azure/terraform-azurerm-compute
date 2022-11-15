@@ -178,6 +178,12 @@ variable "data_disk_size_gb" {
   default     = 30
 }
 
+variable "storage_os_disk_size_gb" {
+  description = "(Optional) Specifies the size of the data disk in gigabytes."
+  type        = number
+  default     = null
+}
+
 variable "boot_diagnostics" {
   type        = bool
   description = "(Optional) Enable or Disable boot diagnostics."
