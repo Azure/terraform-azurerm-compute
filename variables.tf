@@ -106,6 +106,7 @@ variable "is_windows_image" {
 variable "is_marketplace_image" {
   description = "Boolean flag to notify when the image comes from the marketplace."
   type        = bool
+  nullable    = false
   default     = false
 }
 

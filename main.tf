@@ -30,6 +30,13 @@ resource "azurerm_storage_account" "vm-sa" {
 }
 
 resource "azurerm_virtual_machine" "vm-linux" {
+  lifecycle {
+    precondition {
+      condition     = !var.is_marketplace_image || (var.vm_os_offer != null && var.vm_os_publisher != null && var.vm_os_sku != null)
+      error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
+    }
+  }
+
   count                            = !contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
   resource_group_name              = data.azurerm_resource_group.vm.name
