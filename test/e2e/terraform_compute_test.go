@@ -15,7 +15,7 @@ func TestExamplesComplete(t *testing.T) {
 	vars := make(map[string]interface{})
 	managedIdentityId := os.Getenv("MSI_ID")
 	if managedIdentityId != "" {
-		vars["managed_identity_principal_id"] = managedIdentityId
+		_ = os.Setenv("TF_VAR_managed_identity_principal_id", managedIdentityId)
 	}
 	test_helper.RunE2ETest(t, "../../", "examples/complete", terraform.Options{
 		Upgrade: true,
