@@ -161,7 +161,7 @@ rule "terraform_module_version" {
 }
 
 rule "terraform_naming_convention" {
-  enabled = false
+  enabled = true
 }
 
 rule "terraform_required_providers" {

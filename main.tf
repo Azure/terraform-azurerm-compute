@@ -13,7 +13,12 @@ locals {
   ssh_keys = compact(concat([var.ssh_key], var.extra_ssh_keys))
 }
 
-resource "random_id" "vm-sa" {
+moved {
+  from = random_id.vm-sa
+  to   = random_id.vm_sa
+}
+
+resource "random_id" "vm_sa" {
   keepers = {
     vm_hostname = var.vm_hostname
   }
@@ -21,9 +26,14 @@ resource "random_id" "vm-sa" {
   byte_length = 6
 }
 
-resource "azurerm_storage_account" "vm-sa" {
+moved {
+  from = azurerm_storage_account.vm-sa
+  to   = azurerm_storage_account.vm_sa
+}
+
+resource "azurerm_storage_account" "vm_sa" {
   count                    = var.boot_diagnostics ? 1 : 0
-  name                     = "bootdiag${lower(random_id.vm-sa.hex)}"
+  name                     = "bootdiag${lower(random_id.vm_sa.hex)}"
   resource_group_name      = var.resource_group_name
   location                 = local.location
   account_tier             = element(split("_", var.boot_diagnostics_sa_type), 0)
@@ -31,7 +41,12 @@ resource "azurerm_storage_account" "vm-sa" {
   tags                     = var.tags
 }
 
-resource "azurerm_virtual_machine" "vm-linux" {
+moved {
+  from = azurerm_virtual_machine.vm-linux
+  to   = azurerm_virtual_machine.vm_linux
+}
+
+resource "azurerm_virtual_machine" "vm_linux" {
   count                            = !contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
   resource_group_name              = var.resource_group_name
@@ -138,11 +153,16 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm_sa.*.primary_blob_endpoint) : ""
   }
 }
 
-resource "azurerm_virtual_machine" "vm-windows" {
+moved {
+  from = azurerm_virtual_machine.vm-windows
+  to   = azurerm_virtual_machine.vm_windows
+}
+
+resource "azurerm_virtual_machine" "vm_windows" {
   count                         = (var.is_windows_image || contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer")) ? var.nb_instances : 0
   name                          = "${var.vm_hostname}-vmWindows-${count.index}"
   resource_group_name           = var.resource_group_name
@@ -232,7 +252,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm_sa.*.primary_blob_endpoint) : ""
   }
 }
 
@@ -262,7 +282,7 @@ data "azurerm_public_ip" "vm" {
   count               = var.nb_public_ip
   name                = azurerm_public_ip.vm[count.index].name
   resource_group_name = var.resource_group_name
-  depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
+  depends_on          = [azurerm_virtual_machine.vm_linux, azurerm_virtual_machine.vm_windows]
 }
 
 resource "azurerm_network_security_group" "vm" {
