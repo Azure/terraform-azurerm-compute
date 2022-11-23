@@ -4,10 +4,12 @@ module "os" {
 }
 
 data "azurerm_resource_group" "vm" {
-  name = var.resource_group_name
+  count = var.location == null ? 1 : 0
+  name  = var.resource_group_name
 }
 
 locals {
+  location = var.location == null ? data.azurerm_resource_group.vm[0].location : var.location
   ssh_keys = compact(concat([var.ssh_key], var.extra_ssh_keys))
 }
 
@@ -22,8 +24,8 @@ resource "random_id" "vm-sa" {
 resource "azurerm_storage_account" "vm-sa" {
   count                    = var.boot_diagnostics ? 1 : 0
   name                     = "bootdiag${lower(random_id.vm-sa.hex)}"
-  resource_group_name      = data.azurerm_resource_group.vm.name
-  location                 = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  resource_group_name      = var.resource_group_name
+  location                 = local.location
   account_tier             = element(split("_", var.boot_diagnostics_sa_type), 0)
   account_replication_type = element(split("_", var.boot_diagnostics_sa_type), 1)
   tags                     = var.tags
@@ -32,8 +34,8 @@ resource "azurerm_storage_account" "vm-sa" {
 resource "azurerm_virtual_machine" "vm-linux" {
   count                            = !contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
-  resource_group_name              = data.azurerm_resource_group.vm.name
-  location                         = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  resource_group_name              = var.resource_group_name
+  location                         = local.location
   availability_set_id              = azurerm_availability_set.vm.id
   vm_size                          = var.vm_size
   network_interface_ids            = [element(azurerm_network_interface.vm.*.id, count.index)]
@@ -143,8 +145,8 @@ resource "azurerm_virtual_machine" "vm-linux" {
 resource "azurerm_virtual_machine" "vm-windows" {
   count                         = (var.is_windows_image || contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer")) ? var.nb_instances : 0
   name                          = "${var.vm_hostname}-vmWindows-${count.index}"
-  resource_group_name           = data.azurerm_resource_group.vm.name
-  location                      = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  resource_group_name           = var.resource_group_name
+  location                      = local.location
   availability_set_id           = azurerm_availability_set.vm.id
   vm_size                       = var.vm_size
   network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
@@ -236,8 +238,8 @@ resource "azurerm_virtual_machine" "vm-windows" {
 
 resource "azurerm_availability_set" "vm" {
   name                         = "${var.vm_hostname}-avset"
-  resource_group_name          = data.azurerm_resource_group.vm.name
-  location                     = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  resource_group_name          = var.resource_group_name
+  location                     = local.location
   platform_fault_domain_count  = 2
   platform_update_domain_count = 2
   managed                      = true
@@ -247,8 +249,8 @@ resource "azurerm_availability_set" "vm" {
 resource "azurerm_public_ip" "vm" {
   count               = var.nb_public_ip
   name                = "${var.vm_hostname}-pip-${count.index}"
-  resource_group_name = data.azurerm_resource_group.vm.name
-  location            = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  resource_group_name = var.resource_group_name
+  location            = local.location
   allocation_method   = var.allocation_method
   sku                 = var.public_ip_sku
   domain_name_label   = element(var.public_ip_dns, count.index)
@@ -259,14 +261,14 @@ resource "azurerm_public_ip" "vm" {
 data "azurerm_public_ip" "vm" {
   count               = var.nb_public_ip
   name                = azurerm_public_ip.vm[count.index].name
-  resource_group_name = data.azurerm_resource_group.vm.name
+  resource_group_name = var.resource_group_name
   depends_on          = [azurerm_virtual_machine.vm-linux, azurerm_virtual_machine.vm-windows]
 }
 
 resource "azurerm_network_security_group" "vm" {
   name                = "${var.vm_hostname}-nsg"
-  resource_group_name = data.azurerm_resource_group.vm.name
-  location            = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  resource_group_name = var.resource_group_name
+  location            = local.location
 
   tags = var.tags
 }
@@ -274,7 +276,7 @@ resource "azurerm_network_security_group" "vm" {
 resource "azurerm_network_security_rule" "vm" {
   count                       = var.remote_port != "" ? 1 : 0
   name                        = "allow_remote_${coalesce(var.remote_port, module.os.calculated_remote_port)}_in_all"
-  resource_group_name         = data.azurerm_resource_group.vm.name
+  resource_group_name         = var.resource_group_name
   description                 = "Allow remote protocol in from all locations"
   priority                    = 101
   direction                   = "Inbound"
@@ -290,8 +292,8 @@ resource "azurerm_network_security_rule" "vm" {
 resource "azurerm_network_interface" "vm" {
   count                         = var.nb_instances
   name                          = "${var.vm_hostname}-nic-${count.index}"
-  resource_group_name           = data.azurerm_resource_group.vm.name
-  location                      = coalesce(var.location, data.azurerm_resource_group.vm.location)
+  resource_group_name           = var.resource_group_name
+  location                      = local.location
   enable_accelerated_networking = var.enable_accelerated_networking
 
   ip_configuration {
