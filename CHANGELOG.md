@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Repacing location and resource\_group\_name with local variables [\#196](https://github.com/Azure/terraform-azurerm-compute/pull/196) ([jiaweitao001](https://github.com/jiaweitao001))
 - Removing depends\_on in examples code [\#195](https://github.com/Azure/terraform-azurerm-compute/pull/195) ([jiaweitao001](https://github.com/jiaweitao001))
 - Allow custom OS disk size [\#183](https://github.com/Azure/terraform-azurerm-compute/pull/183) ([yatzek](https://github.com/yatzek))
 
