@@ -81,8 +81,6 @@ module "ubuntuservers" {
       certificate_url = azurerm_key_vault_certificate.test.secret_id
     }
   ]
-
-  depends_on = [azurerm_resource_group.test]
 }
 
 module "debianservers" {
@@ -113,8 +111,6 @@ module "debianservers" {
       name = "extra2"
     }
   ]
-
-  depends_on = [azurerm_resource_group.test]
 }
 
 module "debianservers2" {
@@ -130,8 +126,6 @@ module "debianservers2" {
   delete_os_disk_on_termination    = true
   ssh_key                          = ""
   ssh_key_values                   = [file("${path.module}/monica_id_rsa.pub")]
-
-  depends_on = [azurerm_resource_group.test]
 }
 
 module "windowsservers" {
@@ -155,6 +149,4 @@ module "windowsservers" {
       certificate_store = "My"
     }
   ]
-
-  depends_on = [azurerm_resource_group.test]
 }
