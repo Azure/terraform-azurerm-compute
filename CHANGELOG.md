@@ -6,6 +6,7 @@
 
 - Repacing location and resource\_group\_name with local variables [\#196](https://github.com/Azure/terraform-azurerm-compute/pull/196) ([jiaweitao001](https://github.com/jiaweitao001))
 - Removing depends\_on in examples code [\#195](https://github.com/Azure/terraform-azurerm-compute/pull/195) ([jiaweitao001](https://github.com/jiaweitao001))
+- Add override template file so we can run version upgrade test [\#194](https://github.com/Azure/terraform-azurerm-compute/pull/194) ([lonegunmanb](https://github.com/lonegunmanb))
 - Allow custom OS disk size [\#183](https://github.com/Azure/terraform-azurerm-compute/pull/183) ([yatzek](https://github.com/yatzek))
 
 ## [4.0.0](https://github.com/Azure/terraform-azurerm-compute/tree/4.0.0) (2022-11-15)
