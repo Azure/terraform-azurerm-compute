@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Removing depends\_on in examples code [\#195](https://github.com/Azure/terraform-azurerm-compute/pull/195) ([jiaweitao001](https://github.com/jiaweitao001))
 - Allow custom OS disk size [\#183](https://github.com/Azure/terraform-azurerm-compute/pull/183) ([yatzek](https://github.com/yatzek))
 
 ## [4.0.0](https://github.com/Azure/terraform-azurerm-compute/tree/4.0.0) (2022-11-15)
