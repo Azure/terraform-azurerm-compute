@@ -1,0 +1,24 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "{{ env "TERRAFORM_AZURERM_VERSION" | default ">= 3.11, < 4.0"}}"
+    }
+  }
+}
+
+module "ubuntuservers" {
+  source = "{{env "MODULE_SOURCE" |  default "../../"}}"
+}
+
+module "debianservers" {
+  source = "{{env "MODULE_SOURCE" |  default "../../"}}"
+}
+
+module "debianservers2" {
+  source = "{{env "MODULE_SOURCE" |  default "../../"}}"
+}
+
+module "windowsservers" {
+  source = "{{env "MODULE_SOURCE" |  default "../../"}}"
+}

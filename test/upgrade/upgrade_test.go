@@ -20,7 +20,7 @@ func TestExampleUpgrade_complete(t *testing.T) {
 	vars := make(map[string]interface{})
 	managedIdentityId := os.Getenv("MSI_ID")
 	if managedIdentityId != "" {
-		vars["managed_identity_principal_id"] = managedIdentityId
+		_ = os.Setenv("TF_VAR_managed_identity_principal_id", managedIdentityId)
 	}
 	test_helper.ModuleUpgradeTest(t, "Azure", "terraform-azurerm-compute", "examples/complete", currentRoot, terraform.Options{
 		Upgrade: true,
