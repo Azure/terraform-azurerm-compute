@@ -133,7 +133,7 @@ rule "terraform_comment_syntax" {
 }
 
 rule "terraform_deprecated_index" {
-  enabled = false
+  enabled = true
 }
 
 rule "terraform_deprecated_interpolation" {

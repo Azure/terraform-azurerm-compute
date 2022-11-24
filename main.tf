@@ -55,7 +55,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
 
   location                         = local.location
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
-  network_interface_ids            = [element(azurerm_network_interface.vm.*.id, count.index)]
+  network_interface_ids            = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name              = var.resource_group_name
   vm_size                          = var.vm_size
   availability_set_id              = azurerm_availability_set.vm.id
@@ -71,7 +71,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
   }
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm_sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm_sa[*].primary_blob_endpoint) : ""
   }
   dynamic "identity" {
     for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
@@ -168,7 +168,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
 
   location                      = local.location
   name                          = "${var.vm_hostname}-vmWindows-${count.index}"
-  network_interface_ids         = [element(azurerm_network_interface.vm.*.id, count.index)]
+  network_interface_ids         = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name           = var.resource_group_name
   vm_size                       = var.vm_size
   availability_set_id           = azurerm_availability_set.vm.id
@@ -184,7 +184,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
   }
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm_sa.*.primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm_sa[*].primary_blob_endpoint) : ""
   }
   dynamic "identity" {
     for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
@@ -320,7 +320,7 @@ resource "azurerm_network_interface" "vm" {
   ip_configuration {
     name                          = "${var.vm_hostname}-ip-${count.index}"
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, tolist([
+    public_ip_address_id = length(azurerm_public_ip.vm[*].id) > 0 ? element(concat(azurerm_public_ip.vm[*].id, tolist([
       ""
     ])), count.index) : ""
     subnet_id = var.vnet_subnet_id
