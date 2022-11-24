@@ -254,6 +254,15 @@ variable "vm_size" {
   default     = "Standard_D2s_v3"
 }
 
+# Why we use `zone` not `zones` as `azurerm_virtual_machine.zones`?
+# `azurerm_virtual_machine.zones` is [a list of single Az](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine#zones), the maximum length is `1`
+# so we can only pass one zone per vm instance.
+# Why don't we use [`element`](https://developer.hashicorp.com/terraform/language/functions/element) function?
+# The `element` function act as mod operator, it will iterate the vm instances, meanwhile
+# we must keep the vm and public ip in the same zone.
+# The vm's count is controlled by `var.nb_instances` and public ips' count is controled by `var.nb_public_ip`,
+# it would be hard for us to keep the vm and public ip in the same zone once `var.nb_instances` doesn't equal to `var.nb_public_ip`
+# So, we decide that one module instance supports one zone only to avoid this dilemma.
 variable "zone" {
   description = "(Optional) The Availability Zone which the Virtual Machine should be allocated in, only one zone would be accepted. If set then this module won't create `azurerm_availability_set` resource. Changing this forces a new resource to be created."
   type        = string
