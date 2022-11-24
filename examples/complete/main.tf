@@ -119,13 +119,17 @@ module "debianservers2" {
   resource_group_name              = azurerm_resource_group.test.name
   location                         = var.location_alt
   admin_username                   = var.admin_username
+  allocation_method                = "Static"
   vm_os_simple                     = var.vm_os_simple_2
   vnet_subnet_id                   = azurerm_subnet.subnet[1].id
   enable_ssh_key                   = true
   delete_data_disks_on_termination = true
   delete_os_disk_on_termination    = true
+  public_ip_sku                    = "Standard"
   ssh_key                          = ""
   ssh_key_values                   = [file("${path.module}/monica_id_rsa.pub")]
+  # To test `var.zone` please uncomment the line below.
+  #  zone                             = "2"
 }
 
 module "windowsservers" {

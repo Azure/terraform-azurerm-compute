@@ -253,3 +253,9 @@ variable "vm_size" {
   type        = string
   default     = "Standard_D2s_v3"
 }
+
+variable "zone" {
+  description = "(Optional) The Availability Zone which the Virtual Machine should be allocated in, only one zone would be accepted. If set then this module won't create `azurerm_availability_set` resource. Changing this forces a new resource to be created."
+  type        = string
+  default     = null
+}

@@ -58,10 +58,11 @@ resource "azurerm_virtual_machine" "vm_linux" {
   network_interface_ids            = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name              = var.resource_group_name
   vm_size                          = var.vm_size
-  availability_set_id              = azurerm_availability_set.vm.id
+  availability_set_id              = var.zone == null ? azurerm_availability_set.vm[0].id : null
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
   delete_os_disk_on_termination    = var.delete_os_disk_on_termination
   tags                             = var.tags
+  zones                            = var.zone == null ? null : [var.zone]
 
   storage_os_disk {
     create_option     = "FromImage"
@@ -171,10 +172,11 @@ resource "azurerm_virtual_machine" "vm_windows" {
   network_interface_ids         = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name           = var.resource_group_name
   vm_size                       = var.vm_size
-  availability_set_id           = azurerm_availability_set.vm.id
+  availability_set_id           = var.zone == null ? azurerm_availability_set.vm[0].id : null
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
   license_type                  = var.license_type
   tags                          = var.tags
+  zones                         = var.zone == null ? null : [var.zone]
 
   storage_os_disk {
     create_option     = "FromImage"
@@ -253,6 +255,8 @@ resource "azurerm_virtual_machine" "vm_windows" {
 }
 
 resource "azurerm_availability_set" "vm" {
+  count = var.zone == null ? 1 : 0
+
   location                     = local.location
   name                         = "${var.vm_hostname}-avset"
   resource_group_name          = var.resource_group_name
@@ -272,6 +276,7 @@ resource "azurerm_public_ip" "vm" {
   domain_name_label   = element(var.public_ip_dns, count.index)
   sku                 = var.public_ip_sku
   tags                = var.tags
+  zones               = var.zone == null ? null : [var.zone]
 }
 
 # Dynamic public ip address will be got after it's assigned to a vm
