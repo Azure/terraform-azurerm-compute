@@ -191,6 +191,12 @@ variable "storage_account_type" {
   default     = "Premium_LRS"
 }
 
+variable "storage_os_disk_size_gb" {
+  description = "(Optional) Specifies the size of the data disk in gigabytes."
+  type        = number
+  default     = null
+}
+
 variable "tags" {
   type        = map(string)
   description = "A map of the tags to use on the resources that are deployed with this module."
