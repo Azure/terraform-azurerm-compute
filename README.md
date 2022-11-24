@@ -397,10 +397,10 @@ Originally created by [David Tesar](http://github.com/dtzar)
 | [azurerm_network_security_group.vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group)                                               | resource    |
 | [azurerm_network_security_rule.vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule)                                                 | resource    |
 | [azurerm_public_ip.vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip)                                                                         | resource    |
-| [azurerm_storage_account.vm-sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account)                                                          | resource    |
-| [azurerm_virtual_machine.vm-linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine)                                                       | resource    |
-| [azurerm_virtual_machine.vm-windows](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine)                                                     | resource    |
-| [random_id.vm-sa](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id)                                                                                      | resource    |
+| [azurerm_storage_account.vm_sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account)                                                          | resource    |
+| [azurerm_virtual_machine.vm_linux](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine)                                                       | resource    |
+| [azurerm_virtual_machine.vm_windows](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine)                                                     | resource    |
+| [random_id.vm_sa](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id)                                                                                      | resource    |
 | [azurerm_public_ip.vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/public_ip)                                                                      | data source |
 | [azurerm_resource_group.vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group)                                                            | data source |
 
