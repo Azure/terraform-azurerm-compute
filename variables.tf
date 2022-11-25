@@ -26,6 +26,20 @@ variable "allocation_method" {
   default     = "Dynamic"
 }
 
+# We keep default value as `2`, not `3` as the official since this module used to hard code this argument to `2`.
+variable "as_platform_fault_domain_count" {
+  description = "(Optional) Specifies the number of fault domains that are used. Defaults to `2`. Changing this forces a new resource to be created."
+  type        = number
+  default     = 2
+}
+
+# We keep default value as `2`, not `5` as the official since this module used to hard code this argument to `2`.
+variable "as_platform_update_domain_count" {
+  description = "(Optional) Specifies the number of update domains that are used. Defaults to `2`. Changing this forces a new resource to be created."
+  type        = number
+  default     = 2
+}
+
 variable "boot_diagnostics" {
   type        = bool
   description = "(Optional) Enable or Disable boot diagnostics."
