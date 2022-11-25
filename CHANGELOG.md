@@ -5,6 +5,7 @@
 **Merged pull requests:**
 
 - Output vm names [\#202](https://github.com/Azure/terraform-azurerm-compute/pull/202) ([lonegunmanb](https://github.com/lonegunmanb))
+- Make `azurerm_availability_set`'s `platform_fault_domain_count` and `platform_update_domain_count` configurable [\#201](https://github.com/Azure/terraform-azurerm-compute/pull/201) ([lonegunmanb](https://github.com/lonegunmanb))
 - Fix the bug introduced by \#189 by adding `var.storage_os_disk_size_gb` back. [\#200](https://github.com/Azure/terraform-azurerm-compute/pull/200) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for `azurerm_virtual_machine.zones` [\#199](https://github.com/Azure/terraform-azurerm-compute/pull/199) ([lonegunmanb](https://github.com/lonegunmanb))
 - Convert legacy splat syntax into bracket syntax [\#198](https://github.com/Azure/terraform-azurerm-compute/pull/198) ([lonegunmanb](https://github.com/lonegunmanb))
