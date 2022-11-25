@@ -120,8 +120,8 @@ module "debianservers2" {
   location                         = var.location_alt
   admin_username                   = var.admin_username
   allocation_method                = "Static"
-  as_platform_fault_domain_count   = 5
-  as_platform_update_domain_count  = 3
+  as_platform_fault_domain_count   = 3
+  as_platform_update_domain_count  = 5
   vm_os_simple                     = var.vm_os_simple_2
   vnet_subnet_id                   = azurerm_subnet.subnet[1].id
   enable_ssh_key                   = true
