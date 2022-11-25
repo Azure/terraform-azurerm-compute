@@ -49,7 +49,9 @@ moved {
 }
 
 resource "azurerm_virtual_machine" "vm_linux" {
-  count = !contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
+  count = !contains(tolist([
+    var.vm_os_simple, var.vm_os_offer
+  ]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
 
   location                         = local.location
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
@@ -162,7 +164,9 @@ moved {
 }
 
 resource "azurerm_virtual_machine" "vm_windows" {
-  count = (var.is_windows_image || contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer")) ? var.nb_instances : 0
+  count = (var.is_windows_image || contains(tolist([
+    var.vm_os_simple, var.vm_os_offer
+  ]), "WindowsServer")) ? var.nb_instances : 0
 
   location                      = local.location
   name                          = "${var.vm_hostname}-vmWindows-${count.index}"
@@ -275,6 +279,13 @@ resource "azurerm_public_ip" "vm" {
   sku                 = var.public_ip_sku
   tags                = var.tags
   zones               = var.zone == null ? null : [var.zone]
+
+  # To solve issue [#107](https://github.com/Azure/terraform-azurerm-compute/issues/107) we add such block to make `azurerm_network_interface.vm`'s update happen first.
+  # Issue #107's root cause is Terraform will try to execute deletion before update, once we tried to delete the public ip, it is still attached on the network interface.
+  # Declare this `create_before_destroy` will defer this public ip resource's deletion after creation and update so we can fix the issue.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Dynamic public ip address will be got after it's assigned to a vm
@@ -323,8 +334,10 @@ resource "azurerm_network_interface" "vm" {
   ip_configuration {
     name                          = "${var.vm_hostname}-ip-${count.index}"
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = length(azurerm_public_ip.vm[*].id) > 0 ? element(concat(azurerm_public_ip.vm[*].id, tolist([""])), count.index) : ""
-    subnet_id                     = var.vnet_subnet_id
+    public_ip_address_id = length(azurerm_public_ip.vm[*].id) > 0 ? element(concat(azurerm_public_ip.vm[*].id, tolist([
+      ""
+    ])), count.index) : ""
+    subnet_id = var.vnet_subnet_id
   }
 }
 
