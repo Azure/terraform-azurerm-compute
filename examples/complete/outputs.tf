@@ -1,3 +1,11 @@
+output "debian2_availability_set_id" {
+  value = module.debianservers2.availability_set_id
+}
+
+output "debian_availability_set_id" {
+  value = module.debianservers.availability_set_id
+}
+
 output "debian_ip_address" {
   value = module.debianservers.public_ip_address
 }
@@ -22,6 +30,10 @@ output "public_ip_ids" {
     module.debianservers2.public_ip_id,
     module.windowsservers.public_ip_id,
   ))
+}
+
+output "ubuntu_availability_set_id" {
+  value = module.ubuntuservers.availability_set_id
 }
 
 output "ubuntu_identity_type" {
@@ -61,6 +73,10 @@ output "vm_zones" {
     module.debianservers2.vm_zones,
     module.windowsservers.vm_zones,
   )
+}
+
+output "windows_availability_set_id" {
+  value = module.windowsservers.availability_set_id
 }
 
 output "windows_identity_type" {

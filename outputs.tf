@@ -1,6 +1,6 @@
 output "availability_set_id" {
-  description = "id of the availability set where the vms are provisioned."
-  value       = azurerm_availability_set.vm.id
+  description = "Id of the availability set where the vms are provisioned. If `var.zones` is set, this output will return empty string."
+  value       = join("", azurerm_availability_set.vm[*].id)
 }
 
 output "network_interface_ids" {
