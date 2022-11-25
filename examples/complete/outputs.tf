@@ -2,12 +2,20 @@ output "debian2_availability_set_id" {
   value = module.debianservers2.availability_set_id
 }
 
+output "debian2_vm_names" {
+  value = module.debianservers2.vm_names
+}
+
 output "debian_availability_set_id" {
   value = module.debianservers.availability_set_id
 }
 
 output "debian_ip_address" {
   value = module.debianservers.public_ip_address
+}
+
+output "debian_vm_names" {
+  value = module.debianservers.vm_names
 }
 
 output "debian_vm_public_name" {
@@ -42,6 +50,10 @@ output "ubuntu_identity_type" {
 
 output "ubuntu_ip_address" {
   value = module.ubuntuservers.public_ip_address
+}
+
+output "ubuntu_vm_names" {
+  value = module.ubuntuservers.vm_names
 }
 
 output "ubuntu_vm_public_name" {
@@ -90,6 +102,10 @@ output "windows_ip_address" {
 output "windows_vm_admin_password" {
   sensitive = true
   value     = local.admin_password
+}
+
+output "windows_vm_names" {
+  value = module.windowsservers.vm_names
 }
 
 output "windows_vm_public_name" {
