@@ -4,10 +4,11 @@
 
 **Merged pull requests:**
 
-- Fix the bug introduced by adding `var.storage_os_disk_size_gb` back. [\#200](https://github.com/Azure/terraform-azurerm-compute/pull/200) ([lonegunmanb](https://github.com/lonegunmanb))
+- Output vm names [\#202](https://github.com/Azure/terraform-azurerm-compute/pull/202) ([lonegunmanb](https://github.com/lonegunmanb))
+- Fix the bug introduced by \#189 by adding `var.storage_os_disk_size_gb` back. [\#200](https://github.com/Azure/terraform-azurerm-compute/pull/200) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for `azurerm_virtual_machine.zones` [\#199](https://github.com/Azure/terraform-azurerm-compute/pull/199) ([lonegunmanb](https://github.com/lonegunmanb))
 - Convert legacy splat syntax into bracket syntax [\#198](https://github.com/Azure/terraform-azurerm-compute/pull/198) ([lonegunmanb](https://github.com/lonegunmanb))
-- Repacing location and resource\_group\_name with local variables [\#196](https://github.com/Azure/terraform-azurerm-compute/pull/196) ([jiaweitao001](https://github.com/jiaweitao001))
+- Replacing location and resource\_group\_name with local variables [\#196](https://github.com/Azure/terraform-azurerm-compute/pull/196) ([jiaweitao001](https://github.com/jiaweitao001))
 - Removing depends\_on in examples code [\#195](https://github.com/Azure/terraform-azurerm-compute/pull/195) ([jiaweitao001](https://github.com/jiaweitao001))
 - Add override template file so we can run version upgrade test [\#194](https://github.com/Azure/terraform-azurerm-compute/pull/194) ([lonegunmanb](https://github.com/lonegunmanb))
 - Rename some resources to snake case. [\#193](https://github.com/Azure/terraform-azurerm-compute/pull/193) ([lonegunmanb](https://github.com/lonegunmanb))
