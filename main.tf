@@ -49,9 +49,7 @@ moved {
 }
 
 resource "azurerm_virtual_machine" "vm_linux" {
-  count = !contains(tolist([
-    var.vm_os_simple, var.vm_os_offer
-  ]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
+  count = !contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
 
   location                         = local.location
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
@@ -68,6 +66,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     create_option     = "FromImage"
     name              = "osdisk-${var.vm_hostname}-${count.index}"
     caching           = "ReadWrite"
+    disk_size_gb      = var.storage_os_disk_size_gb
     managed_disk_type = var.storage_account_type
   }
   boot_diagnostics {
@@ -163,9 +162,7 @@ moved {
 }
 
 resource "azurerm_virtual_machine" "vm_windows" {
-  count = (var.is_windows_image || contains(tolist([
-    var.vm_os_simple, var.vm_os_offer
-  ]), "WindowsServer")) ? var.nb_instances : 0
+  count = (var.is_windows_image || contains(tolist([var.vm_os_simple, var.vm_os_offer]), "WindowsServer")) ? var.nb_instances : 0
 
   location                      = local.location
   name                          = "${var.vm_hostname}-vmWindows-${count.index}"
@@ -182,6 +179,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     create_option     = "FromImage"
     name              = "${var.vm_hostname}-osdisk-${count.index}"
     caching           = "ReadWrite"
+    disk_size_gb      = var.storage_os_disk_size_gb
     managed_disk_type = var.storage_account_type
   }
   boot_diagnostics {
@@ -325,10 +323,8 @@ resource "azurerm_network_interface" "vm" {
   ip_configuration {
     name                          = "${var.vm_hostname}-ip-${count.index}"
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = length(azurerm_public_ip.vm[*].id) > 0 ? element(concat(azurerm_public_ip.vm[*].id, tolist([
-      ""
-    ])), count.index) : ""
-    subnet_id = var.vnet_subnet_id
+    public_ip_address_id          = length(azurerm_public_ip.vm[*].id) > 0 ? element(concat(azurerm_public_ip.vm[*].id, tolist([""])), count.index) : ""
+    subnet_id                     = var.vnet_subnet_id
   }
 }
 

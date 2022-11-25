@@ -181,7 +181,7 @@ rule "terraform_typed_variables" {
 }
 
 rule "terraform_unused_declarations" {
-  enabled = false
+  enabled = true
 }
 
 rule "terraform_unused_required_providers" {
