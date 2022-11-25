@@ -157,6 +157,18 @@ variable "nb_public_ip" {
   default     = 1
 }
 
+variable "network_security_group" {
+  description = "The network security group we'd like to bind with virtual machine. Set this variable will disable the creation of `azurerm_network_security_group` and `azurerm_network_security_rule` resources."
+  type = object({
+    id = string
+  })
+  default = null
+  validation {
+    condition     = var.network_security_group == null ? true : var.network_security_group.id != null
+    error_message = "When `var.network_security_group` is not `null`, `var.network_security_group.id` is required."
+  }
+}
+
 variable "os_profile_secrets" {
   description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url and certificate_store."
   type        = list(map(string))

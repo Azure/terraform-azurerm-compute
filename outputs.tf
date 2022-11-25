@@ -15,12 +15,12 @@ output "network_interface_private_ip" {
 
 output "network_security_group_id" {
   description = "id of the security group provisioned"
-  value       = azurerm_network_security_group.vm.id
+  value       = local.network_security_group_id
 }
 
 output "network_security_group_name" {
-  description = "name of the security group provisioned"
-  value       = azurerm_network_security_group.vm.name
+  description = "name of the security group provisioned, empty if no security group was created."
+  value       = join("", concat(azurerm_network_security_group.vm[*].name, [""]))
 }
 
 output "public_ip_address" {

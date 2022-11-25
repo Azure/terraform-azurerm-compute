@@ -287,20 +287,31 @@ data "azurerm_public_ip" "vm" {
   depends_on = [azurerm_virtual_machine.vm_linux, azurerm_virtual_machine.vm_windows]
 }
 
+moved {
+  from = azurerm_network_security_group.vm
+  to   = azurerm_network_security_group.vm[0]
+}
+
 resource "azurerm_network_security_group" "vm" {
+  count = var.network_security_group == null ? 1 : 0
+
   location            = local.location
   name                = "${var.vm_hostname}-nsg"
   resource_group_name = var.resource_group_name
   tags                = var.tags
 }
 
+locals {
+  network_security_group_id = var.network_security_group == null ? azurerm_network_security_group.vm[0].id : var.network_security_group.id
+}
+
 resource "azurerm_network_security_rule" "vm" {
-  count = var.remote_port != "" ? 1 : 0
+  count = var.network_security_group == null && var.remote_port != "" ? 1 : 0
 
   access                      = "Allow"
   direction                   = "Inbound"
   name                        = "allow_remote_${coalesce(var.remote_port, module.os.calculated_remote_port)}_in_all"
-  network_security_group_name = azurerm_network_security_group.vm.name
+  network_security_group_name = azurerm_network_security_group.vm[0].name
   priority                    = 101
   protocol                    = "Tcp"
   resource_group_name         = var.resource_group_name
@@ -332,5 +343,5 @@ resource "azurerm_network_interface_security_group_association" "test" {
   count = var.nb_instances
 
   network_interface_id      = azurerm_network_interface.vm[count.index].id
-  network_security_group_id = azurerm_network_security_group.vm.id
+  network_security_group_id = local.network_security_group_id
 }

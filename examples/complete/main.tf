@@ -113,6 +113,27 @@ module "debianservers" {
   ]
 }
 
+resource "azurerm_network_security_group" "external_nsg" {
+  location            = var.location_alt
+  name                = "${azurerm_resource_group.test.name}-nsg"
+  resource_group_name = azurerm_resource_group.test.name
+}
+
+resource "azurerm_network_security_rule" "vm" {
+  access                      = "Allow"
+  direction                   = "Inbound"
+  name                        = "allow_remote_in_all"
+  network_security_group_name = azurerm_network_security_group.external_nsg.name
+  priority                    = 101
+  protocol                    = "Tcp"
+  resource_group_name         = azurerm_resource_group.test.name
+  description                 = "Allow remote protocol in from all locations"
+  destination_address_prefix  = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "${local.public_ip}/32"
+  source_port_range           = "*"
+}
+
 module "debianservers2" {
   source                           = "../.."
   vm_hostname                      = "${random_id.ip_dns.hex}-d2"
@@ -130,6 +151,9 @@ module "debianservers2" {
   public_ip_sku                    = "Standard"
   ssh_key                          = ""
   ssh_key_values                   = [file("${path.module}/monica_id_rsa.pub")]
+  network_security_group = {
+    id = azurerm_network_security_group.external_nsg.id
+  }
   # To test `var.zone` please uncomment the line below.
   #  zone                             = "2"
 }

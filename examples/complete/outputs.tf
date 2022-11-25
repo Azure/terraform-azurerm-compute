@@ -2,6 +2,14 @@ output "debian2_availability_set_id" {
   value = module.debianservers2.availability_set_id
 }
 
+output "debian2_nsg_id" {
+  value = module.debianservers2.network_security_group_id
+}
+
+output "debian2_nsg_name" {
+  value = module.debianservers2.network_security_group_name
+}
+
 output "debian2_vm_names" {
   value = module.debianservers2.vm_names
 }
@@ -12,6 +20,14 @@ output "debian_availability_set_id" {
 
 output "debian_ip_address" {
   value = module.debianservers.public_ip_address
+}
+
+output "debian_nsg_id" {
+  value = module.debianservers.network_security_group_id
+}
+
+output "debian_nsg_name" {
+  value = module.debianservers.network_security_group_name
 }
 
 output "debian_vm_names" {
@@ -50,6 +66,14 @@ output "ubuntu_identity_type" {
 
 output "ubuntu_ip_address" {
   value = module.ubuntuservers.public_ip_address
+}
+
+output "ubuntu_nsg_id" {
+  value = module.ubuntuservers.network_security_group_id
+}
+
+output "ubuntu_nsg_name" {
+  value = module.ubuntuservers.network_security_group_name
 }
 
 output "ubuntu_vm_names" {
@@ -97,6 +121,14 @@ output "windows_identity_type" {
 
 output "windows_ip_address" {
   value = module.windowsservers.public_ip_address
+}
+
+output "windows_nsg_id" {
+  value = module.windowsservers.network_security_group_id
+}
+
+output "windows_nsg_name" {
+  value = module.windowsservers.network_security_group_name
 }
 
 output "windows_vm_admin_password" {
