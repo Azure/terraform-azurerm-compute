@@ -48,6 +48,14 @@ output "vm_ids" {
   value       = concat(azurerm_virtual_machine.vm_windows[*].id, azurerm_virtual_machine.vm_linux[*].id)
 }
 
+output "vm_names" {
+  description = "Virtual machine names created."
+  value = {
+    linux   = azurerm_virtual_machine.vm_linux[*].name
+    windows = azurerm_virtual_machine.vm_windows[*].name
+  }
+}
+
 output "vm_zones" {
   description = "map with key `Virtual Machine Id`, value `list of the Availability Zone` which the Virtual Machine should be allocated in."
   value       = zipmap(concat(azurerm_virtual_machine.vm_windows[*].id, azurerm_virtual_machine.vm_linux[*].id), concat(azurerm_virtual_machine.vm_windows[*].zones, azurerm_virtual_machine.vm_linux[*].zones))

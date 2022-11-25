@@ -466,5 +466,6 @@ Originally created by [David Tesar](http://github.com/dtzar)
 | <a name="output_public_ip_id"></a> [public\_ip\_id](#output\_public\_ip\_id)                                                   | id of the public ip address provisoned.                                                                                    |
 | <a name="output_vm_identity"></a> [vm\_identity](#output\_vm\_identity)                                                        | map with key `Virtual Machine Id`, value `list of identity` created for the Virtual Machine.                               |
 | <a name="output_vm_ids"></a> [vm\_ids](#output\_vm\_ids)                                                                       | Virtual machine ids created.                                                                                               |
+| <a name="output_vm_names"></a> [vm\_names](#output\_vm\_names)                                                                 | Virtual machine names created.                                                                                             |
 | <a name="output_vm_zones"></a> [vm\_zones](#output\_vm\_zones)                                                                 | map with key `Virtual Machine Id`, value `list of the Availability Zone` which the Virtual Machine should be allocated in. |
 <!-- END_TF_DOCS -->
