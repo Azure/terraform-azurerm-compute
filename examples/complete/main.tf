@@ -28,9 +28,15 @@ resource "azurerm_subnet" "subnet" {
   virtual_network_name = azurerm_virtual_network.vnet.name
 }
 
-resource "azurerm_user_assigned_identity" "test" {
+resource "azurerm_user_assigned_identity" "vm" {
   location            = azurerm_resource_group.test.location
   name                = "host${random_id.ip_dns.hex}-id"
+  resource_group_name = azurerm_resource_group.test.name
+}
+
+resource "azurerm_user_assigned_identity" "storage_account" {
+  location            = azurerm_resource_group.test.location
+  name                = "storage-account-${random_id.ip_dns.hex}-id"
   resource_group_name = azurerm_resource_group.test.name
 }
 
@@ -74,7 +80,7 @@ module "ubuntuservers" {
   vm_size                          = "Standard_DS2_V2"
   nb_data_disk                     = 2
   identity_type                    = "UserAssigned"
-  identity_ids                     = [azurerm_user_assigned_identity.test.id]
+  identity_ids                     = [azurerm_user_assigned_identity.vm.id]
   os_profile_secrets = [
     {
       source_vault_id = azurerm_key_vault.test.id
@@ -111,6 +117,52 @@ module "debianservers" {
       name = "extra2"
     }
   ]
+  identity_type = "UserAssigned"
+  identity_ids  = [azurerm_user_assigned_identity.vm.id]
+}
+
+resource "random_string" "storage_account" {
+  length      = 16
+  lower       = true
+  upper       = false
+  numeric     = true
+  min_lower   = 1
+  min_numeric = 1
+  special     = false
+}
+
+resource "azurerm_storage_account" "debian2" {
+  account_replication_type      = "LRS"
+  account_tier                  = "Standard"
+  location                      = var.location_alt
+  name                          = "bootdiag${random_string.storage_account.result}"
+  resource_group_name           = azurerm_resource_group.test.name
+  account_kind                  = "StorageV2"
+  min_tls_version               = "TLS1_2"
+  public_network_access_enabled = false
+
+  customer_managed_key {
+    key_vault_key_id          = azurerm_key_vault_key.des_key.id
+    user_assigned_identity_id = azurerm_user_assigned_identity.storage_account.id
+  }
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.storage_account.id]
+  }
+  network_rules {
+    default_action = "Deny"
+  }
+  queue_properties {
+    logging {
+      delete                = true
+      read                  = true
+      version               = "1.0"
+      write                 = true
+      retention_policy_days = 1
+    }
+  }
+
+  depends_on = [azurerm_key_vault_access_policy.storage_account]
 }
 
 resource "azurerm_network_security_group" "external_nsg" {
@@ -135,19 +187,24 @@ resource "azurerm_network_security_rule" "vm" {
 }
 
 module "debianservers2" {
-  source                           = "../.."
-  vm_hostname                      = "${random_id.ip_dns.hex}-d2"
-  resource_group_name              = azurerm_resource_group.test.name
-  location                         = var.location_alt
-  admin_username                   = var.admin_username
-  allocation_method                = "Static"
-  as_platform_fault_domain_count   = 3
-  as_platform_update_domain_count  = 5
-  vm_os_simple                     = var.vm_os_simple_2
-  vnet_subnet_id                   = azurerm_subnet.subnet[1].id
-  enable_ssh_key                   = true
+  source                          = "../.."
+  vm_hostname                     = "${random_id.ip_dns.hex}-d2"
+  resource_group_name             = azurerm_resource_group.test.name
+  location                        = var.location_alt
+  admin_username                  = var.admin_username
+  allocation_method               = "Static"
+  as_platform_fault_domain_count  = 3
+  as_platform_update_domain_count = 5
+  vm_os_simple                    = var.vm_os_simple_2
+  vnet_subnet_id                  = azurerm_subnet.subnet[1].id
+  enable_ssh_key                  = true
+  external_boot_diagnostics_storage = {
+    uri = azurerm_storage_account.debian2.primary_blob_endpoint
+  }
   delete_data_disks_on_termination = true
   delete_os_disk_on_termination    = true
+  identity_type                    = "UserAssigned"
+  identity_ids                     = [azurerm_user_assigned_identity.vm.id]
   public_ip_sku                    = "Standard"
   ssh_key                          = ""
   ssh_key_values                   = [file("${path.module}/monica_id_rsa.pub")]
@@ -171,7 +228,7 @@ module "windowsservers" {
   vnet_subnet_id      = azurerm_subnet.subnet[2].id
   license_type        = var.license_type
   identity_type       = "UserAssigned"
-  identity_ids        = [azurerm_user_assigned_identity.test.id]
+  identity_ids        = [azurerm_user_assigned_identity.vm.id]
   os_profile_secrets = [
     {
       source_vault_id   = azurerm_key_vault.test.id

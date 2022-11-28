@@ -33,7 +33,7 @@ moved {
 }
 
 resource "azurerm_storage_account" "vm_sa" {
-  count = var.boot_diagnostics ? 1 : 0
+  count = var.boot_diagnostics && var.external_boot_diagnostics_storage == null ? 1 : 0
 
   account_replication_type = element(split("_", var.boot_diagnostics_sa_type), 1)
   account_tier             = element(split("_", var.boot_diagnostics_sa_type), 0)
@@ -73,7 +73,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
   }
   boot_diagnostics {
     enabled     = var.boot_diagnostics
-    storage_uri = var.boot_diagnostics ? join(",", azurerm_storage_account.vm_sa[*].primary_blob_endpoint) : ""
+    storage_uri = var.boot_diagnostics ? try(var.external_boot_diagnostics_storage.uri, join(",", azurerm_storage_account.vm_sa[*].primary_blob_endpoint)) : ""
   }
   dynamic "identity" {
     for_each = length(var.identity_ids) == 0 && var.identity_type == "SystemAssigned" ? [var.identity_type] : []
