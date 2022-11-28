@@ -174,15 +174,15 @@ resource "azurerm_network_security_group" "external_nsg" {
 resource "azurerm_network_security_rule" "vm" {
   access                      = "Allow"
   direction                   = "Inbound"
-  name                        = "allow_remote_in_all"
+  name                        = "allow_remote_ssh"
   network_security_group_name = azurerm_network_security_group.external_nsg.name
   priority                    = 101
   protocol                    = "Tcp"
   resource_group_name         = azurerm_resource_group.test.name
-  description                 = "Allow remote protocol in from all locations"
+  description                 = "Allow remote protocol ssh"
   destination_address_prefix  = "*"
   destination_port_range      = "22"
-  source_address_prefix       = "${local.public_ip}/32"
+  source_address_prefix       = local.public_ip
   source_port_range           = "*"
 }
 
@@ -210,6 +210,17 @@ module "debianservers2" {
   ssh_key_values                   = [file("${path.module}/monica_id_rsa.pub")]
   network_security_group = {
     id = azurerm_network_security_group.external_nsg.id
+  }
+  vm_extension = {
+    name                 = "hostname"
+    publisher            = "Microsoft.Azure.Extensions"
+    type                 = "CustomScript"
+    type_handler_version = "2.0"
+    settings = jsonencode(
+      {
+        commandToExecute = "hostname && uptime"
+      }
+    )
   }
   # To test `var.zone` please uncomment the line below.
   #  zone                             = "2"
