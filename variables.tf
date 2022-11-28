@@ -134,6 +134,13 @@ variable "identity_type" {
   default     = ""
 }
 
+variable "is_marketplace_image" {
+  description = "Boolean flag to notify when the image comes from the marketplace."
+  type        = bool
+  nullable    = false
+  default     = false
+}
+
 variable "is_windows_image" {
   description = "Boolean flag to notify when the custom image is windows based."
   type        = bool
