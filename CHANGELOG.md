@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Solve \#107 by adding `create_before_destroy = true` to defer public ip's deletion. [\#203](https://github.com/Azure/terraform-azurerm-compute/pull/203) ([lonegunmanb](https://github.com/lonegunmanb))
 - Output vm names [\#202](https://github.com/Azure/terraform-azurerm-compute/pull/202) ([lonegunmanb](https://github.com/lonegunmanb))
 - Make `azurerm_availability_set`'s `platform_fault_domain_count` and `platform_update_domain_count` configurable [\#201](https://github.com/Azure/terraform-azurerm-compute/pull/201) ([lonegunmanb](https://github.com/lonegunmanb))
 - Fix the bug introduced by \#189 by adding `var.storage_os_disk_size_gb` back. [\#200](https://github.com/Azure/terraform-azurerm-compute/pull/200) ([lonegunmanb](https://github.com/lonegunmanb))
