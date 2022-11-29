@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Support boot diagnostics storage injection [\#208](https://github.com/Azure/terraform-azurerm-compute/pull/208) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for network security group injection [\#205](https://github.com/Azure/terraform-azurerm-compute/pull/205) ([lonegunmanb](https://github.com/lonegunmanb))
 - Solve \#107 by adding `create_before_destroy = true` to defer public ip's deletion. [\#203](https://github.com/Azure/terraform-azurerm-compute/pull/203) ([lonegunmanb](https://github.com/lonegunmanb))
 - Output vm names [\#202](https://github.com/Azure/terraform-azurerm-compute/pull/202) ([lonegunmanb](https://github.com/lonegunmanb))
