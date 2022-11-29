@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Add support for `plan` block [\#209](https://github.com/Azure/terraform-azurerm-compute/pull/209) ([lonegunmanb](https://github.com/lonegunmanb))
 - Support boot diagnostics storage injection [\#208](https://github.com/Azure/terraform-azurerm-compute/pull/208) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for network security group injection [\#205](https://github.com/Azure/terraform-azurerm-compute/pull/205) ([lonegunmanb](https://github.com/lonegunmanb))
 - Solve \#107 by adding `create_before_destroy = true` to defer public ip's deletion. [\#203](https://github.com/Azure/terraform-azurerm-compute/pull/203) ([lonegunmanb](https://github.com/lonegunmanb))
