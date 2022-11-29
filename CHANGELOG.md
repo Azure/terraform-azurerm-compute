@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Add support for `azurerm_virtual_machine_extension` resource. [\#210](https://github.com/Azure/terraform-azurerm-compute/pull/210) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for `plan` block [\#209](https://github.com/Azure/terraform-azurerm-compute/pull/209) ([lonegunmanb](https://github.com/lonegunmanb))
 - Support boot diagnostics storage injection [\#208](https://github.com/Azure/terraform-azurerm-compute/pull/208) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for network security group injection [\#205](https://github.com/Azure/terraform-azurerm-compute/pull/205) ([lonegunmanb](https://github.com/lonegunmanb))
