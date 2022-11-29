@@ -127,6 +127,15 @@ resource "azurerm_virtual_machine" "vm_linux" {
       }
     }
   }
+  dynamic "plan" {
+    for_each = var.is_marketplace_image ? ["plan"] : []
+
+    content {
+      name      = var.vm_os_offer
+      product   = var.vm_os_sku
+      publisher = var.vm_os_publisher
+    }
+  }
   dynamic "storage_data_disk" {
     for_each = range(var.nb_data_disk)
 
@@ -155,6 +164,13 @@ resource "azurerm_virtual_machine" "vm_linux" {
     publisher = var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""
     sku       = var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""
     version   = var.vm_os_id == "" ? var.vm_os_version : ""
+  }
+
+  lifecycle {
+    precondition {
+      condition     = !var.is_marketplace_image || (var.vm_os_offer != null && var.vm_os_publisher != null && var.vm_os_sku != null)
+      error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
+    }
   }
 }
 
@@ -225,6 +241,15 @@ resource "azurerm_virtual_machine" "vm_windows" {
   os_profile_windows_config {
     provision_vm_agent = true
   }
+  dynamic "plan" {
+    for_each = var.is_marketplace_image ? ["plan"] : []
+
+    content {
+      name      = var.vm_os_offer
+      product   = var.vm_os_sku
+      publisher = var.vm_os_publisher
+    }
+  }
   dynamic "storage_data_disk" {
     for_each = range(var.nb_data_disk)
 
@@ -253,6 +278,13 @@ resource "azurerm_virtual_machine" "vm_windows" {
     publisher = var.vm_os_id == "" ? coalesce(var.vm_os_publisher, module.os.calculated_value_os_publisher) : ""
     sku       = var.vm_os_id == "" ? coalesce(var.vm_os_sku, module.os.calculated_value_os_sku) : ""
     version   = var.vm_os_id == "" ? var.vm_os_version : ""
+  }
+
+  lifecycle {
+    precondition {
+      condition     = !var.is_marketplace_image || (var.vm_os_offer != null && var.vm_os_publisher != null && var.vm_os_sku != null)
+      error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
+    }
   }
 }
 
