@@ -94,6 +94,19 @@ variable "enable_ssh_key" {
   default     = true
 }
 
+# Why use object as type? We use this variable in `count` expression, if we use a newly created `azurerm_storage_account.primary_blob_endpoint` as uri directly, then Terraform would complain that it cannot determine the value of `count` during the plan phase, so we wrap the `uri` with an object.
+variable "external_boot_diagnostics_storage" {
+  description = "(Optional) The Storage Account's Blob Endpoint which should hold the virtual machine's diagnostic files. Set this argument would disable the creation of `azurerm_storage_account` resource."
+  type = object({
+    uri = string
+  })
+  default = null
+  validation {
+    condition     = var.external_boot_diagnostics_storage == null ? true : var.external_boot_diagnostics_storage.uri != null
+    error_message = "`var.external_boot_diagnostics_storage.uri` cannot be `null`"
+  }
+}
+
 variable "extra_disks" {
   description = "(Optional) List of extra data disks attached to each virtual machine."
   type = list(object({

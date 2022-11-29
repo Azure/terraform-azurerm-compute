@@ -16,7 +16,7 @@ resource "azurerm_key_vault" "test" {
   location                    = var.location_alt
   name                        = "test${random_id.ip_dns.hex}kv"
   resource_group_name         = azurerm_resource_group.test.name
-  sku_name                    = "standard"
+  sku_name                    = "premium"
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   enabled_for_deployment      = true
   enabled_for_disk_encryption = true
@@ -30,7 +30,7 @@ resource "azurerm_key_vault" "test" {
   }
 }
 
-resource "azurerm_key_vault_access_policy" "test" {
+resource "azurerm_key_vault_access_policy" "current_user" {
   key_vault_id = azurerm_key_vault.test.id
   object_id    = coalesce(var.managed_identity_principal_id, data.azurerm_client_config.current.object_id)
   tenant_id    = data.azurerm_client_config.current.tenant_id
@@ -85,7 +85,7 @@ resource "azurerm_key_vault_access_policy" "test" {
 
 resource "azurerm_key_vault_access_policy" "test_vm" {
   key_vault_id = azurerm_key_vault.test.id
-  object_id    = azurerm_user_assigned_identity.test.principal_id
+  object_id    = azurerm_user_assigned_identity.vm.principal_id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   certificate_permissions = [
     "Get",
@@ -103,6 +103,17 @@ resource "azurerm_key_vault_access_policy" "test_vm" {
   }
 }
 
+resource "azurerm_key_vault_access_policy" "storage_account" {
+  key_vault_id = azurerm_key_vault.test.id
+  object_id    = azurerm_user_assigned_identity.storage_account.principal_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+
+  key_permissions = [
+    "Get",
+    "WrapKey",
+    "UnwrapKey",
+  ]
+}
 
 resource "azurerm_key_vault_certificate" "test" {
   key_vault_id = azurerm_key_vault.test.id
@@ -150,5 +161,29 @@ resource "azurerm_key_vault_certificate" "test" {
     }
   }
 
-  depends_on = [azurerm_key_vault_access_policy.test, azurerm_key_vault_access_policy.test_vm]
+  depends_on = [azurerm_key_vault_access_policy.current_user, azurerm_key_vault_access_policy.test_vm]
+}
+
+resource "azurerm_key_vault_key" "des_key" {
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
+  ]
+  key_type        = "RSA-HSM"
+  key_vault_id    = azurerm_key_vault.test.id
+  name            = "des-key"
+  expiration_date = timeadd("${formatdate("YYYY-MM-DD", timestamp())}T00:00:00Z", "168h")
+  key_size        = 2048
+
+  depends_on = [
+    azurerm_key_vault_access_policy.current_user
+  ]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
