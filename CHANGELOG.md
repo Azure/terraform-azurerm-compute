@@ -5,6 +5,7 @@
 **Merged pull requests:**
 
 - Bump tflint plugin version, add new checking rule [\#213](https://github.com/Azure/terraform-azurerm-compute/pull/213) ([lonegunmanb](https://github.com/lonegunmanb))
+- Upgrade `terraform-module-test-helper` lib so we can get rid of override file to execute version upgrade test [\#212](https://github.com/Azure/terraform-azurerm-compute/pull/212) ([lonegunmanb](https://github.com/lonegunmanb))
 
 ## [4.1.0](https://github.com/Azure/terraform-azurerm-compute/tree/4.1.0) (2022-11-29)
 
