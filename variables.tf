@@ -156,7 +156,7 @@ variable "license_type" {
 variable "location" {
   description = "(Optional) The location in which the resources will be created."
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "nb_data_disk" {
