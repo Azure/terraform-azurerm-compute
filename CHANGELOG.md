@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Changed var.location default value from "" to null [\#214](https://github.com/Azure/terraform-azurerm-compute/pull/214) ([juanjojulian](https://github.com/juanjojulian))
 - Bump tflint plugin version, add new checking rule [\#213](https://github.com/Azure/terraform-azurerm-compute/pull/213) ([lonegunmanb](https://github.com/lonegunmanb))
 - Upgrade `terraform-module-test-helper` lib so we can get rid of override file to execute version upgrade test [\#212](https://github.com/Azure/terraform-azurerm-compute/pull/212) ([lonegunmanb](https://github.com/lonegunmanb))
 
