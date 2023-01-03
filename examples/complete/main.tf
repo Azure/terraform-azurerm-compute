@@ -211,17 +211,6 @@ module "debianservers2" {
   network_security_group = {
     id = azurerm_network_security_group.external_nsg.id
   }
-  vm_extension = {
-    name                 = "hostname"
-    publisher            = "Microsoft.Azure.Extensions"
-    type                 = "CustomScript"
-    type_handler_version = "2.0"
-    settings = jsonencode(
-      {
-        commandToExecute = "hostname && uptime"
-      }
-    )
-  }
   # To test `var.zone` please uncomment the line below.
   #  zone                             = "2"
 }

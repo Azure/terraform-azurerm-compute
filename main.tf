@@ -49,9 +49,7 @@ moved {
 }
 
 resource "azurerm_virtual_machine" "vm_linux" {
-  count = !contains(tolist([
-    var.vm_os_simple, var.vm_os_offer
-  ]), "WindowsServer") && !var.is_windows_image ? var.nb_instances : 0
+  count = !local.is_windows ? var.nb_instances : 0
 
   location                         = local.location
   name                             = "${var.vm_hostname}-vmLinux-${count.index}"
@@ -180,9 +178,7 @@ moved {
 }
 
 resource "azurerm_virtual_machine" "vm_windows" {
-  count = (var.is_windows_image || contains(tolist([
-    var.vm_os_simple, var.vm_os_offer
-  ]), "WindowsServer")) ? var.nb_instances : 0
+  count = local.is_windows ? var.nb_instances : 0
 
   location                      = local.location
   name                          = "${var.vm_hostname}-vmWindows-${count.index}"
@@ -394,13 +390,11 @@ resource "azurerm_network_interface_security_group_association" "test" {
 resource "azurerm_virtual_machine_extension" "extension" {
   count = var.vm_extension == null ? 0 : var.nb_instances
 
-  name                 = var.vm_extension.name
-  publisher            = var.vm_extension.publisher
-  type                 = var.vm_extension.type
-  type_handler_version = var.vm_extension.type_handler_version
-  virtual_machine_id = (var.is_windows_image || contains(tolist([
-    var.vm_os_simple, var.vm_os_offer
-  ]), "WindowsServer")) ? azurerm_virtual_machine.vm_windows[count.index].id : azurerm_virtual_machine.vm_linux[count.index].id
+  name                        = var.vm_extension.name
+  publisher                   = var.vm_extension.publisher
+  type                        = var.vm_extension.type
+  type_handler_version        = var.vm_extension.type_handler_version
+  virtual_machine_id          = local.is_windows ? azurerm_virtual_machine.vm_windows[count.index].id : azurerm_virtual_machine.vm_linux[count.index].id
   auto_upgrade_minor_version  = var.vm_extension.auto_upgrade_minor_version
   automatic_upgrade_enabled   = var.vm_extension.automatic_upgrade_enabled
   failure_suppression_enabled = var.vm_extension.failure_suppression_enabled
@@ -414,6 +408,46 @@ resource "azurerm_virtual_machine_extension" "extension" {
     content {
       secret_url      = var.vm_extension.protected_settings_from_key_vault.secret_url
       source_vault_id = var.vm_extension.protected_settings_from_key_vault.source_vault_id
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition     = length(var.vm_extensions) == 0
+      error_message = "`vm_extensions` cannot be used along with `vm_extension`."
+    }
+  }
+}
+
+resource "azurerm_virtual_machine_extension" "extensions" {
+  # The `sensitive` inside `nonsensitive` is a workaround for https://github.com/terraform-linters/tflint-ruleset-azurerm/issues/229
+  for_each = nonsensitive(sensitive(local.vm_extensions))
+
+  name                        = each.value.value.name
+  publisher                   = each.value.value.publisher
+  type                        = each.value.value.type
+  type_handler_version        = each.value.value.type_handler_version
+  virtual_machine_id          = local.is_windows ? azurerm_virtual_machine.vm_windows[each.value.index].id : azurerm_virtual_machine.vm_linux[each.value.index].id
+  auto_upgrade_minor_version  = each.value.value.auto_upgrade_minor_version
+  automatic_upgrade_enabled   = each.value.value.automatic_upgrade_enabled
+  failure_suppression_enabled = each.value.value.failure_suppression_enabled
+  protected_settings          = each.value.value.protected_settings
+  settings                    = each.value.value.settings
+  tags                        = var.tags
+
+  dynamic "protected_settings_from_key_vault" {
+    for_each = each.value.value.protected_settings_from_key_vault == null ? [] : ["protected_settings_from_key_vault"]
+
+    content {
+      secret_url      = each.value.value.protected_settings_from_key_vault.secret_url
+      source_vault_id = each.value.value.protected_settings_from_key_vault.source_vault_id
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition     = var.vm_extension == null
+      error_message = "`vm_extensions` cannot be used along with `vm_extension`."
     }
   }
 }
