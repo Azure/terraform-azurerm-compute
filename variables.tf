@@ -274,7 +274,7 @@ variable "vm_extension" {
 }
 
 variable "vm_extensions" {
-  description = "Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension). Map key is extension's `name` argument."
+  description = "Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
   type = set(object({
     name                        = string
     publisher                   = string
