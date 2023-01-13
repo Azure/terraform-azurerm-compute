@@ -131,8 +131,8 @@ resource "azurerm_virtual_machine" "vm_linux" {
     for_each = var.is_marketplace_image ? ["plan"] : []
 
     content {
-      name      = var.vm_os_offer
-      product   = var.vm_os_sku
+      name      = var.vm_os_sku
+      product   = var.vm_os_offer
       publisher = var.vm_os_publisher
     }
   }
@@ -245,8 +245,8 @@ resource "azurerm_virtual_machine" "vm_windows" {
     for_each = var.is_marketplace_image ? ["plan"] : []
 
     content {
-      name      = var.vm_os_offer
-      product   = var.vm_os_sku
+      name      = var.vm_os_sku
+      product   = var.vm_os_offer
       publisher = var.vm_os_publisher
     }
   }
