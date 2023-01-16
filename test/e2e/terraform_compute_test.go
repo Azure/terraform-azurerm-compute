@@ -27,6 +27,12 @@ func TestExamplesComplete(t *testing.T) {
 	})
 }
 
+func TestExamplesExtensions(t *testing.T) {
+	test_helper.RunE2ETest(t, "../../", "examples/extensions", terraform.Options{
+		Upgrade: true,
+	}, nil)
+}
+
 func assertVmIpAddresses(t *testing.T, outputName string, output test_helper.TerraformOutput) {
 	o, ok := output[outputName]
 	assert.True(t, ok)

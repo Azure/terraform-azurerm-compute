@@ -253,7 +253,7 @@ variable "tags" {
 }
 
 variable "vm_extension" {
-  description = "Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
+  description = "(Deprecated) This variable has been superseded by the `vm_extensions`. Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
   type = object({
     name                        = string
     publisher                   = string
@@ -271,6 +271,41 @@ variable "vm_extension" {
   })
   default   = null
   sensitive = true # Because `protected_settings` is sensitive
+}
+
+variable "vm_extensions" {
+  description = "Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
+  type = set(object({
+    name                        = string
+    publisher                   = string
+    type                        = string
+    type_handler_version        = string
+    auto_upgrade_minor_version  = optional(bool)
+    automatic_upgrade_enabled   = optional(bool)
+    failure_suppression_enabled = optional(bool, false)
+    settings                    = optional(string)
+    protected_settings          = optional(string)
+    protected_settings_from_key_vault = optional(object({
+      secret_url      = string
+      source_vault_id = string
+    }))
+  }))
+  # tflint-ignore: terraform_sensitive_variable_no_default
+  default   = []
+  nullable  = false
+  sensitive = true # Because `protected_settings` is sensitive
+  validation {
+    condition = length(var.vm_extensions) == length(distinct([
+      for e in var.vm_extensions : e.type
+    ]))
+    error_message = "`type` in `vm_extensions` must be unique."
+  }
+  validation {
+    condition = length(var.vm_extensions) == length(distinct([
+      for e in var.vm_extensions : e.name
+    ]))
+    error_message = "`name` in `vm_extensions` must be unique."
+  }
 }
 
 variable "vm_hostname" {
