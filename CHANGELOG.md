@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Add support for multiple virtual machine extensions. [\#217](https://github.com/Azure/terraform-azurerm-compute/pull/217) ([lonegunmanb](https://github.com/lonegunmanb))
 - Bump github.com/Azure/terraform-module-test-helper from 0.4.0 to 0.6.0 in /test [\#216](https://github.com/Azure/terraform-azurerm-compute/pull/216) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github.com/gruntwork-io/terratest from 0.41.6 to 0.41.7 in /test [\#215](https://github.com/Azure/terraform-azurerm-compute/pull/215) ([dependabot[bot]](https://github.com/apps/dependabot))
 
