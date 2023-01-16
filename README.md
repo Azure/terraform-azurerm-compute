@@ -1,12 +1,34 @@
 # terraform-azurerm-compute
 
-## Notice on Upgrade to V4.x
+## Notice on Upgrade to v5.x
+
+As [#218](https://github.com/Azure/terraform-azurerm-compute/pull/218) described, the `plan` block introduced by [#209](https://github.com/Azure/terraform-azurerm-compute/pull/209) was incorrect so we must adjust the assignments' order, which is a breaking change. The change we've made to vm's `plan` block is:
+
+```hcl
+dynamic "plan" {
+  for_each = var.is_marketplace_image ? ["plan"] : []
+
+  content {
+  -      name      = var.vm_os_offer
+  -      product   = var.vm_os_sku
+  +      name      = var.vm_os_sku
+  +      product   = var.vm_os_offer
+    publisher = var.vm_os_publisher
+  }
+}
+```
+
+Now `vm_os_sku` would be used as `plan.name` and `vm_os_offer` would be used as `plan.product`.
+
+v5.0.0 is a major version upgrade. Extreme caution must be taken during the upgrade to avoid resource replacement and downtime by accident.
+
+## Notice on Upgrade to v4.x
 
 We've added a CI pipeline for this module to speed up our code review and to enforce a high code quality standard, if you want to contribute by submitting a pull request, please read [Pre-Commit & Pr-Check & Test](#Pre-Commit--Pr-Check--Test) section, or your pull request might be rejected by CI pipeline.
 
 A pull request will be reviewed when it has passed Pre Pull Request Check in the pipeline, and will be merged when it has passed the acceptance tests. Once the ci Pipeline failed, please read the pipeline's output, thanks for your cooperation.
 
-V4.0.0 is a major version upgrade. Extreme caution must be taken during the upgrade to avoid resource replacement and downtime by accident.
+v4.0.0 is a major version upgrade. Extreme caution must be taken during the upgrade to avoid resource replacement and downtime by accident.
 
 Running the `terraform plan` first to inspect the plan is strongly advised.
 
