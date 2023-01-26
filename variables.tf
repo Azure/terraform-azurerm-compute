@@ -78,7 +78,7 @@ variable "delete_data_disks_on_termination" {
 
 variable "delete_os_disk_on_termination" {
   type        = bool
-  description = "Delete datadisk when machine is terminated."
+  description = "Delete OS disk when machine is terminated."
   default     = false
 }
 
@@ -178,7 +178,7 @@ variable "nb_public_ip" {
 }
 
 variable "network_security_group" {
-  description = "The network security group we'd like to bind with virtual machine. Set this variable will disable the creation of `azurerm_network_security_group` and `azurerm_network_security_rule` resources."
+  description = "The network security group we'd like to bind with virtual machine. Set this variable will disable the creation of `azurerm_network_security_group` and `azurerm_network_security_rule` resources.  To prevent the binding of a network security group, set `enable_network_security_group` to false."
   type = object({
     id = string
   })
@@ -366,9 +366,24 @@ variable "vm_size" {
 # it would be hard for us to keep the vm and public ip in the same zone once `var.nb_instances` doesn't equal to `var.nb_public_ip`
 # So, we decide that one module instance supports one zone only to avoid this dilemma.
 variable "zone" {
-  description = "(Optional) The Availability Zone which the Virtual Machine should be allocated in, only one zone would be accepted. If set then this module won't create `azurerm_availability_set` resource. Changing this forces a new resource to be created."
+  description = "(Optional) The Availability Zone which the Virtual Machine should be allocated in, only one zone would be accepted. If set then this module won't create `azurerm_availability_set` resource. Changing this forces a new resource to be created.  To prevent the usage of an availability set, set `enable_availability_set` to false."
   type        = string
   default     = null
+}
+
+variable "nb_data_disk_by_data_disk_attachment" {
+  description = "(Optional) Number of the data disks attached to each virtual machine using a azurerm_virtual_machine_data_disk_attachment resource.  Data Disks can be attached either directly by `nb_data_disk` and `extra_disks`, or using the azurerm_virtual_machine_data_disk_attachment resource by `nb_data_disk_by_data_disk_attachment` and `extra_disks_by_data_disk_attachment` - but the two cannot be used together."
+  type        = number
+  default     = 0
+}
+
+variable "extra_disks_by_data_disk_attachment" {
+  description = "(Optional) List of extra data disks attached to each virtual machine using a azurerm_virtual_machine_data_disk_attachment resource.  Data Disks can be attached either directly by `nb_data_disk` and `extra_disks`, or using the azurerm_virtual_machine_data_disk_attachment resource by `nb_data_disk_by_data_disk_attachment` and `extra_disks_by_data_disk_attachment` - but the two cannot be used together."
+  type = list(object({
+    name = string
+    size = number
+  }))
+  default = []
 }
 
 variable "storage_account_name" {

@@ -33,7 +33,7 @@ moved {
 }
 
 resource "azurerm_storage_account" "vm_sa" {
-  count = (( var.boot_diagnostics && var.external_boot_diagnostics_storage == null ) || ( var.storage_account_name != "" )) ? 1 : 0
+  count = ((var.boot_diagnostics && var.external_boot_diagnostics_storage == null) || (var.storage_account_name != "")) ? 1 : 0
 
   account_replication_type = element(split("_", var.boot_diagnostics_sa_type), 1)
   account_tier             = element(split("_", var.boot_diagnostics_sa_type), 0)
@@ -63,7 +63,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
   zones                            = var.zone == null ? null : [var.zone]
 
   storage_os_disk {
-    create_option     = "FromImage"
+    create_option = "FromImage"
     # Last case should be 'join("-", [var.vm_hostname, "osdisk", count.index])' to fit the pattern but changing this now would break deployed systems.
     name              = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "osdisk"]) : join("-", ["osdisk", var.vm_hostname, count.index])
     caching           = "ReadWrite"
@@ -283,6 +283,90 @@ resource "azurerm_virtual_machine" "vm_windows" {
       error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
     }
   }
+}
+
+moved {
+  from = azurerm_managed_disk.vm-data-disk
+  to   = azurerm_managed_disk.vm_data_disk
+}
+
+resource "azurerm_managed_disk" "vm_data_disk" {
+  for_each             = local.data_disk_map
+  name                 = each.key
+  resource_group_name  = var.resource_group_name
+  location             = local.location
+  create_option        = "Empty"
+  disk_size_gb         = var.data_disk_size_gb
+  storage_account_type = var.data_sa_type
+  tags                 = var.tags
+}
+
+moved {
+  from = azurerm_virtual_machine_data_disk_attachment.vm-data-disk-attachments-linux
+  to   = azurerm_virtual_machine_data_disk_attachment.vm_data_disk_attachments_linux
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_data_disk_attachments_linux" {
+  for_each           = local.data_disk_map_linux
+  managed_disk_id    = azurerm_managed_disk.vm_data_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_linux[each.value.host_number].id
+  lun                = each.value.disk_number
+  caching            = "ReadWrite"
+}
+
+moved {
+  from = azurerm_virtual_machine_data_disk_attachment.vm-data-disk-attachments-windows
+  to   = azurerm_virtual_machine_data_disk_attachment.vm_data_disk_attachments_windows
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_data_disk_attachments_windows" {
+  for_each           = local.data_disk_map_windows
+  managed_disk_id    = azurerm_managed_disk.vm_data_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_windows[each.value.host_number].id
+  lun                = each.value.disk_number
+  caching            = "ReadWrite"
+}
+
+moved {
+  from = azurerm_managed_disk.vm-extra-disk
+  to   = azurerm_managed_disk.vm_extra_disk
+}
+
+resource "azurerm_managed_disk" "vm_extra_disk" {
+  for_each             = local.extra_disk_map
+  name                 = each.key
+  resource_group_name  = var.resource_group_name
+  location             = local.location
+  create_option        = "Empty"
+  disk_size_gb         = each.value.disk_size
+  storage_account_type = var.data_sa_type
+  tags                 = var.tags
+}
+
+moved {
+  from = azurerm_virtual_machine_data_disk_attachment.vm-extra-disk-attachments-linux
+  to   = azurerm_virtual_machine_data_disk_attachment.vm_extra_disk_attachments_linux
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachments_linux" {
+  for_each           = local.extra_disk_map_linux
+  managed_disk_id    = azurerm_managed_disk.vm_extra_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_linux[each.value.host_number].id
+  lun                = var.nb_data_disk_by_data_disk_attachment + each.value.disk_number
+  caching            = "ReadWrite"
+}
+
+moved {
+  from = azurerm_virtual_machine_data_disk_attachment.vm-extra-disk-attachments-windows
+  to   = azurerm_virtual_machine_data_disk_attachment.vm_extra_disk_attachments_windows
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachments_windows" {
+  for_each           = local.extra_disk_map_windows
+  managed_disk_id    = azurerm_managed_disk.vm_extra_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_windows[each.value.host_number].id
+  lun                = var.nb_data_disk_by_data_disk_attachment + each.value.disk_number
+  caching            = "ReadWrite"
 }
 
 resource "azurerm_availability_set" "vm" {
