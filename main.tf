@@ -33,12 +33,12 @@ moved {
 }
 
 resource "azurerm_storage_account" "vm_sa" {
-  count = var.boot_diagnostics && var.external_boot_diagnostics_storage == null ? 1 : 0
+  count = (( var.boot_diagnostics && var.external_boot_diagnostics_storage == null ) || ( var.storage_account_name != "" )) ? 1 : 0
 
   account_replication_type = element(split("_", var.boot_diagnostics_sa_type), 1)
   account_tier             = element(split("_", var.boot_diagnostics_sa_type), 0)
   location                 = local.location
-  name                     = "bootdiag${lower(random_id.vm_sa.hex)}"
+  name                     = var.storage_account_name != "" ? var.storage_account_name : "bootdiag${lower(random_id.vm_sa.hex)}"
   resource_group_name      = var.resource_group_name
   tags                     = var.tags
 }
@@ -52,11 +52,11 @@ resource "azurerm_virtual_machine" "vm_linux" {
   count = !local.is_windows ? var.nb_instances : 0
 
   location                         = local.location
-  name                             = "${var.vm_hostname}-vmLinux-${count.index}"
+  name                             = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "vmLinux"]) : join("-", [var.vm_hostname, "vmLinux", count.index])
   network_interface_ids            = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name              = var.resource_group_name
   vm_size                          = var.vm_size
-  availability_set_id              = var.zone == null ? azurerm_availability_set.vm[0].id : null
+  availability_set_id              = (var.enable_availability_set && (var.zone == null)) ? azurerm_availability_set.vm[0].id : null
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
   delete_os_disk_on_termination    = var.delete_os_disk_on_termination
   tags                             = var.tags
@@ -64,7 +64,8 @@ resource "azurerm_virtual_machine" "vm_linux" {
 
   storage_os_disk {
     create_option     = "FromImage"
-    name              = "osdisk-${var.vm_hostname}-${count.index}"
+    # Last case should be 'join("-", [var.vm_hostname, "osdisk", count.index])' to fit the pattern but changing this now would break deployed systems.
+    name              = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "osdisk"]) : join("-", ["osdisk", var.vm_hostname, count.index])
     caching           = "ReadWrite"
     disk_size_gb      = var.storage_os_disk_size_gb
     managed_disk_type = var.storage_account_type
@@ -140,7 +141,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.value
-      name              = "${var.vm_hostname}-datadisk-${count.index}-${storage_data_disk.value}"
+      name              = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "datadisk", storage_data_disk.value]) : join("-", [var.vm_hostname, "datadisk", count.index, storage_data_disk.value])
       disk_size_gb      = var.data_disk_size_gb
       managed_disk_type = var.data_sa_type
     }
@@ -151,7 +152,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.key + var.nb_data_disk
-      name              = "${var.vm_hostname}-extradisk-${count.index}-${storage_data_disk.value.name}"
+      name              = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "extradisk", storage_data_disk.value.name]) : join("-", [var.vm_hostname, "extradisk", count.index, storage_data_disk.value.name])
       disk_size_gb      = storage_data_disk.value.size
       managed_disk_type = var.data_sa_type
     }
@@ -181,11 +182,11 @@ resource "azurerm_virtual_machine" "vm_windows" {
   count = local.is_windows ? var.nb_instances : 0
 
   location                      = local.location
-  name                          = "${var.vm_hostname}-vmWindows-${count.index}"
+  name                          = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "vmWindows"]) : join("-", [var.vm_hostname, "vmWindows", count.index])
   network_interface_ids         = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name           = var.resource_group_name
   vm_size                       = var.vm_size
-  availability_set_id           = var.zone == null ? azurerm_availability_set.vm[0].id : null
+  availability_set_id           = (var.enable_availability_set && (var.zone == null)) ? azurerm_availability_set.vm[0].id : null
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
   license_type                  = var.license_type
   tags                          = var.tags
@@ -193,7 +194,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
 
   storage_os_disk {
     create_option     = "FromImage"
-    name              = "${var.vm_hostname}-osdisk-${count.index}"
+    name              = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "osdisk"]) : join("-", [var.vm_hostname, "osdisk", count.index])
     caching           = "ReadWrite"
     disk_size_gb      = var.storage_os_disk_size_gb
     managed_disk_type = var.storage_account_type
@@ -252,7 +253,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.value
-      name              = "${var.vm_hostname}-datadisk-${count.index}-${storage_data_disk.value}"
+      name              = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "datadisk", storage_data_disk.value]) : join("-", [var.vm_hostname, "datadisk", count.index, storage_data_disk.value])
       disk_size_gb      = var.data_disk_size_gb
       managed_disk_type = var.data_sa_type
     }
@@ -263,7 +264,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.key + var.nb_data_disk
-      name              = "${var.vm_hostname}-extradisk-${count.index}-${storage_data_disk.value.name}"
+      name              = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "extradisk", storage_data_disk.value.name]) : join("-", [var.vm_hostname, "extradisk", count.index, storage_data_disk.value.name])
       disk_size_gb      = storage_data_disk.value.size
       managed_disk_type = var.data_sa_type
     }
@@ -285,7 +286,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
 }
 
 resource "azurerm_availability_set" "vm" {
-  count = var.zone == null ? 1 : 0
+  count = (var.enable_availability_set && (var.zone == null)) ? 1 : 0
 
   location                     = local.location
   name                         = "${var.vm_hostname}-avset"
@@ -332,7 +333,7 @@ moved {
 }
 
 resource "azurerm_network_security_group" "vm" {
-  count = var.network_security_group == null ? 1 : 0
+  count = (var.enable_network_security_group && (var.network_security_group == null)) ? 1 : 0
 
   location            = local.location
   name                = "${var.vm_hostname}-nsg"
@@ -341,11 +342,11 @@ resource "azurerm_network_security_group" "vm" {
 }
 
 locals {
-  network_security_group_id = var.network_security_group == null ? azurerm_network_security_group.vm[0].id : var.network_security_group.id
+  network_security_group_id = var.enable_network_security_group ? var.network_security_group == null ? azurerm_network_security_group.vm[0].id : var.network_security_group.id : null
 }
 
 resource "azurerm_network_security_rule" "vm" {
-  count = var.network_security_group == null && var.remote_port != "" ? 1 : 0
+  count = var.enable_network_security_group && var.network_security_group == null && var.remote_port != "" ? 1 : 0
 
   access                      = "Allow"
   direction                   = "Inbound"
@@ -365,13 +366,13 @@ resource "azurerm_network_interface" "vm" {
   count = var.nb_instances
 
   location                      = local.location
-  name                          = "${var.vm_hostname}-nic-${count.index}"
+  name                          = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "nic"]) : join("-", [var.vm_hostname, "nic", count.index])
   resource_group_name           = var.resource_group_name
   enable_accelerated_networking = var.enable_accelerated_networking
   tags                          = var.tags
 
   ip_configuration {
-    name                          = "${var.vm_hostname}-ip-${count.index}"
+    name                          = var.group_by_vm_instance ? join("-", [var.vm_hostname, count.index, "ip"]) : join("-", [var.vm_hostname, "ip", count.index])
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id = length(azurerm_public_ip.vm[*].id) > 0 ? element(concat(azurerm_public_ip.vm[*].id, tolist([
       ""
@@ -381,7 +382,7 @@ resource "azurerm_network_interface" "vm" {
 }
 
 resource "azurerm_network_interface_security_group_association" "test" {
-  count = var.nb_instances
+  count = var.enable_network_security_group ? var.nb_instances : 0
 
   network_interface_id      = azurerm_network_interface.vm[count.index].id
   network_security_group_id = local.network_security_group_id

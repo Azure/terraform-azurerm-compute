@@ -370,3 +370,28 @@ variable "zone" {
   type        = string
   default     = null
 }
+
+variable "storage_account_name" {
+  description = "(Optional) The name of a Storage Account to create.  Leave empty to skip creating the storage account.  IMPORTANT: Must be lower case letters and numbers ONLY!"
+  type        = string
+  default     = null
+}
+
+variable "enable_availability_set" {
+  type        = bool
+  description = "(Optional) Enable or Disable availability set.  Default is true (enabled)."
+  default     = true
+}
+
+variable "enable_network_security_group" {
+  type        = bool
+  description = "(Optional) Enable or Disable network security group.  Default is true (enabled)."
+  default     = true
+}
+
+variable "group_by_vm_instance" {
+  type        = bool
+  description = "(Optional) Enable or Disable grouping by vm instances.  Default is to group by type."
+  default     = false
+}
+
