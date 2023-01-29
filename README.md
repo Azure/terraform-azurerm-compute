@@ -1,5 +1,9 @@
 # terraform-azurerm-compute
 
+## Notice on new alternative virtual machine module
+
+This module was designed and implemented for AzureRM Provider v2.x, It's impossible to refactor this module from `azurerm_virtual_machine` to the modern version `azurerm_linux_virtual_machine` and `azurerm_windows_virtual_machine`. For those who're maintaining infrastructure on brownfield, you're welcome to continue using this module; for those who're about to provision new infrastructure on greenfield, you're welcome to try our new alternative: [terraform-azurerm-virtual-machine](https://registry.terraform.io/modules/Azure/virtual-machine/azurerm/latest).
+
 ## Notice on Upgrade to v5.x
 
 As [#218](https://github.com/Azure/terraform-azurerm-compute/pull/218) described, the `plan` block introduced by [#209](https://github.com/Azure/terraform-azurerm-compute/pull/209) was incorrect so we must adjust the assignments' order, which is a breaking change. The change we've made to vm's `plan` block is:
