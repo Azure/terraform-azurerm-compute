@@ -88,6 +88,12 @@ variable "enable_accelerated_networking" {
   default     = false
 }
 
+variable "enable_availability_set" {
+  type        = bool
+  description = "(Optional) Enable or Disable availability set.  Default is true (enabled)."
+  default     = true
+}
+
 variable "enable_ssh_key" {
   type        = bool
   description = "(Optional) Enable ssh key authentication in Linux virtual Machine."
