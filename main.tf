@@ -284,6 +284,68 @@ resource "azurerm_virtual_machine" "vm_windows" {
   }
 }
 
+resource "azurerm_managed_disk" "vm_data_disk" {
+  for_each = local.data_disk_map
+
+  create_option          = "Empty"
+  location               = local.location
+  name                   = each.key
+  resource_group_name    = var.resource_group_name
+  storage_account_type   = var.data_sa_type
+  disk_encryption_set_id = var.managed_data_disk_encryption_set_id
+  disk_size_gb           = var.data_disk_size_gb
+  tags                   = var.tags
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_data_disk_attachments_linux" {
+  for_each = local.data_disk_map_linux
+
+  caching            = "ReadWrite"
+  lun                = each.value.disk_number
+  managed_disk_id    = azurerm_managed_disk.vm_data_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_linux[each.value.host_number].id
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_data_disk_attachments_windows" {
+  for_each = local.data_disk_map_windows
+
+  caching            = "ReadWrite"
+  lun                = each.value.disk_number
+  managed_disk_id    = azurerm_managed_disk.vm_data_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_windows[each.value.host_number].id
+}
+
+resource "azurerm_managed_disk" "vm_extra_disk" {
+  for_each = local.extra_disk_map
+
+  create_option          = "Empty"
+  location               = local.location
+  name                   = each.key
+  resource_group_name    = var.resource_group_name
+  storage_account_type   = var.data_sa_type
+  disk_encryption_set_id = var.managed_data_disk_encryption_set_id
+  disk_size_gb           = each.value.disk_size
+  tags                   = var.tags
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachments_linux" {
+  for_each = local.extra_disk_map_linux
+
+  caching            = "ReadWrite"
+  lun                = var.nb_data_disk_by_data_disk_attachment + each.value.disk_number
+  managed_disk_id    = azurerm_managed_disk.vm_extra_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_linux[each.value.host_number].id
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachments_windows" {
+  for_each = local.extra_disk_map_windows
+
+  caching            = "ReadWrite"
+  lun                = var.nb_data_disk_by_data_disk_attachment + each.value.disk_number
+  managed_disk_id    = azurerm_managed_disk.vm_extra_disk[each.key].id
+  virtual_machine_id = azurerm_virtual_machine.vm_windows[each.value.host_number].id
+}
+
 resource "azurerm_availability_set" "vm" {
   count = var.zone == null ? 1 : 0
 

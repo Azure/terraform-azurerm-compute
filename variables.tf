@@ -116,6 +116,15 @@ variable "extra_disks" {
   default = []
 }
 
+variable "extra_disks_by_data_disk_attachment" {
+  description = "(Optional) List of extra data disks attached to each virtual machine using a azurerm_virtual_machine_data_disk_attachment resource.  Data Disks can be attached either directly by `nb_data_disk` and `extra_disks`, or using the azurerm_virtual_machine_data_disk_attachment resource by `nb_data_disk_by_data_disk_attachment` and `extra_disks_by_data_disk_attachment` - but the two cannot be used together."
+  type = list(object({
+    name = string
+    size = number
+  }))
+  default = []
+}
+
 variable "extra_ssh_keys" {
   description = "Same as ssh_key, but allows for setting multiple public keys. Set your first key in ssh_key, and the extras here."
   type        = list(string)
@@ -159,8 +168,19 @@ variable "location" {
   default     = null
 }
 
+variable "managed_data_disk_encryption_set_id" {
+  description = "(Optional) The disk encryption set ID for the managed data disk attached using the azurerm_virtual_machine_data_disk_attachment resource."
+  type        = string
+  default     = null
+}
 variable "nb_data_disk" {
   description = "(Optional) Number of the data disks attached to each virtual machine."
+  type        = number
+  default     = 0
+}
+
+variable "nb_data_disk_by_data_disk_attachment" {
+  description = "(Optional) Number of the data disks attached to each virtual machine using a azurerm_virtual_machine_data_disk_attachment resource.  Data Disks can be attached either directly by `nb_data_disk` and `extra_disks`, or using the azurerm_virtual_machine_data_disk_attachment resource by `nb_data_disk_by_data_disk_attachment` and `extra_disks_by_data_disk_attachment` - but the two cannot be used together."
   type        = number
   default     = 0
 }
