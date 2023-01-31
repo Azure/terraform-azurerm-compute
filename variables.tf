@@ -231,6 +231,12 @@ variable "ssh_key_values" {
   default     = []
 }
 
+variable "storage_account_name" {
+  description = "(Optional) The name of a Storage Account to create.  Leave empty to skip creating the storage account.  IMPORTANT: Must be lower case letters and numbers ONLY!"
+  type        = string
+  default     = null
+}
+
 variable "storage_account_type" {
   description = "Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS."
   type        = string

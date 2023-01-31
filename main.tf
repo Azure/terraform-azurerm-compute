@@ -33,12 +33,12 @@ moved {
 }
 
 resource "azurerm_storage_account" "vm_sa" {
-  count = var.boot_diagnostics && var.external_boot_diagnostics_storage == null ? 1 : 0
+  count = ((var.boot_diagnostics && var.external_boot_diagnostics_storage == null) || (var.storage_account_name != "")) ? 1 : 0
 
   account_replication_type = element(split("_", var.boot_diagnostics_sa_type), 1)
   account_tier             = element(split("_", var.boot_diagnostics_sa_type), 0)
   location                 = local.location
-  name                     = "bootdiag${lower(random_id.vm_sa.hex)}"
+  name                     = var.storage_account_name != "" ? var.storage_account_name : "bootdiag${lower(random_id.vm_sa.hex)}"
   resource_group_name      = var.resource_group_name
   tags                     = var.tags
 }
