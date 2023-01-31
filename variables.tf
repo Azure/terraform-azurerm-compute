@@ -78,7 +78,7 @@ variable "delete_data_disks_on_termination" {
 
 variable "delete_os_disk_on_termination" {
   type        = bool
-  description = "Delete datadisk when machine is terminated."
+  description = "Delete OS disk when machine is terminated."
   default     = false
 }
 
