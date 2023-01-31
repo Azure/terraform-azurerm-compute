@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Update `README.md` with Powershell error resolution. [\#226](https://github.com/Azure/terraform-azurerm-compute/pull/226) ([DatsloJRel](https://github.com/DatsloJRel))
 - Update readme to recommend new virtual machine module [\#225](https://github.com/Azure/terraform-azurerm-compute/pull/225) ([lonegunmanb](https://github.com/lonegunmanb))
 - Bump github.com/Azure/terraform-module-test-helper from 0.6.0 to 0.7.1 in /test [\#221](https://github.com/Azure/terraform-azurerm-compute/pull/221) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github.com/gruntwork-io/terratest from 0.41.7 to 0.41.9 in /test [\#219](https://github.com/Azure/terraform-azurerm-compute/pull/219) ([dependabot[bot]](https://github.com/apps/dependabot))
