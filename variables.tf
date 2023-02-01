@@ -41,7 +41,7 @@ variable "as_platform_update_domain_count" {
 }
 
 variable "availability_set_enabled" {
-  description = "(Optional) Enable or Disable availability set.  Default is true (enabled)."
+  description = "(Optional) Enable or Disable availability set.  Default is `true` (enabled)."
   type        = bool
   nullable    = false
   default     = true
