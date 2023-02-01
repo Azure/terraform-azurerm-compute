@@ -40,6 +40,13 @@ variable "as_platform_update_domain_count" {
   default     = 2
 }
 
+variable "availability_set_enabled" {
+  description = "(Optional) Enable or Disable availability set.  Default is true (enabled)."
+  type        = bool
+  nullable    = false
+  default     = true
+}
+
 variable "boot_diagnostics" {
   type        = bool
   description = "(Optional) Enable or Disable boot diagnostics."
@@ -86,12 +93,6 @@ variable "enable_accelerated_networking" {
   type        = bool
   description = "(Optional) Enable accelerated networking on Network interface."
   default     = false
-}
-
-variable "enable_availability_set" {
-  type        = bool
-  description = "(Optional) Enable or Disable availability set.  Default is true (enabled)."
-  default     = true
 }
 
 variable "enable_ssh_key" {
