@@ -40,6 +40,13 @@ variable "as_platform_update_domain_count" {
   default     = 2
 }
 
+variable "availability_set_enabled" {
+  description = "(Optional) Enable or Disable availability set.  Default is `true` (enabled)."
+  type        = bool
+  nullable    = false
+  default     = true
+}
+
 variable "boot_diagnostics" {
   type        = bool
   description = "(Optional) Enable or Disable boot diagnostics."
