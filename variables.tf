@@ -40,6 +40,13 @@ variable "as_platform_update_domain_count" {
   default     = 2
 }
 
+variable "availability_set_enabled" {
+  description = "(Optional) Enable or Disable availability set.  Default is `true` (enabled)."
+  type        = bool
+  nullable    = false
+  default     = true
+}
+
 variable "boot_diagnostics" {
   type        = bool
   description = "(Optional) Enable or Disable boot diagnostics."
@@ -78,7 +85,7 @@ variable "delete_data_disks_on_termination" {
 
 variable "delete_os_disk_on_termination" {
   type        = bool
-  description = "Delete datadisk when machine is terminated."
+  description = "Delete OS disk when machine is terminated."
   default     = false
 }
 

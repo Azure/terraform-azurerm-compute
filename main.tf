@@ -56,7 +56,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
   network_interface_ids            = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name              = var.resource_group_name
   vm_size                          = var.vm_size
-  availability_set_id              = var.zone == null ? azurerm_availability_set.vm[0].id : null
+  availability_set_id              = try(azurerm_availability_set.vm[0].id, null)
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
   delete_os_disk_on_termination    = var.delete_os_disk_on_termination
   tags                             = var.tags
@@ -185,7 +185,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
   network_interface_ids         = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name           = var.resource_group_name
   vm_size                       = var.vm_size
-  availability_set_id           = var.zone == null ? azurerm_availability_set.vm[0].id : null
+  availability_set_id           = try(azurerm_availability_set.vm[0].id, null)
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
   license_type                  = var.license_type
   tags                          = var.tags
@@ -347,7 +347,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachmen
 }
 
 resource "azurerm_availability_set" "vm" {
-  count = var.zone == null ? 1 : 0
+  count = (var.availability_set_enabled && (var.zone == null)) ? 1 : 0
 
   location                     = local.location
   name                         = "${var.vm_hostname}-avset"
