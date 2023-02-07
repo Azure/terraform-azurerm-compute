@@ -91,9 +91,10 @@ func Test_ExtensionVmIdMap(t *testing.T) {
 		true,
 	}
 	for _, w := range isWindowsImages {
-		t.Run(strconv.FormatBool(w), func(t *testing.T) {
+		isWindows := w
+		t.Run(strconv.FormatBool(isWindows), func(t *testing.T) {
 			vars := map[string]interface{}{
-				"is_windows_image": w,
+				"is_windows_image": isWindows,
 				"nb_instances":     2,
 			}
 			test_helper.RunE2ETest(t, "../../", "unit-fixture", terraform.Options{
@@ -108,7 +109,7 @@ func Test_ExtensionVmIdMap(t *testing.T) {
 					output := m["outputs"].(map[string]interface{})
 					vmId := output["virtual_machine_id"].(string)
 					prefix := "linux-%s"
-					if w {
+					if isWindows {
 						prefix = "windows-%s"
 					}
 					index := strings.Split(k, "-")[1]
