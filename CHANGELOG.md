@@ -5,6 +5,7 @@
 **Merged pull requests:**
 
 - Pin the iterator variable to avoid concurrent test error [\#232](https://github.com/Azure/terraform-azurerm-compute/pull/232) ([lonegunmanb](https://github.com/lonegunmanb))
+- Bump github.com/gruntwork-io/terratest from 0.41.9 to 0.41.10 in /test [\#231](https://github.com/Azure/terraform-azurerm-compute/pull/231) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [5.1.0](https://github.com/Azure/terraform-azurerm-compute/tree/5.1.0) (2023-02-06)
 
