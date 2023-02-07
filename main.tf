@@ -135,7 +135,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = range(var.nb_data_disk)
+    for_each = var.nested_data_disks ? range(var.nb_data_disk) : []
 
     content {
       create_option     = "Empty"
@@ -146,7 +146,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = var.extra_disks
+    for_each = var.nested_data_disks ? var.extra_disks : []
 
     content {
       create_option     = "Empty"
@@ -247,7 +247,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = range(var.nb_data_disk)
+    for_each = var.nested_data_disks ? range(var.nb_data_disk) : []
 
     content {
       create_option     = "Empty"
@@ -258,7 +258,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = var.extra_disks
+    for_each = var.nested_data_disks ? var.extra_disks : []
 
     content {
       create_option     = "Empty"
@@ -332,7 +332,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachmen
   for_each = local.extra_disk_map_linux
 
   caching            = "ReadWrite"
-  lun                = var.nb_data_disk_by_data_disk_attachment + each.value.disk_number
+  lun                = var.nb_data_disk + each.value.disk_number
   managed_disk_id    = azurerm_managed_disk.vm_extra_disk[each.key].id
   virtual_machine_id = azurerm_virtual_machine.vm_linux[each.value.host_number].id
 }
@@ -341,7 +341,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachmen
   for_each = local.extra_disk_map_windows
 
   caching            = "ReadWrite"
-  lun                = var.nb_data_disk_by_data_disk_attachment + each.value.disk_number
+  lun                = var.nb_data_disk + each.value.disk_number
   managed_disk_id    = azurerm_managed_disk.vm_extra_disk[each.key].id
   virtual_machine_id = azurerm_virtual_machine.vm_windows[each.value.host_number].id
 }

@@ -123,15 +123,6 @@ variable "extra_disks" {
   default = []
 }
 
-variable "extra_disks_by_data_disk_attachment" {
-  description = "(Optional) List of extra data disks attached to each virtual machine using a azurerm_virtual_machine_data_disk_attachment resource.  Data Disks can be attached either directly by `nb_data_disk` and `extra_disks`, or using the azurerm_virtual_machine_data_disk_attachment resource by `nb_data_disk_by_data_disk_attachment` and `extra_disks_by_data_disk_attachment` - but the two cannot be used together."
-  type = list(object({
-    name = string
-    size = number
-  }))
-  default = []
-}
-
 variable "extra_ssh_keys" {
   description = "Same as ssh_key, but allows for setting multiple public keys. Set your first key in ssh_key, and the extras here."
   type        = list(string)
@@ -186,12 +177,6 @@ variable "nb_data_disk" {
   default     = 0
 }
 
-variable "nb_data_disk_by_data_disk_attachment" {
-  description = "(Optional) Number of the data disks attached to each virtual machine using a azurerm_virtual_machine_data_disk_attachment resource.  Data Disks can be attached either directly by `nb_data_disk` and `extra_disks`, or using the azurerm_virtual_machine_data_disk_attachment resource by `nb_data_disk_by_data_disk_attachment` and `extra_disks_by_data_disk_attachment` - but the two cannot be used together."
-  type        = number
-  default     = 0
-}
-
 variable "nb_instances" {
   description = "Specify the number of vm instances."
   type        = number
@@ -202,6 +187,13 @@ variable "nb_public_ip" {
   description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
   type        = number
   default     = 1
+}
+
+variable "nested_data_disks" {
+  description = "(Optional) When `true`, use nested data disks directly attached to the VM.  When `false`, use azurerm_virtual_machine_data_disk_attachment resource to attach the data disks after the VM is created.  Default is `true`."
+  type        = bool
+  nullable    = false
+  default     = true
 }
 
 variable "network_security_group" {
