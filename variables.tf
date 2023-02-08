@@ -166,6 +166,11 @@ variable "location" {
   default     = null
 }
 
+variable "managed_data_disk_encryption_set_id" {
+  description = "(Optional) The disk encryption set ID for the managed data disk attached using the azurerm_virtual_machine_data_disk_attachment resource."
+  type        = string
+  default     = null
+}
 variable "nb_data_disk" {
   description = "(Optional) Number of the data disks attached to each virtual machine."
   type        = number
@@ -182,6 +187,13 @@ variable "nb_public_ip" {
   description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
   type        = number
   default     = 1
+}
+
+variable "nested_data_disks" {
+  description = "(Optional) When `true`, use nested data disks directly attached to the VM.  When `false`, use azurerm_virtual_machine_data_disk_attachment resource to attach the data disks after the VM is created.  Default is `true`."
+  type        = bool
+  nullable    = false
+  default     = true
 }
 
 variable "network_security_group" {
