@@ -2,8 +2,7 @@ locals {
   data_disk_list = flatten([
     for host_number in range(var.nb_instances) : [
       for data_disk_number in range(var.nb_data_disk) : {
-        name        = join("-", [var.vm_hostname, "datadisk", host_number, data_disk_number])
-        host        = join("-", [var.vm_hostname, host_number])
+        name        = join("-", ["datadisk", host_number, data_disk_number])
         host_number = host_number
         disk_number = data_disk_number
       }
@@ -15,8 +14,7 @@ locals {
   extra_disk_list = flatten([
     for host_number in range(var.nb_instances) : [
       for extra_disk in var.extra_disks : {
-        name        = join("-", [var.vm_hostname, "extradisk", host_number, extra_disk.name])
-        host        = join("-", [var.vm_hostname, host_number])
+        name        = join("-", ["extradisk", host_number, extra_disk.name])
         host_number = host_number
         disk_number = index(var.extra_disks, extra_disk)
         disk_name   = extra_disk.name
