@@ -129,6 +129,13 @@ variable "extra_ssh_keys" {
   default     = []
 }
 
+variable "group_by_vm_instance" {
+  description = "(Optional) When `true`, all resources that are affected by `var.nb_instances` are named by host name and instance count, such as '<vm_hostname>-<instance count>-<resource_type>'.  When `false`, these resources are named by the original format: <vm_hostname>-<resource_type>-<instance count>.  Default is `false`."
+  type        = bool
+  nullable    = false
+  default     = false
+}
+
 variable "identity_ids" {
   description = "Specifies a list of user managed identity ids to be assigned to the VM."
   type        = list(string)
