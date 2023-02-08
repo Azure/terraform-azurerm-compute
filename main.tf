@@ -170,7 +170,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
       error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
     }
     precondition {
-      condition     = !var.nested_data_disks || var.delete_data_disks_on_termination != true
+      condition     = var.nested_data_disks || var.delete_data_disks_on_termination != true
       error_message = "`var.nested_data_disks` must be `true` when `var.delete_data_disks_on_termination` is `true`, because when you declare data disks via separate managed disk resource, you might want to preserve the data while recreating the vm instance."
     }
   }
@@ -286,7 +286,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
       error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
     }
     precondition {
-      condition     = !var.nested_data_disks || var.delete_data_disks_on_termination != true
+      condition     = var.nested_data_disks || var.delete_data_disks_on_termination != true
       error_message = "`var.nested_data_disks` must be `true` when `var.delete_data_disks_on_termination` is `true`, because when you declare data disks via separate managed disk resource, you might want to preserve the data while recreating the vm instance."
     }
   }
