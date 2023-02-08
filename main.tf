@@ -297,7 +297,7 @@ resource "azurerm_managed_disk" "vm_data_disk" {
 
   create_option          = "Empty"
   location               = local.location
-  name                   = each.key
+  name                   = each.value.name
   resource_group_name    = var.resource_group_name
   storage_account_type   = var.data_sa_type
   disk_encryption_set_id = var.managed_data_disk_encryption_set_id
@@ -328,7 +328,7 @@ resource "azurerm_managed_disk" "vm_extra_disk" {
 
   create_option          = "Empty"
   location               = local.location
-  name                   = each.key
+  name                   = each.value.name
   resource_group_name    = var.resource_group_name
   storage_account_type   = var.data_sa_type
   disk_encryption_set_id = var.managed_data_disk_encryption_set_id
