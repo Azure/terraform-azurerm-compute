@@ -135,7 +135,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = var.nested_data_disks ? range(var.nb_data_disk) : []
+    for_each = local.nested_data_disk_list
 
     content {
       create_option     = "Empty"
@@ -146,7 +146,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = var.nested_data_disks ? var.extra_disks : []
+    for_each = local.nested_extra_data_disk_list
 
     content {
       create_option     = "Empty"
@@ -168,6 +168,10 @@ resource "azurerm_virtual_machine" "vm_linux" {
     precondition {
       condition     = !var.is_marketplace_image || (var.vm_os_offer != null && var.vm_os_publisher != null && var.vm_os_sku != null)
       error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
+    }
+    precondition {
+      condition     = !var.nested_data_disks || var.delete_data_disks_on_termination != true
+      error_message = "`var.nested_data_disks` must be `true` when `var.delete_data_disks_on_termination` is `true`, because when you declare data disks via separate managed disk resource, you might want to preserve the data while recreating the vm instance."
     }
   }
 }
@@ -247,7 +251,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = var.nested_data_disks ? range(var.nb_data_disk) : []
+    for_each = local.nested_data_disk_list
 
     content {
       create_option     = "Empty"
@@ -258,7 +262,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     }
   }
   dynamic "storage_data_disk" {
-    for_each = var.nested_data_disks ? var.extra_disks : []
+    for_each = local.nested_extra_data_disk_list
 
     content {
       create_option     = "Empty"
@@ -280,6 +284,10 @@ resource "azurerm_virtual_machine" "vm_windows" {
     precondition {
       condition     = !var.is_marketplace_image || (var.vm_os_offer != null && var.vm_os_publisher != null && var.vm_os_sku != null)
       error_message = "`var.vm_os_offer`, `vm_os_publisher` and `var.vm_os_sku` are required when `var.is_marketplace_image` is `true`."
+    }
+    precondition {
+      condition     = !var.nested_data_disks || var.delete_data_disks_on_termination != true
+      error_message = "`var.nested_data_disks` must be `true` when `var.delete_data_disks_on_termination` is `true`, because when you declare data disks via separate managed disk resource, you might want to preserve the data while recreating the vm instance."
     }
   }
 }
