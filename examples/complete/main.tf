@@ -61,26 +61,26 @@ locals {
 }
 
 module "ubuntuservers" {
-  source                           = "../.."
-  vm_hostname                      = "${random_id.ip_dns.hex}-u"
-  resource_group_name              = azurerm_resource_group.test.name
-  location                         = var.location_alt
-  admin_username                   = var.admin_username
-  admin_password                   = local.admin_password
-  vm_os_simple                     = var.vm_os_simple_1
-  public_ip_dns                    = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
-  vnet_subnet_id                   = azurerm_subnet.subnet[0].id
-  allocation_method                = "Static"
-  public_ip_sku                    = "Standard"
-  enable_accelerated_networking    = true
-  delete_data_disks_on_termination = true
-  delete_os_disk_on_termination    = true
-  ssh_key                          = fileexists("~/.ssh/id_rsa.pub") ? "~/.ssh/id_rsa.pub" : ""
-  extra_ssh_keys                   = local.ubuntu_ssh_keys
-  vm_size                          = "Standard_DS2_V2"
-  nb_data_disk                     = 2
-  identity_type                    = "UserAssigned"
-  identity_ids                     = [azurerm_user_assigned_identity.vm.id]
+  source                        = "../.."
+  vm_hostname                   = "${random_id.ip_dns.hex}-u"
+  resource_group_name           = azurerm_resource_group.test.name
+  location                      = var.location_alt
+  admin_username                = var.admin_username
+  admin_password                = local.admin_password
+  vm_os_simple                  = var.vm_os_simple_1
+  public_ip_dns                 = ["ubuntusimplevmips-${random_id.ip_dns.hex}"]
+  vnet_subnet_id                = azurerm_subnet.subnet[0].id
+  allocation_method             = "Static"
+  public_ip_sku                 = "Standard"
+  enable_accelerated_networking = true
+  delete_os_disk_on_termination = true
+  ssh_key                       = fileexists("~/.ssh/id_rsa.pub") ? "~/.ssh/id_rsa.pub" : ""
+  extra_ssh_keys                = local.ubuntu_ssh_keys
+  vm_size                       = "Standard_DS2_V2"
+  nb_data_disk                  = 2
+  nested_data_disks             = false
+  identity_type                 = "UserAssigned"
+  identity_ids                  = [azurerm_user_assigned_identity.vm.id]
   os_profile_secrets = [
     {
       source_vault_id = azurerm_key_vault.test.id
@@ -229,6 +229,8 @@ module "windowsservers" {
   license_type        = var.license_type
   identity_type       = "UserAssigned"
   identity_ids        = [azurerm_user_assigned_identity.vm.id]
+  nb_data_disk        = 1
+  nested_data_disks   = false
   os_profile_secrets = [
     {
       source_vault_id   = azurerm_key_vault.test.id
