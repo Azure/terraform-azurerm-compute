@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Improve separate data disk resource logic [\#233](https://github.com/Azure/terraform-azurerm-compute/pull/233) ([lonegunmanb](https://github.com/lonegunmanb))
 - Pin the iterator variable to avoid concurrent test error [\#232](https://github.com/Azure/terraform-azurerm-compute/pull/232) ([lonegunmanb](https://github.com/lonegunmanb))
 - Bump github.com/gruntwork-io/terratest from 0.41.9 to 0.41.10 in /test [\#231](https://github.com/Azure/terraform-azurerm-compute/pull/231) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github.com/Azure/terraform-module-test-helper from 0.7.1 to 0.8.1 in /test [\#230](https://github.com/Azure/terraform-azurerm-compute/pull/230) ([dependabot[bot]](https://github.com/apps/dependabot))
