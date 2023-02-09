@@ -3,7 +3,7 @@ locals {
     for host_number in range(var.nb_instances) : [
       for data_disk_number in range(var.nb_data_disk) : {
         key         = join("-", ["datadisk", host_number, data_disk_number])
-        name        = var.group_by_vm_instance ? join("-", [var.vm_hostname, host_number, "datadisk", data_disk_number]) : join("-", [var.vm_hostname, "datadisk", host_number, data_disk_number])
+        name        = replace(replace(replace(var.data_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", host_number), "$${data_disk_number}", data_disk_number)
         host_number = host_number
         disk_number = data_disk_number
       }
@@ -16,7 +16,7 @@ locals {
     for host_number in range(var.nb_instances) : [
       for extra_disk in var.extra_disks : {
         key         = join("-", ["extradisk", host_number, extra_disk.name])
-        name        = var.group_by_vm_instance ? join("-", [var.vm_hostname, host_number, "extradisk", extra_disk.name]) : join("-", [var.vm_hostname, "extradisk", host_number, extra_disk.name])
+        name        = replace(replace(replace(var.extra_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", host_number), "$${extra_disk_name}", extra_disk.name)
         host_number = host_number
         disk_number = index(var.extra_disks, extra_disk)
         disk_name   = extra_disk.name

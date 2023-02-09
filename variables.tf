@@ -47,6 +47,12 @@ variable "availability_set_enabled" {
   default     = true
 }
 
+variable "availability_set_name_template" {
+  description = "The name template for the availability set. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-avset"
+}
+
 variable "boot_diagnostics" {
   type        = bool
   description = "(Optional) Enable or Disable boot diagnostics."
@@ -63,6 +69,12 @@ variable "custom_data" {
   description = "The custom data to supply to the machine. This can be used as a cloud-init for Linux systems."
   type        = string
   default     = ""
+}
+
+variable "data_disk_name_template" {
+  description = "The name template for the data disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${data_disk_number}` => 'data disk index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-datadisk-$${host_number}-$${data_disk_number}"
 }
 
 variable "data_disk_size_gb" {
@@ -114,6 +126,12 @@ variable "external_boot_diagnostics_storage" {
   }
 }
 
+variable "extra_disk_name_template" {
+  description = "The name template for the extra disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${extra_disk_name}` => 'name of extra disk'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-extradisk-$${host_number}-$${extra_disk_name}"
+}
+
 variable "extra_disks" {
   description = "(Optional) List of extra data disks attached to each virtual machine."
   type = list(object({
@@ -127,13 +145,6 @@ variable "extra_ssh_keys" {
   description = "Same as ssh_key, but allows for setting multiple public keys. Set your first key in ssh_key, and the extras here."
   type        = list(string)
   default     = []
-}
-
-variable "group_by_vm_instance" {
-  description = "(Optional) When `true`, all resources that are affected by `var.nb_instances` are named by host name and instance count, such as '<vm_hostname>-<instance count>-<resource_type>'.  When `false`, these resources are named by the original format: <vm_hostname>-<resource_type>-<instance count>.  Default is `false`."
-  type        = bool
-  nullable    = false
-  default     = false
 }
 
 variable "identity_ids" {
@@ -203,6 +214,12 @@ variable "nested_data_disks" {
   default     = true
 }
 
+variable "network_interface_name_template" {
+  description = "The name template for the network interface. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-nic-$${host_number}"
+}
+
 variable "network_security_group" {
   description = "The network security group we'd like to bind with virtual machine. Set this variable will disable the creation of `azurerm_network_security_group` and `azurerm_network_security_rule` resources."
   type = object({
@@ -215,6 +232,12 @@ variable "network_security_group" {
   }
 }
 
+variable "network_security_group_name_template" {
+  description = "The name template for the network security group. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-nsg"
+}
+
 variable "os_profile_secrets" {
   description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url and certificate_store."
   type        = list(map(string))
@@ -225,6 +248,12 @@ variable "public_ip_dns" {
   description = "Optional globally unique per datacenter region domain name label to apply to each public ip address. e.g. thisvar.varlocation.cloudapp.azure.com where you specify only thisvar here. This is an array of names which will pair up sequentially to the number of public ips defined in var.nb_public_ip. One name or empty string is required for every public ip. If no public ip is desired, then set this to an array with a single empty string."
   type        = list(string)
   default     = [null]
+}
+
+variable "public_ip_name_template" {
+  description = "The name template for the public ip. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${ip_number}` => 'public ip index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-pip-$${ip_number}"
 }
 
 variable "public_ip_sku" {
@@ -340,6 +369,18 @@ variable "vm_hostname" {
   default     = "myvm"
 }
 
+variable "vm_linux_name_template" {
+  description = "The name template for the Linux virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-vmLinux-$${host_number}"
+}
+
+variable "vm_linux_os_disk_name_template" {
+  description = "The name template for the Linux VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "osdisk-$${vm_hostname}-$${host_number}"
+}
+
 variable "vm_os_id" {
   description = "The resource ID of the image that you want to deploy if you are using a custom image.Note, need to provide is_windows_image = true for windows custom images."
   type        = string
@@ -380,6 +421,18 @@ variable "vm_size" {
   description = "Specifies the size of the virtual machine."
   type        = string
   default     = "Standard_D2s_v3"
+}
+
+variable "vm_windows_name_template" {
+  description = "The name template for the Windows virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-vmWindows-$${host_number}"
+}
+
+variable "vm_windows_os_disk_name_template" {
+  description = "The name template for the Windows VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-osdisk-$${host_number}"
 }
 
 # Why we use `zone` not `zones` as `azurerm_virtual_machine.zones`?
