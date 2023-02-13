@@ -171,6 +171,67 @@ variable "managed_data_disk_encryption_set_id" {
   type        = string
   default     = null
 }
+
+variable "name_template_availability_set" {
+  description = "The name template for the availability set. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-avset"
+}
+
+variable "name_template_data_disk" {
+  description = "The name template for the data disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${data_disk_number}` => 'data disk index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-datadisk-$${host_number}-$${data_disk_number}"
+}
+
+variable "name_template_extra_disk" {
+  description = "The name template for the extra disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${extra_disk_name}` => 'name of extra disk'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-extradisk-$${host_number}-$${extra_disk_name}"
+}
+
+variable "name_template_network_interface" {
+  description = "The name template for the network interface. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-nic-$${host_number}"
+}
+
+variable "name_template_network_security_group" {
+  description = "The name template for the network security group. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-nsg"
+}
+
+variable "name_template_public_ip" {
+  description = "The name template for the public ip. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${ip_number}` => 'public ip index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-pip-$${ip_number}"
+}
+
+variable "name_template_vm_linux" {
+  description = "The name template for the Linux virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-vmLinux-$${host_number}"
+}
+
+variable "name_template_vm_linux_os_disk" {
+  description = "The name template for the Linux VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "osdisk-$${vm_hostname}-$${host_number}"
+}
+
+variable "name_template_vm_windows" {
+  description = "The name template for the Windows virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-vmWindows-$${host_number}"
+}
+
+variable "name_template_vm_windows_os_disk" {
+  description = "The name template for the Windows VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
+  type        = string
+  default     = "$${vm_hostname}-osdisk-$${host_number}"
+}
+
 variable "nb_data_disk" {
   description = "(Optional) Number of the data disks attached to each virtual machine."
   type        = number
