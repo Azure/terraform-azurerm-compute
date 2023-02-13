@@ -52,7 +52,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
   count = !local.is_windows ? var.nb_instances : 0
 
   location                         = local.location
-  name                             = replace(replace(var.vm_linux_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
+  name                             = replace(replace(var.name_template_vm_linux, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
   network_interface_ids            = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name              = var.resource_group_name
   vm_size                          = var.vm_size
@@ -64,7 +64,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
 
   storage_os_disk {
     create_option     = "FromImage"
-    name              = replace(replace(var.vm_linux_os_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
+    name              = replace(replace(var.name_template_vm_linux_os_disk, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
     caching           = "ReadWrite"
     disk_size_gb      = var.storage_os_disk_size_gb
     managed_disk_type = var.storage_account_type
@@ -140,7 +140,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.value
-      name              = replace(replace(replace(var.data_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${data_disk_number}", storage_data_disk.value)
+      name              = replace(replace(replace(var.name_template_data_disk, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${data_disk_number}", storage_data_disk.value)
       disk_size_gb      = var.data_disk_size_gb
       managed_disk_type = var.data_sa_type
     }
@@ -151,7 +151,7 @@ resource "azurerm_virtual_machine" "vm_linux" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.key + var.nb_data_disk
-      name              = replace(replace(replace(var.extra_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${extra_disk_name}", storage_data_disk.value.name)
+      name              = replace(replace(replace(var.name_template_extra_disk, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${extra_disk_name}", storage_data_disk.value.name)
       disk_size_gb      = storage_data_disk.value.size
       managed_disk_type = var.data_sa_type
     }
@@ -185,7 +185,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
   count = local.is_windows ? var.nb_instances : 0
 
   location                      = local.location
-  name                          = replace(replace(var.vm_windows_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
+  name                          = replace(replace(var.name_template_vm_windows, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
   network_interface_ids         = [element(azurerm_network_interface.vm[*].id, count.index)]
   resource_group_name           = var.resource_group_name
   vm_size                       = var.vm_size
@@ -197,7 +197,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
 
   storage_os_disk {
     create_option     = "FromImage"
-    name              = replace(replace(var.vm_windows_os_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
+    name              = replace(replace(var.name_template_vm_windows_os_disk, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
     caching           = "ReadWrite"
     disk_size_gb      = var.storage_os_disk_size_gb
     managed_disk_type = var.storage_account_type
@@ -256,7 +256,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.value
-      name              = replace(replace(replace(var.data_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${data_disk_number}", storage_data_disk.value)
+      name              = replace(replace(replace(var.name_template_data_disk, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${data_disk_number}", storage_data_disk.value)
       disk_size_gb      = var.data_disk_size_gb
       managed_disk_type = var.data_sa_type
     }
@@ -267,7 +267,7 @@ resource "azurerm_virtual_machine" "vm_windows" {
     content {
       create_option     = "Empty"
       lun               = storage_data_disk.key + var.nb_data_disk
-      name              = replace(replace(replace(var.extra_disk_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${extra_disk_name}", storage_data_disk.value.name)
+      name              = replace(replace(replace(var.name_template_extra_disk, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index), "$${extra_disk_name}", storage_data_disk.value.name)
       disk_size_gb      = storage_data_disk.value.size
       managed_disk_type = var.data_sa_type
     }
@@ -358,7 +358,7 @@ resource "azurerm_availability_set" "vm" {
   count = (var.availability_set_enabled && (var.zone == null)) ? 1 : 0
 
   location                     = local.location
-  name                         = replace(var.availability_set_name_template, "$${vm_hostname}", var.vm_hostname)
+  name                         = replace(var.name_template_availability_set, "$${vm_hostname}", var.vm_hostname)
   resource_group_name          = var.resource_group_name
   managed                      = true
   platform_fault_domain_count  = var.as_platform_fault_domain_count
@@ -371,7 +371,7 @@ resource "azurerm_public_ip" "vm" {
 
   allocation_method   = var.allocation_method
   location            = local.location
-  name                = replace(replace(var.public_ip_name_template, "$${vm_hostname}", var.vm_hostname), "$${ip_number}", count.index)
+  name                = replace(replace(var.name_template_public_ip, "$${vm_hostname}", var.vm_hostname), "$${ip_number}", count.index)
   resource_group_name = var.resource_group_name
   domain_name_label   = element(var.public_ip_dns, count.index)
   sku                 = var.public_ip_sku
@@ -405,7 +405,7 @@ resource "azurerm_network_security_group" "vm" {
   count = var.network_security_group == null ? 1 : 0
 
   location            = local.location
-  name                = replace(var.network_security_group_name_template, "$${vm_hostname}", var.vm_hostname)
+  name                = replace(var.name_template_network_security_group, "$${vm_hostname}", var.vm_hostname)
   resource_group_name = var.resource_group_name
   tags                = var.tags
 }
@@ -435,7 +435,7 @@ resource "azurerm_network_interface" "vm" {
   count = var.nb_instances
 
   location                      = local.location
-  name                          = replace(replace(var.network_interface_name_template, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
+  name                          = replace(replace(var.name_template_network_interface, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
   resource_group_name           = var.resource_group_name
   enable_accelerated_networking = var.enable_accelerated_networking
   tags                          = var.tags
