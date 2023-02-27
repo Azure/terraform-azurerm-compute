@@ -6,7 +6,7 @@ on:
 
 jobs:
   full-e2e-check:
-    runs-on: [self-hosted, 1ES.Pool=<YOUR_REPO_NAME>]
+    runs-on: [self-hosted, 1ES.Pool=terraform-azurerm-compute]
     environment:
       name: crontests
     steps:
