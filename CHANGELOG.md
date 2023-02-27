@@ -4,6 +4,12 @@
 
 **Merged pull requests:**
 
+- Bump github.com/Azure/terraform-module-test-helper from 0.8.1 to 0.9.1 in /test [\#240](https://github.com/Azure/terraform-azurerm-compute/pull/240) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump github.com/gruntwork-io/terratest from 0.41.10 to 0.41.11 in /test [\#239](https://github.com/Azure/terraform-azurerm-compute/pull/239) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update versions.tf to require Terraform v1.3 [\#238](https://github.com/Azure/terraform-azurerm-compute/pull/238) ([lonegunmanb](https://github.com/lonegunmanb))
+- Bump golang.org/x/net from 0.1.0 to 0.7.0 in /test [\#237](https://github.com/Azure/terraform-azurerm-compute/pull/237) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump github.com/hashicorp/go-getter/v2 from 2.1.1 to 2.2.0 in /test [\#236](https://github.com/Azure/terraform-azurerm-compute/pull/236) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump github.com/hashicorp/go-getter from 1.6.1 to 1.7.0 in /test [\#235](https://github.com/Azure/terraform-azurerm-compute/pull/235) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Use name template variables to customize the name of each resource [\#234](https://github.com/Azure/terraform-azurerm-compute/pull/234) ([DatsloJRel](https://github.com/DatsloJRel))
 - Improve separate data disk resource logic [\#233](https://github.com/Azure/terraform-azurerm-compute/pull/233) ([lonegunmanb](https://github.com/lonegunmanb))
 - Pin the iterator variable to avoid concurrent test error [\#232](https://github.com/Azure/terraform-azurerm-compute/pull/232) ([lonegunmanb](https://github.com/lonegunmanb))
