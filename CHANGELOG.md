@@ -1,9 +1,10 @@
 # Changelog
 
-## [Unreleased](https://github.com/Azure/terraform-azurerm-compute/tree/HEAD)
+## [5.2.0](https://github.com/Azure/terraform-azurerm-compute/tree/5.2.0) (2023-02-28)
 
 **Merged pull requests:**
 
+- Bump github.com/stretchr/testify from 1.8.1 to 1.8.2 in /test [\#241](https://github.com/Azure/terraform-azurerm-compute/pull/241) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github.com/Azure/terraform-module-test-helper from 0.8.1 to 0.9.1 in /test [\#240](https://github.com/Azure/terraform-azurerm-compute/pull/240) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump github.com/gruntwork-io/terratest from 0.41.10 to 0.41.11 in /test [\#239](https://github.com/Azure/terraform-azurerm-compute/pull/239) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update versions.tf to require Terraform v1.3 [\#238](https://github.com/Azure/terraform-azurerm-compute/pull/238) ([lonegunmanb](https://github.com/lonegunmanb))
