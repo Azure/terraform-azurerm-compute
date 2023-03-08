@@ -22,14 +22,9 @@ jobs:
       - name: Update
         run: |
           sh scripts/ci-update-test-record.sh
-      - name: Fix Permission
-        run: |
-          cd .git
-          sudo chmod -R a+rwX .
-          sudo find . -type d -exec chmod g+s '{}' +
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           message: 'Update TestVersionSnapshot'
-          branch: ${{ env.default_branch }}
+          branch: ${{ github.event.repository.default_branch }}
