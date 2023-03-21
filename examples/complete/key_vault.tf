@@ -65,6 +65,7 @@ resource "azurerm_key_vault_access_policy" "current_user" {
     "Update",
     "Verify",
     "WrapKey",
+    "GetRotationPolicy",
   ]
   secret_permissions = [
     "Backup",
