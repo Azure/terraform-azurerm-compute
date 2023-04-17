@@ -6,6 +6,10 @@
 
 - Fix broken example [\#245](https://github.com/Azure/terraform-azurerm-compute/pull/245) ([lonegunmanb](https://github.com/lonegunmanb))
 
+**Pull requests:**
+
+* Fix broken ip_configuration when `azurerm_public_ip` is null
+
 ## [5.2.0](https://github.com/Azure/terraform-azurerm-compute/tree/5.2.0) (2023-02-28)
 
 **Merged pull requests:**
