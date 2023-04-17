@@ -1,14 +1,16 @@
 # Changelog
 
+## [Unreleased](https://github.com/Azure/terraform-azurerm-compute/tree/HEAD)
+
+**Merged pull requests:**
+
+- Fix broken ip\_configuration when azurerm\_public\_ip is null [\#248](https://github.com/Azure/terraform-azurerm-compute/pull/248) ([Amos-85](https://github.com/Amos-85))
+
 ## [5.2.1](https://github.com/Azure/terraform-azurerm-compute/tree/5.2.1) (2023-04-16)
 
 **Merged pull requests:**
 
 - Fix broken example [\#245](https://github.com/Azure/terraform-azurerm-compute/pull/245) ([lonegunmanb](https://github.com/lonegunmanb))
-
-**Pull requests:**
-
-* Fix broken ip_configuration when `azurerm_public_ip` is null
 
 ## [5.2.0](https://github.com/Azure/terraform-azurerm-compute/tree/5.2.0) (2023-02-28)
 
