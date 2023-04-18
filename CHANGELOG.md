@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Bump github.com/Azure/terraform-module-test-helper from 0.9.1 to 0.13.0 in /test [\#252](https://github.com/Azure/terraform-azurerm-compute/pull/252) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Fix broken ip\_configuration when azurerm\_public\_ip is null [\#248](https://github.com/Azure/terraform-azurerm-compute/pull/248) ([Amos-85](https://github.com/Amos-85))
 
 ## [5.2.1](https://github.com/Azure/terraform-azurerm-compute/tree/5.2.1) (2023-04-16)
