@@ -95,6 +95,12 @@ variable "enable_accelerated_networking" {
   default     = false
 }
 
+variable "enable_ip_forwarding" {
+  type        = bool
+  default     = false
+  description = "(Optional) Should IP Forwarding be enabled? Defaults to `false`."
+}
+
 variable "enable_ssh_key" {
   type        = bool
   description = "(Optional) Enable ssh key authentication in Linux virtual Machine."
