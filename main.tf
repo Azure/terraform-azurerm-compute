@@ -438,6 +438,7 @@ resource "azurerm_network_interface" "vm" {
   name                          = replace(replace(var.name_template_network_interface, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
   resource_group_name           = var.resource_group_name
   enable_accelerated_networking = var.enable_accelerated_networking
+  enable_ip_forwarding          = var.enable_ip_forwarding
   tags                          = var.tags
 
   ip_configuration {
