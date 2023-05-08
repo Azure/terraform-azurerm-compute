@@ -1,7 +1,7 @@
 variable "admin_password" {
   type      = string
-  sensitive = true
   default   = null
+  sensitive = true
 }
 
 variable "admin_username" {

@@ -108,7 +108,6 @@ resource "azurerm_key_vault_access_policy" "storage_account" {
   key_vault_id = azurerm_key_vault.test.id
   object_id    = azurerm_user_assigned_identity.storage_account.principal_id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-
   key_permissions = [
     "Get",
     "WrapKey",
@@ -130,6 +129,9 @@ resource "azurerm_key_vault_certificate" "test" {
       reuse_key  = true
       key_size   = 2048
     }
+    secret_properties {
+      content_type = "application/x-pkcs12"
+    }
     lifetime_action {
       action {
         action_type = "AutoRenew"
@@ -137,9 +139,6 @@ resource "azurerm_key_vault_certificate" "test" {
       trigger {
         days_before_expiry = 30
       }
-    }
-    secret_properties {
-      content_type = "application/x-pkcs12"
     }
     x509_certificate_properties {
       key_usage = [

@@ -1,98 +1,98 @@
 variable "resource_group_name" {
-  description = "The name of the resource group in which the resources will be created."
   type        = string
+  description = "The name of the resource group in which the resources will be created."
 }
 
 variable "vnet_subnet_id" {
-  description = "The subnet id of the virtual network where the virtual machines will reside."
   type        = string
+  description = "The subnet id of the virtual network where the virtual machines will reside."
 }
 
 variable "admin_password" {
-  description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure."
   type        = string
   default     = ""
+  description = "The admin password to be used on the VMSS that will be deployed. The password must meet the complexity requirements of Azure."
 }
 
 variable "admin_username" {
-  description = "The admin username of the VM that will be deployed."
   type        = string
   default     = "azureuser"
+  description = "The admin username of the VM that will be deployed."
 }
 
 variable "allocation_method" {
-  description = "Defines how an IP address is assigned. Options are Static or Dynamic."
   type        = string
   default     = "Dynamic"
+  description = "Defines how an IP address is assigned. Options are Static or Dynamic."
 }
 
 # We keep default value as `2`, not `3` as the official since this module used to hard code this argument to `2`.
 variable "as_platform_fault_domain_count" {
-  description = "(Optional) Specifies the number of fault domains that are used. Defaults to `2`. Changing this forces a new resource to be created."
   type        = number
   default     = 2
+  description = "(Optional) Specifies the number of fault domains that are used. Defaults to `2`. Changing this forces a new resource to be created."
 }
 
 # We keep default value as `2`, not `5` as the official since this module used to hard code this argument to `2`.
 variable "as_platform_update_domain_count" {
-  description = "(Optional) Specifies the number of update domains that are used. Defaults to `2`. Changing this forces a new resource to be created."
   type        = number
   default     = 2
+  description = "(Optional) Specifies the number of update domains that are used. Defaults to `2`. Changing this forces a new resource to be created."
 }
 
 variable "availability_set_enabled" {
-  description = "(Optional) Enable or Disable availability set.  Default is `true` (enabled)."
   type        = bool
-  nullable    = false
   default     = true
+  description = "(Optional) Enable or Disable availability set.  Default is `true` (enabled)."
+  nullable    = false
 }
 
 variable "boot_diagnostics" {
   type        = bool
-  description = "(Optional) Enable or Disable boot diagnostics."
   default     = false
+  description = "(Optional) Enable or Disable boot diagnostics."
 }
 
 variable "boot_diagnostics_sa_type" {
-  description = "(Optional) Storage account type for boot diagnostics."
   type        = string
   default     = "Standard_LRS"
+  description = "(Optional) Storage account type for boot diagnostics."
 }
 
 variable "custom_data" {
-  description = "The custom data to supply to the machine. This can be used as a cloud-init for Linux systems."
   type        = string
   default     = ""
+  description = "The custom data to supply to the machine. This can be used as a cloud-init for Linux systems."
 }
 
 variable "data_disk_size_gb" {
-  description = "Storage data disk size size."
   type        = number
   default     = 30
+  description = "Storage data disk size size."
 }
 
 variable "data_sa_type" {
-  description = "Data Disk Storage Account type."
   type        = string
   default     = "Standard_LRS"
+  description = "Data Disk Storage Account type."
 }
 
 variable "delete_data_disks_on_termination" {
   type        = bool
-  description = "Delete data disks when machine is terminated."
   default     = false
+  description = "Delete data disks when machine is terminated."
 }
 
 variable "delete_os_disk_on_termination" {
   type        = bool
-  description = "Delete OS disk when machine is terminated."
   default     = false
+  description = "Delete OS disk when machine is terminated."
 }
 
 variable "enable_accelerated_networking" {
   type        = bool
-  description = "(Optional) Enable accelerated networking on Network interface."
   default     = false
+  description = "(Optional) Enable accelerated networking on Network interface."
 }
 
 variable "enable_ip_forwarding" {
@@ -103,17 +103,18 @@ variable "enable_ip_forwarding" {
 
 variable "enable_ssh_key" {
   type        = bool
-  description = "(Optional) Enable ssh key authentication in Linux virtual Machine."
   default     = true
+  description = "(Optional) Enable ssh key authentication in Linux virtual Machine."
 }
 
 # Why use object as type? We use this variable in `count` expression, if we use a newly created `azurerm_storage_account.primary_blob_endpoint` as uri directly, then Terraform would complain that it cannot determine the value of `count` during the plan phase, so we wrap the `uri` with an object.
 variable "external_boot_diagnostics_storage" {
-  description = "(Optional) The Storage Account's Blob Endpoint which should hold the virtual machine's diagnostic files. Set this argument would disable the creation of `azurerm_storage_account` resource."
   type = object({
     uri = string
   })
-  default = null
+  default     = null
+  description = "(Optional) The Storage Account's Blob Endpoint which should hold the virtual machine's diagnostic files. Set this argument would disable the creation of `azurerm_storage_account` resource."
+
   validation {
     condition     = var.external_boot_diagnostics_storage == null ? true : var.external_boot_diagnostics_storage.uri != null
     error_message = "`var.external_boot_diagnostics_storage.uri` cannot be `null`"
@@ -121,154 +122,155 @@ variable "external_boot_diagnostics_storage" {
 }
 
 variable "extra_disks" {
-  description = "(Optional) List of extra data disks attached to each virtual machine."
   type = list(object({
     name = string
     size = number
   }))
-  default = []
+  default     = []
+  description = "(Optional) List of extra data disks attached to each virtual machine."
 }
 
 variable "extra_ssh_keys" {
-  description = "Same as ssh_key, but allows for setting multiple public keys. Set your first key in ssh_key, and the extras here."
   type        = list(string)
   default     = []
+  description = "Same as ssh_key, but allows for setting multiple public keys. Set your first key in ssh_key, and the extras here."
 }
 
 variable "identity_ids" {
-  description = "Specifies a list of user managed identity ids to be assigned to the VM."
   type        = list(string)
   default     = []
+  description = "Specifies a list of user managed identity ids to be assigned to the VM."
 }
 
 variable "identity_type" {
-  description = "The Managed Service Identity Type of this Virtual Machine."
   type        = string
   default     = ""
+  description = "The Managed Service Identity Type of this Virtual Machine."
 }
 
 variable "is_marketplace_image" {
-  description = "Boolean flag to notify when the image comes from the marketplace."
   type        = bool
-  nullable    = false
   default     = false
+  description = "Boolean flag to notify when the image comes from the marketplace."
+  nullable    = false
 }
 
 variable "is_windows_image" {
-  description = "Boolean flag to notify when the custom image is windows based."
   type        = bool
   default     = false
+  description = "Boolean flag to notify when the custom image is windows based."
 }
 
 variable "license_type" {
-  description = "Specifies the BYOL Type for this Virtual Machine. This is only applicable to Windows Virtual Machines. Possible values are Windows_Client and Windows_Server"
   type        = string
   default     = null
+  description = "Specifies the BYOL Type for this Virtual Machine. This is only applicable to Windows Virtual Machines. Possible values are Windows_Client and Windows_Server"
 }
 
 variable "location" {
-  description = "(Optional) The location in which the resources will be created."
   type        = string
   default     = null
+  description = "(Optional) The location in which the resources will be created."
 }
 
 variable "managed_data_disk_encryption_set_id" {
-  description = "(Optional) The disk encryption set ID for the managed data disk attached using the azurerm_virtual_machine_data_disk_attachment resource."
   type        = string
   default     = null
+  description = "(Optional) The disk encryption set ID for the managed data disk attached using the azurerm_virtual_machine_data_disk_attachment resource."
 }
 
 variable "name_template_availability_set" {
-  description = "The name template for the availability set. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-avset"
+  description = "The name template for the availability set. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
 }
 
 variable "name_template_data_disk" {
-  description = "The name template for the data disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${data_disk_number}` => 'data disk index'. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-datadisk-$${host_number}-$${data_disk_number}"
+  description = "The name template for the data disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${data_disk_number}` => 'data disk index'. All other text can be set as desired."
 }
 
 variable "name_template_extra_disk" {
-  description = "The name template for the extra disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${extra_disk_name}` => 'name of extra disk'. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-extradisk-$${host_number}-$${extra_disk_name}"
+  description = "The name template for the extra disks. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index', `$${extra_disk_name}` => 'name of extra disk'. All other text can be set as desired."
 }
 
 variable "name_template_network_interface" {
-  description = "The name template for the network interface. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-nic-$${host_number}"
+  description = "The name template for the network interface. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
 }
 
 variable "name_template_network_security_group" {
-  description = "The name template for the network security group. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-nsg"
+  description = "The name template for the network security group. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`. All other text can be set as desired."
 }
 
 variable "name_template_public_ip" {
-  description = "The name template for the public ip. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${ip_number}` => 'public ip index'. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-pip-$${ip_number}"
+  description = "The name template for the public ip. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${ip_number}` => 'public ip index'. All other text can be set as desired."
 }
 
 variable "name_template_vm_linux" {
-  description = "The name template for the Linux virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-vmLinux-$${host_number}"
+  description = "The name template for the Linux virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
 }
 
 variable "name_template_vm_linux_os_disk" {
-  description = "The name template for the Linux VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
   type        = string
   default     = "osdisk-$${vm_hostname}-$${host_number}"
+  description = "The name template for the Linux VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
 }
 
 variable "name_template_vm_windows" {
-  description = "The name template for the Windows virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-vmWindows-$${host_number}"
+  description = "The name template for the Windows virtual machine. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
 }
 
 variable "name_template_vm_windows_os_disk" {
-  description = "The name template for the Windows VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
   type        = string
   default     = "$${vm_hostname}-osdisk-$${host_number}"
+  description = "The name template for the Windows VM OS disk. The following replacements are automatically made: `$${vm_hostname}` => `var.vm_hostname`, `$${host_number}` => 'host index'. All other text can be set as desired."
 }
 
 variable "nb_data_disk" {
-  description = "(Optional) Number of the data disks attached to each virtual machine."
   type        = number
   default     = 0
+  description = "(Optional) Number of the data disks attached to each virtual machine."
 }
 
 variable "nb_instances" {
-  description = "Specify the number of vm instances."
   type        = number
   default     = 1
+  description = "Specify the number of vm instances."
 }
 
 variable "nb_public_ip" {
-  description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
   type        = number
   default     = 1
+  description = "Number of public IPs to assign corresponding to one IP per vm. Set to 0 to not assign any public IP addresses."
 }
 
 variable "nested_data_disks" {
-  description = "(Optional) When `true`, use nested data disks directly attached to the VM.  When `false`, use azurerm_virtual_machine_data_disk_attachment resource to attach the data disks after the VM is created.  Default is `true`."
   type        = bool
-  nullable    = false
   default     = true
+  description = "(Optional) When `true`, use nested data disks directly attached to the VM.  When `false`, use azurerm_virtual_machine_data_disk_attachment resource to attach the data disks after the VM is created.  Default is `true`."
+  nullable    = false
 }
 
 variable "network_security_group" {
-  description = "The network security group we'd like to bind with virtual machine. Set this variable will disable the creation of `azurerm_network_security_group` and `azurerm_network_security_rule` resources."
   type = object({
     id = string
   })
-  default = null
+  default     = null
+  description = "The network security group we'd like to bind with virtual machine. Set this variable will disable the creation of `azurerm_network_security_group` and `azurerm_network_security_rule` resources."
+
   validation {
     condition     = var.network_security_group == null ? true : var.network_security_group.id != null
     error_message = "When `var.network_security_group` is not `null`, `var.network_security_group.id` is required."
@@ -276,70 +278,84 @@ variable "network_security_group" {
 }
 
 variable "os_profile_secrets" {
-  description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url and certificate_store."
   type        = list(map(string))
   default     = []
+  description = "Specifies a list of certificates to be installed on the VM, each list item is a map with the keys source_vault_id, certificate_url and certificate_store."
 }
 
 variable "public_ip_dns" {
-  description = "Optional globally unique per datacenter region domain name label to apply to each public ip address. e.g. thisvar.varlocation.cloudapp.azure.com where you specify only thisvar here. This is an array of names which will pair up sequentially to the number of public ips defined in var.nb_public_ip. One name or empty string is required for every public ip. If no public ip is desired, then set this to an array with a single empty string."
   type        = list(string)
   default     = [null]
+  description = "Optional globally unique per datacenter region domain name label to apply to each public ip address. e.g. thisvar.varlocation.cloudapp.azure.com where you specify only thisvar here. This is an array of names which will pair up sequentially to the number of public ips defined in var.nb_public_ip. One name or empty string is required for every public ip. If no public ip is desired, then set this to an array with a single empty string."
 }
 
 variable "public_ip_sku" {
-  description = "Defines the SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Basic."
   type        = string
   default     = "Basic"
+  description = "Defines the SKU of the Public IP. Accepted values are Basic and Standard. Defaults to Basic."
 }
 
 variable "remote_port" {
-  description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
   type        = string
   default     = ""
+  description = "Remote tcp port to be used for access to the vms created via the nsg applied to the nics."
 }
 
 variable "source_address_prefixes" {
-  description = "(Optional) List of source address prefixes allowed to access var.remote_port."
   type        = list(string)
   default     = ["0.0.0.0/0"]
+  description = "(Optional) List of source address prefixes allowed to access var.remote_port."
 }
 
 variable "ssh_key" {
-  description = "Path to the public key to be used for ssh access to the VM. Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash.e.g. c : /home/id_rsa.pub."
   type        = string
   default     = "~/.ssh/id_rsa.pub"
+  description = "Path to the public key to be used for ssh access to the VM. Only used with non-Windows vms and can be left as-is even if using Windows vms. If specifying a path to a certification on a Windows machine to provision a linux vm use the / in the path versus backslash.e.g. c : /home/id_rsa.pub."
 }
 
 variable "ssh_key_values" {
-  description = "List of Public SSH Keys values to be used for ssh access to the VMs."
   type        = list(string)
   default     = []
+  description = "List of Public SSH Keys values to be used for ssh access to the VMs."
 }
 
 variable "storage_account_type" {
-  description = "Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS."
   type        = string
   default     = "Premium_LRS"
+  description = "Defines the type of storage account to be created. Valid options are Standard_LRS, Standard_ZRS, Standard_GRS, Standard_RAGRS, Premium_LRS."
 }
 
 variable "storage_os_disk_size_gb" {
-  description = "(Optional) Specifies the size of the data disk in gigabytes."
   type        = number
   default     = null
+  description = "(Optional) Specifies the size of the data disk in gigabytes."
 }
 
 variable "tags" {
-  type        = map(string)
-  description = "A map of the tags to use on the resources that are deployed with this module."
-
+  type = map(string)
   default = {
     source = "terraform"
   }
+  description = "A map of the tags to use on the resources that are deployed with this module."
+}
+
+# tflint-ignore: terraform_unused_declarations
+variable "tracing_tags_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether enable tracing tags that generated by BridgeCrew Yor."
+  nullable    = false
+}
+
+# tflint-ignore: terraform_unused_declarations
+variable "tracing_tags_prefix" {
+  type        = string
+  default     = "avm_"
+  description = "Default prefix for generated tracing tags"
+  nullable    = false
 }
 
 variable "vm_extension" {
-  description = "(Deprecated) This variable has been superseded by the `vm_extensions`. Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
   type = object({
     name                        = string
     publisher                   = string
@@ -355,12 +371,12 @@ variable "vm_extension" {
       source_vault_id = string
     }))
   })
-  default   = null
-  sensitive = true # Because `protected_settings` is sensitive
+  default     = null
+  description = "(Deprecated) This variable has been superseded by the `vm_extensions`. Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
+  sensitive   = true # Because `protected_settings` is sensitive
 }
 
 variable "vm_extensions" {
-  description = "Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
   type = set(object({
     name                        = string
     publisher                   = string
@@ -377,69 +393,65 @@ variable "vm_extensions" {
     }))
   }))
   # tflint-ignore: terraform_sensitive_variable_no_default
-  default   = []
-  nullable  = false
-  sensitive = true # Because `protected_settings` is sensitive
+  default     = []
+  description = "Argument to create `azurerm_virtual_machine_extension` resource, the argument descriptions could be found at [the document](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension)."
+  nullable    = false
+  sensitive   = true # Because `protected_settings` is sensitive
+
   validation {
     condition = length(var.vm_extensions) == length(distinct([
       for e in var.vm_extensions : e.type
     ]))
     error_message = "`type` in `vm_extensions` must be unique."
   }
-  validation {
-    condition = length(var.vm_extensions) == length(distinct([
-      for e in var.vm_extensions : e.name
-    ]))
-    error_message = "`name` in `vm_extensions` must be unique."
-  }
 }
 
 variable "vm_hostname" {
-  description = "local name of the Virtual Machine."
   type        = string
   default     = "myvm"
+  description = "local name of the Virtual Machine."
 }
 
 variable "vm_os_id" {
-  description = "The resource ID of the image that you want to deploy if you are using a custom image.Note, need to provide is_windows_image = true for windows custom images."
   type        = string
   default     = ""
+  description = "The resource ID of the image that you want to deploy if you are using a custom image.Note, need to provide is_windows_image = true for windows custom images."
 }
 
 variable "vm_os_offer" {
-  description = "The name of the offer of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   type        = string
   default     = ""
+  description = "The name of the offer of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
 }
 
 variable "vm_os_publisher" {
-  description = "The name of the publisher of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   type        = string
   default     = ""
+  description = "The name of the publisher of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
 }
 
 variable "vm_os_simple" {
-  description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
   type        = string
   default     = ""
+  description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
 }
 
 variable "vm_os_sku" {
-  description = "The sku of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   type        = string
   default     = ""
+  description = "The sku of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
 }
 
 variable "vm_os_version" {
-  description = "The version of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
   type        = string
   default     = "latest"
+  description = "The version of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
 }
 
 variable "vm_size" {
-  description = "Specifies the size of the virtual machine."
   type        = string
   default     = "Standard_D2s_v3"
+  description = "Specifies the size of the virtual machine."
 }
 
 # Why we use `zone` not `zones` as `azurerm_virtual_machine.zones`?
@@ -452,23 +464,7 @@ variable "vm_size" {
 # it would be hard for us to keep the vm and public ip in the same zone once `var.nb_instances` doesn't equal to `var.nb_public_ip`
 # So, we decide that one module instance supports one zone only to avoid this dilemma.
 variable "zone" {
-  description = "(Optional) The Availability Zone which the Virtual Machine should be allocated in, only one zone would be accepted. If set then this module won't create `azurerm_availability_set` resource. Changing this forces a new resource to be created."
   type        = string
   default     = null
-}
-
-# tflint-ignore: terraform_unused_declarations
-variable "tracing_tags_enabled" {
-  type        = bool
-  description = "Whether enable tracing tags that generated by BridgeCrew Yor."
-  default     = false
-  nullable    = false
-}
-
-# tflint-ignore: terraform_unused_declarations
-variable "tracing_tags_prefix" {
-  type        = string
-  description = "Default prefix for generated tracing tags"
-  default     = "avm_"
-  nullable    = false
+  description = "(Optional) The Availability Zone which the Virtual Machine should be allocated in, only one zone would be accepted. If set then this module won't create `azurerm_availability_set` resource. Changing this forces a new resource to be created."
 }

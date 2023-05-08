@@ -124,11 +124,11 @@ module "debianservers" {
 resource "random_string" "storage_account" {
   length      = 16
   lower       = true
-  upper       = false
-  numeric     = true
   min_lower   = 1
   min_numeric = 1
+  numeric     = true
   special     = false
+  upper       = false
 }
 
 resource "azurerm_storage_account" "debian2" {

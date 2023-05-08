@@ -20,11 +20,10 @@ moved {
 }
 
 resource "random_id" "vm_sa" {
+  byte_length = 6
   keepers = {
     vm_hostname = var.vm_hostname
   }
-
-  byte_length = 6
 }
 
 moved {
@@ -40,7 +39,14 @@ resource "azurerm_storage_account" "vm_sa" {
   location                 = local.location
   name                     = "bootdiag${lower(random_id.vm_sa.hex)}"
   resource_group_name      = var.resource_group_name
-  tags                     = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "634363ec15f9f4252ff016369744cb9539480a22"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2022-11-28 08:50:01"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "6c97a9d0-5f8f-488d-bd3a-e944b3e79306"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
 
 moved {
@@ -59,8 +65,15 @@ resource "azurerm_virtual_machine" "vm_linux" {
   availability_set_id              = try(azurerm_availability_set.vm[0].id, null)
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
   delete_os_disk_on_termination    = var.delete_os_disk_on_termination
-  tags                             = var.tags
-  zones                            = var.zone == null ? null : [var.zone]
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "d00d0b0e4c701e75fae213953b048fea0f12a323"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-02-13 09:51:02"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "6db91e5a-b289-47ab-a285-32b67f5e3788"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
+  zones = var.zone == null ? null : [var.zone]
 
   storage_os_disk {
     create_option     = "FromImage"
@@ -192,8 +205,15 @@ resource "azurerm_virtual_machine" "vm_windows" {
   availability_set_id           = try(azurerm_availability_set.vm[0].id, null)
   delete_os_disk_on_termination = var.delete_os_disk_on_termination
   license_type                  = var.license_type
-  tags                          = var.tags
-  zones                         = var.zone == null ? null : [var.zone]
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "d00d0b0e4c701e75fae213953b048fea0f12a323"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-02-13 09:51:02"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "21ecfbf2-8173-4998-a51e-ca67865d696f"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
+  zones = var.zone == null ? null : [var.zone]
 
   storage_os_disk {
     create_option     = "FromImage"
@@ -302,7 +322,14 @@ resource "azurerm_managed_disk" "vm_data_disk" {
   storage_account_type   = var.data_sa_type
   disk_encryption_set_id = var.managed_data_disk_encryption_set_id
   disk_size_gb           = var.data_disk_size_gb
-  tags                   = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "384cfb50e021324724483c74f43a0c102e97371b"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-02-09 06:17:56"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "0c032dd1-ec94-4252-8e97-8ea8ef5a402e"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "vm_data_disk_attachments_linux" {
@@ -333,7 +360,14 @@ resource "azurerm_managed_disk" "vm_extra_disk" {
   storage_account_type   = var.data_sa_type
   disk_encryption_set_id = var.managed_data_disk_encryption_set_id
   disk_size_gb           = each.value.disk_size
-  tags                   = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "384cfb50e021324724483c74f43a0c102e97371b"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-02-09 06:17:56"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "80fa754e-b42a-4615-bb66-bdcbb47cad05"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "vm_extra_disk_attachments_linux" {
@@ -363,7 +397,14 @@ resource "azurerm_availability_set" "vm" {
   managed                      = true
   platform_fault_domain_count  = var.as_platform_fault_domain_count
   platform_update_domain_count = var.as_platform_update_domain_count
-  tags                         = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "d00d0b0e4c701e75fae213953b048fea0f12a323"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-02-13 09:51:02"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "bb852b0d-6ecc-4b9c-878c-3662f89cb45f"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
 
 resource "azurerm_public_ip" "vm" {
@@ -375,8 +416,15 @@ resource "azurerm_public_ip" "vm" {
   resource_group_name = var.resource_group_name
   domain_name_label   = element(var.public_ip_dns, count.index)
   sku                 = var.public_ip_sku
-  tags                = var.tags
-  zones               = var.zone == null ? null : [var.zone]
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "d00d0b0e4c701e75fae213953b048fea0f12a323"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-02-13 09:51:02"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "f5fdda00-6f11-4aea-8dd9-1e2d4ca84a0e"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
+  zones = var.zone == null ? null : [var.zone]
 
   # To solve issue [#107](https://github.com/Azure/terraform-azurerm-compute/issues/107) we add such block to make `azurerm_network_interface.vm`'s update happen first.
   # Issue #107's root cause is Terraform will try to execute deletion before update, once we tried to delete the public ip, it is still attached on the network interface.
@@ -407,7 +455,14 @@ resource "azurerm_network_security_group" "vm" {
   location            = local.location
   name                = replace(var.name_template_network_security_group, "$${vm_hostname}", var.vm_hostname)
   resource_group_name = var.resource_group_name
-  tags                = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "d00d0b0e4c701e75fae213953b048fea0f12a323"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-02-13 09:51:02"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "aba45e0b-8f11-4967-af5c-ef29b54e63b8"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
 
 locals {
@@ -439,7 +494,14 @@ resource "azurerm_network_interface" "vm" {
   resource_group_name           = var.resource_group_name
   enable_accelerated_networking = var.enable_accelerated_networking
   enable_ip_forwarding          = var.enable_ip_forwarding
-  tags                          = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "78b54d36f6674612398cab6b85f1a149543d5ade"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-04-26 01:46:49"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "0beee8db-5683-4ad1-9acf-1846cd11f0ca"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 
   ip_configuration {
     name                          = "${var.vm_hostname}-ip-${count.index}"
@@ -471,7 +533,14 @@ resource "azurerm_virtual_machine_extension" "extension" {
   failure_suppression_enabled = var.vm_extension.failure_suppression_enabled
   protected_settings          = var.vm_extension.protected_settings
   settings                    = var.vm_extension.settings
-  tags                        = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "ca91ba3f5396eb91c9ef9143a8e34ee6528fbbd1"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-01-16 01:11:35"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "30f3bf36-323e-4e3b-b2e4-078bec4681e8"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 
   dynamic "protected_settings_from_key_vault" {
     for_each = var.vm_extension.protected_settings_from_key_vault == null ? [] : ["protected_settings_from_key_vault"]
@@ -504,7 +573,14 @@ resource "azurerm_virtual_machine_extension" "extensions" {
   failure_suppression_enabled = each.value.value.failure_suppression_enabled
   protected_settings          = each.value.value.protected_settings
   settings                    = each.value.value.settings
-  tags                        = var.tags
+  tags = merge(var.tags, (/*<box>*/ (var.tracing_tags_enabled ? { for k, v in /*</box>*/ {
+    avm_git_commit           = "ca91ba3f5396eb91c9ef9143a8e34ee6528fbbd1"
+    avm_git_file             = "main.tf"
+    avm_git_last_modified_at = "2023-01-16 01:11:35"
+    avm_git_org              = "Azure"
+    avm_git_repo             = "terraform-azurerm-compute"
+    avm_yor_trace            = "9ed405df-b353-48b2-ba66-bd40c387f95e"
+  } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 
   dynamic "protected_settings_from_key_vault" {
     for_each = each.value.value.protected_settings_from_key_vault == null ? [] : ["protected_settings_from_key_vault"]

@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Add tracing tags toggle variable [\#256](https://github.com/Azure/terraform-azurerm-compute/pull/256) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for `azurerm_network_interface.enable_ip_forwarding` [\#254](https://github.com/Azure/terraform-azurerm-compute/pull/254) ([lonegunmanb](https://github.com/lonegunmanb))
 
 ## [5.2.2](https://github.com/Azure/terraform-azurerm-compute/tree/5.2.2) (2023-04-18)
