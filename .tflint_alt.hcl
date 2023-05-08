@@ -193,35 +193,35 @@ rule "terraform_workspace_remote" {
 }
 
 rule "terraform_locals_order" {
-  enabled = true
+  enabled = false
 }
 
 rule "terraform_output_order" {
-  enabled = true
+  enabled = false
 }
 
 rule "terraform_output_separate" {
-  enabled = true
+  enabled = false
 }
 
 rule "terraform_variable_nullable_false" {
-  enabled = true
+  enabled = false
 }
 
 rule "terraform_variable_order" {
-  enabled = true
+  enabled = false
 }
 
 rule "terraform_variable_separate" {
-  enabled = true
+  enabled = false
 }
 
 rule "terraform_resource_data_arg_layout" {
-  enabled = true
+  enabled = false
 }
 
 rule "azurerm_arg_order" {
-  enabled = true
+  enabled = false
 }
 
 rule "azurerm_resource_tag" {
