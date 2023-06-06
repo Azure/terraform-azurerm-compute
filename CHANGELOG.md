@@ -1,12 +1,13 @@
 # Changelog
 
-## [Unreleased](https://github.com/Azure/terraform-azurerm-compute/tree/HEAD)
+## [5.3.0](https://github.com/Azure/terraform-azurerm-compute/tree/5.3.0) (2023-06-06)
 
 **Merged pull requests:**
 
 - Bump github.com/Azure/terraform-module-test-helper from 0.13.0 to 0.14.0 in /test [\#263](https://github.com/Azure/terraform-azurerm-compute/pull/263) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Add tracing tags toggle variable [\#256](https://github.com/Azure/terraform-azurerm-compute/pull/256) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for `azurerm_network_interface.enable_ip_forwarding` [\#254](https://github.com/Azure/terraform-azurerm-compute/pull/254) ([lonegunmanb](https://github.com/lonegunmanb))
+- Fix broken ip\_configuration when azurerm\_public\_ip is null [\#248](https://github.com/Azure/terraform-azurerm-compute/pull/248) ([Amos-85](https://github.com/Amos-85))
 
 ## [5.2.2](https://github.com/Azure/terraform-azurerm-compute/tree/5.2.2) (2023-04-18)
 
