@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Bump github.com/Azure/terraform-module-test-helper from 0.13.0 to 0.14.0 in /test [\#263](https://github.com/Azure/terraform-azurerm-compute/pull/263) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Add tracing tags toggle variable [\#256](https://github.com/Azure/terraform-azurerm-compute/pull/256) ([lonegunmanb](https://github.com/lonegunmanb))
 - Add support for `azurerm_network_interface.enable_ip_forwarding` [\#254](https://github.com/Azure/terraform-azurerm-compute/pull/254) ([lonegunmanb](https://github.com/lonegunmanb))
 
