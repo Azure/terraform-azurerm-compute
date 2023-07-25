@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased](https://github.com/Azure/terraform-azurerm-compute/tree/HEAD)
+
+**Merged pull requests:**
+
+- Fix checkov issue [\#272](https://github.com/Azure/terraform-azurerm-compute/pull/272) ([lonegunmanb](https://github.com/lonegunmanb))
+
 ## [5.3.0](https://github.com/Azure/terraform-azurerm-compute/tree/5.3.0) (2023-06-06)
 
 **Merged pull requests:**
