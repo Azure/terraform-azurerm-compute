@@ -1,4 +1,4 @@
-name: 'Comment on PR'
+name: 'Azurevm'
 
 on:
   workflow_run:
