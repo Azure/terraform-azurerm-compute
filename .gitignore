@@ -59,6 +59,8 @@ README-generated.md
 
 .tflint.hcl
 .tflint_example.hcl
+.tflint.merged.hcl
+.tflint_example.merged.hcl
 
 tfmod-scaffold/
 scripts
