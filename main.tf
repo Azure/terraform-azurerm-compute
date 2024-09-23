@@ -419,6 +419,7 @@ resource "azurerm_availability_set" "vm" {
   } /*<box>*/ : replace(k, "avm_", var.tracing_tags_prefix) => v } : {}) /*</box>*/))
 }
 
+
 resource "azurerm_public_ip" "vm" {
   count = var.nb_public_ip
 
