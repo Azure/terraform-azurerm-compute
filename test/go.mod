@@ -1,6 +1,8 @@
 module github.com/Azure/terraform-azurerm-compute
 
-go 1.19
+go 1.22.0
+
+toolchain go1.22.5
 
 require (
 	github.com/Azure/terraform-module-test-helper v0.26.0

@@ -4,6 +4,7 @@
 
 **Merged pull requests:**
 
+- Bump github.com/Azure/terraform-module-test-helper in /test [\#294](https://github.com/Azure/terraform-azurerm-compute/pull/294) ([lonegunmanb](https://github.com/lonegunmanb))
 - Use oidc as authentication method [\#290](https://github.com/Azure/terraform-azurerm-compute/pull/290) ([lonegunmanb](https://github.com/lonegunmanb))
 - change customized tflint config files to use override files [\#289](https://github.com/Azure/terraform-azurerm-compute/pull/289) ([lonegunmanb](https://github.com/lonegunmanb))
 - Bump github.com/Azure/terraform-module-test-helper from 0.15.0 to 0.16.0 in /test [\#274](https://github.com/Azure/terraform-azurerm-compute/pull/274) ([dependabot[bot]](https://github.com/apps/dependabot))
