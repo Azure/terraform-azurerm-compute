@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased](https://github.com/Azure/terraform-azurerm-compute/tree/HEAD)
+## [v5.3.1](https://github.com/Azure/terraform-azurerm-compute/tree/v5.3.1) (2024-11-29)
 
 **Merged pull requests:**
 
