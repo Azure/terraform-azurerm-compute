@@ -1,4 +1,6 @@
-# terraform-azurerm-compute
+# [DEPRECATED] terraform-azurerm-compute
+
+> **NOTE:** This terraform-azurerm-compute module is now deprecated. The module will no longer receive updates or support. Users are encouraged to transition to the [avm-res-compute-virtualmachine](https://github.com/Azure/terraform-azurerm-avm-res-compute-virtualmachine) module for future deployments.
 
 ## Notice on new alternative virtual machine module
 
